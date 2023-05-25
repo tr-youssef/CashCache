@@ -1,15 +1,15 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
-const Categories = ({ navigation }) => {
+const Accounts = () => {
   return (
     <View style={styles.container}>
-      <Text>Categories</Text>
+      <Text>Accounts</Text>
     </View>
   );
 };
 
-export default Categories;
+export default Accounts;
 
 const styles = StyleSheet.create({
   container: {
