@@ -8,8 +8,6 @@ import Settings from "../Settings/Settings.js";
 const DashboardNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  const [accounts, setAccounts] = useState(["a", "b"]);
-  const [date, setDate] = useState(["24/05/2023", "24/04/2023"]);
   return (
     <DrawerContext.Provider value={{ drawerIsOpen, setDrawerIsOpen }}>
       <Stack.Navigator>
