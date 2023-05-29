@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { StyleSheet } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import BottomMenu from "./src/components/BottomMenu/BottomMenu.js";
@@ -8,7 +7,6 @@ import BottomMenu from "./src/components/BottomMenu/BottomMenu.js";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const Tab = createBottomTabNavigator();
   let [fontsLoaded] = useFonts({
     Inter_900Black,
   });
@@ -20,7 +18,8 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  return <BottomMenu />;
+
+  return <BottomMenu onLayoutRootView={onLayoutRootView} />;
 }
 
 const styles = StyleSheet.create({

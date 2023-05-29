@@ -2,12 +2,14 @@ import React from "react";
 import { Icon } from "@rneui/themed";
 import { navigationRef } from "../../../src/utils/navigation/RootNavigation.js";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import DashboardNavigator from "../../../src/views/Dashboard/DashboardNavigator.js";
 import CategoriesNavigator from "../../../src/views/Categories/CategoriesNavigator.js";
 import AccountsNavigator from "../../../src/views/Accounts/AccountsNavigator.js";
 import TransactionsNavigator from "../../../src/views/Transactions/TransactionsNavigator.js";
 
-const BottomMenu = () => {
+const BottomMenu = ({ onLayoutRootView }) => {
+  const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer onReady={onLayoutRootView} ref={navigationRef}>
       <Tab.Navigator>
