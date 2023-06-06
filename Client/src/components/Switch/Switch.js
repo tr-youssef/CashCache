@@ -1,17 +1,22 @@
-import { StyleSheet, Button, View, Pressable, Text } from "react-native";
+import { StyleSheet, View, Pressable, Text } from "react-native";
 import React, { useState } from "react";
 
-const Switch = () => {
-  const [choice, setChoice] = useState("Expense");
+const Switch = ({ type, setType }) => {
+  const [choice, setChoice] = useState(type);
+
+  const handlePress = (selectedType) => {
+    setChoice(selectedType);
+    setType(selectedType);
+  };
   return (
     <View style={styles.container}>
-      <Pressable style={choice === "Expense" ? styles.selectButton : styles.button} onPress={() => setChoice("Expense")}>
+      <Pressable style={choice === "Expense" ? styles.selectButtonFirst : styles.buttonFirst} onPress={() => handlePress("Expense")}>
         <Text style={styles.text}>Expense</Text>
       </Pressable>
-      <Pressable style={choice === "Income" ? styles.selectButton : styles.button} onPress={() => setChoice("Income")}>
+      <Pressable style={choice === "Income" ? styles.selectButton : styles.button} onPress={() => handlePress("Income")}>
         <Text style={styles.text}>Income</Text>
       </Pressable>
-      <Pressable style={choice === "Transfer" ? styles.selectButton : styles.button} onPress={() => setChoice("Transfer")}>
+      <Pressable style={choice === "Transfer" ? styles.selectButtonLast : styles.buttonLast} onPress={() => handlePress("Transfer")}>
         <Text style={styles.text}>Transfer</Text>
       </Pressable>
     </View>
@@ -22,16 +27,40 @@ export default Switch;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: "70%",
+    height: "5%",
     flexDirection: "row",
     marginTop: 15,
+    backgroundColor: "#1A251D",
+    resizeMode: "contain",
+    borderRadius: "20%",
   },
-  button: { borderColor: "#33CD48", borderWidth: "2px", width: "20%", height: "5%", justifyContent: "center", alignItems: "center" },
+  button: { flex: 1, justifyContent: "center", alignItems: "center" },
   selectButton: {
     backgroundColor: "#33CD48",
-    width: "20%",
-    height: "5%",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonFirst: { flex: 1, justifyContent: "center", alignItems: "center", borderTopLeftRadius: "20%", borderBottomLeftRadius: "20%" },
+  selectButtonFirst: {
+    backgroundColor: "#33CD48",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopLeftRadius: "20%",
+    borderBottomLeftRadius: "20%",
+  },
+  buttonLast: { flex: 1, justifyContent: "center", alignItems: "center", borderTopRightRadius: "20%", borderBottomRightRadius: "20%" },
+  selectButtonLast: {
+    backgroundColor: "#33CD48",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopRightRadius: "20%",
+    borderBottomRightRadius: "20%",
+  },
+  text: {
+    color: "#F2FFF5",
   },
 });
