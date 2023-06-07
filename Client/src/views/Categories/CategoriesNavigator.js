@@ -12,7 +12,14 @@ const CategoriesNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
 
   const [categories, setCategories] = useState([]);
-  const icons = ["fastfood", "home", "local-movies", "airplanemode-active", "payments", "compare-arrows"];
+  const icons = [
+    "fastfood",
+    "home",
+    "local-movies",
+    "airplanemode-active",
+    "payments",
+    "compare-arrows",
+  ];
   const [name, setName] = useState("");
   const data = [
     { label: "Expense", value: "Expense" },
@@ -22,9 +29,16 @@ const CategoriesNavigator = ({ navigation }) => {
   const [type, setType] = useState(data.length > 0 ? data[0].value : "");
   const [choice, setChoice] = useState(icons[0]);
   const saveCategory = (name, type, choice) => {
-    callAPI("http://localhost:4001/api/categories/parent", "POST", { name: name, type: type, icon: choice }, token)
+    callAPI(
+      "/api/categories/parent",
+      "POST",
+      { name: name, type: type, icon: choice },
+      token
+    )
       .then(async () => {
-        await callAPI("http://localhost:4001/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) =>
+          setCategories(res)
+        );
         navigation.navigate("Categories");
       })
       .catch((error) => {
@@ -36,18 +50,48 @@ const CategoriesNavigator = ({ navigation }) => {
       <Stack.Screen
         name="Categories"
         options={{
-          headerRight: () => <Icon name="settings" type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+          headerRight: () => (
+            <Icon
+              name="settings"
+              type="MaterialIcons"
+              onPress={() => navigation.navigate("Settings")}
+            />
+          ),
         }}
       >
-        {(props) => <Categories {...props} categories={categories} setCategories={setCategories} />}
+        {(props) => (
+          <Categories
+            {...props}
+            categories={categories}
+            setCategories={setCategories}
+          />
+        )}
       </Stack.Screen>
       <Stack.Screen
         name="AddCategory"
         options={{
-          headerRight: () => <Icon name="save" type="MaterialIcons" onPress={() => saveCategory(name, type, choice)} />,
+          headerRight: () => (
+            <Icon
+              name="save"
+              type="MaterialIcons"
+              onPress={() => saveCategory(name, type, choice)}
+            />
+          ),
         }}
       >
-        {(props) => <AddCategory {...props} icons={icons} name={name} setName={setName} data={data} type={type} setType={setType} choice={choice} setChoice={setChoice} />}
+        {(props) => (
+          <AddCategory
+            {...props}
+            icons={icons}
+            name={name}
+            setName={setName}
+            data={data}
+            type={type}
+            setType={setType}
+            choice={choice}
+            setChoice={setChoice}
+          />
+        )}
       </Stack.Screen>
       <Stack.Screen
         name="SubCategory"

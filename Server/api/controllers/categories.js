@@ -44,7 +44,9 @@ export const getCategoryById = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    category ? res.status(200).json(category) : res.status(404).send({ message: `No category with id: ${id}` });
+    category
+      ? res.status(200).json(category)
+      : res.status(404).send({ message: `No category with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -102,7 +104,9 @@ export const deleteCategory = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    categoryDeleted.deletedCount > 0 ? res.status(200).json("Category deleted") : res.status(400).json("Category doesn't exist");
+    categoryDeleted.deletedCount > 0
+      ? res.status(200).json("Category deleted")
+      : res.status(400).json("Category doesn't exist");
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

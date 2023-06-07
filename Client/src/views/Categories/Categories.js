@@ -12,7 +12,9 @@ const Categories = ({ categories, setCategories }) => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    callAPI("http://localhost:4001/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+    callAPI("/api/categories/parents", "GET", "", token)
+      .then((res) => setCategories(res))
+      .catch((error) => console.log("error", error));
   }, []);
   return (
     <View style={styles.container}>
@@ -21,9 +23,21 @@ const Categories = ({ categories, setCategories }) => {
       {categories
         ? categories
             .filter((category) => category.type === type)
-            .filter((category) => category.name.toLowerCase().includes(search.toLowerCase()))
+            .filter((category) =>
+              category.name.toLowerCase().includes(search.toLowerCase())
+            )
             .map((category) => {
-              return <DisplayBar key={category._id} type="category" icon={category.icon} label={category.name} idParent={category._id} subCategories={category.subCategories} typeCategory={type} />;
+              return (
+                <DisplayBar
+                  key={category._id}
+                  type="category"
+                  icon={category.icon}
+                  label={category.name}
+                  idParent={category._id}
+                  subCategories={category.subCategories}
+                  typeCategory={type}
+                />
+              );
             })
         : ""}
       <AddButton />

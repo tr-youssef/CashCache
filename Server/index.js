@@ -6,9 +6,6 @@ import test from "./api/test.js";
 import routeCategories from "./api/routes/categories.js";
 import routeUsers from "./api/routes/users.js";
 
-process.on("warning", (warning) => {
-  console.warn(warning.stack);
-});
 const app = express();
 app.use(express.json({ extended: false }));
 app.use(cors());
@@ -25,5 +22,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => app.listen(PORT, () => console.log(`Server running on port : ${PORT}`)))
+  .then(() =>
+    app.listen(PORT, () => console.log(`Server running on port : ${PORT}`))
+  )
   .catch((error) => console.log(error));
