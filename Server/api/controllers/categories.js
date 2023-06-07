@@ -51,6 +51,7 @@ export const getCategoryById = async (req, res) => {
 };
 
 export const addParentCategory = async (req, res) => {
+  console.log("req.body", req.body);
   const newCategory = req.body;
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
