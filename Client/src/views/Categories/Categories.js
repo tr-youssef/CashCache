@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { callAPI } from "../../utils/fetch/callAPI.js";
+import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
 import AddButton from "../../components/AddButton/AddButton.js";
 import token from "../../utils/token.js";
 
-const Categories = ({ categories, setCategories }) => {
+const Categories = () => {
+  const categoryContext = useContext(CategoriesContext);
+  const { categories, setCategories } = categoryContext;
+
   const [type, setType] = useState("Expense");
   const [search, setSearch] = useState("");
 
@@ -23,10 +27,10 @@ const Categories = ({ categories, setCategories }) => {
             .filter((category) => category.type === type)
             .filter((category) => category.name.toLowerCase().includes(search.toLowerCase()))
             .map((category) => {
-              return <DisplayBar key={category._id} type="category" icon={category.icon} label={category.name} idParent={category._id} subCategories={category.subCategories} typeCategory={type} />;
+              return <DisplayBar key={category._id} category={category} type="category" icon={category.icon} label={category.name} subCategories={category.subCategories} />;
             })
         : ""}
-      <AddButton />
+      <AddButton screen={"AddCategory"} />
     </View>
   );
 };

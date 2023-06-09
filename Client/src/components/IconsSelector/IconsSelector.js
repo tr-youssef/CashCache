@@ -1,16 +1,16 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "@rneui/themed";
-import React, { useState } from "react";
+import React from "react";
 
-const IconsSelector = ({ choice, setChoice, icons }) => {
+const IconsSelector = ({ choiceCategory, setChoiceCategory, icons }) => {
   const handlePress = (icon) => {
-    setChoice(icon);
+    setChoiceCategory(icon);
   };
   return (
     <View style={styles.container}>
       {icons.map((icon, index) => {
         return (
-          <TouchableOpacity style={icon === choice ? styles.buttonSelected : styles.button} onPress={() => handlePress(icon)} key={index}>
+          <TouchableOpacity style={icon === choiceCategory ? styles.buttonSelected : styles.button} onPress={() => handlePress(icon)} key={index}>
             <Icon style={styles.icons} name={icons[index]} type="MaterialIcons" size={20} color="#F2FFF5" />
           </TouchableOpacity>
         );

@@ -17,6 +17,7 @@ export const getParentsCategories = async (req, res) => {
   }
 };
 export const getChildsCategories = async (req, res) => {
+  const { idParent } = req.body;
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
@@ -25,6 +26,7 @@ export const getChildsCategories = async (req, res) => {
   try {
     const categories = await Categories.find({
       userId: req.userId,
+      _id: idParent,
     });
     res.status(200).json(categories);
   } catch (error) {
@@ -51,7 +53,6 @@ export const getCategoryById = async (req, res) => {
 };
 
 export const addParentCategory = async (req, res) => {
-  console.log("req.body", req.body);
   const newCategory = req.body;
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
@@ -119,6 +120,8 @@ export const updateParentCategory = async (req, res) => {
       {
         name: newCategory.name,
         type: newCategory.type,
+        icon: newCategory.icon,
+        subcategories: newCategory.subcategories,
       }
     );
     if (oldCategory.modifiedCount > 0) {

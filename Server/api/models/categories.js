@@ -1,5 +1,18 @@
 import mongoose from "mongoose";
 
+const subcategorySchema = new mongoose.Schema({
+  name: {
+    type: String,
+    allowNull: false,
+    required: [true, "Name is required"],
+  },
+  icon: {
+    type: String,
+    allowNull: false,
+    required: [true, "Icon is required"],
+  },
+});
+
 const categoriesSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,12 +34,7 @@ const categoriesSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "User is required"],
   },
-  subcategories: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Categories",
-    },
-  ],
+  subcategories: [subcategorySchema],
 });
 
 const Categories = mongoose.model("Categories", categoriesSchema);

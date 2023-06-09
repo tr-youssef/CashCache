@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, View } from "react-native";
-import { callAPI } from "../../utils/fetch/callAPI.js";
+import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
-import token from "../../utils/token.js";
+import AddButton from "../../components/AddButton/AddButton.js";
 
-const SubCategories = ({ route }) => {
-  const [categories, setCategories] = useState([]);
-  const [type, setType] = useState("Expense");
+const SubCategories = () => {
+  const categoryContext = useContext(CategoriesContext);
+  const { selectedCategory } = categoryContext;
   const [search, setSearch] = useState("");
-  const { idParent, subCategories, typeCategory, label, icon } = route.params;
-  // useEffect(() => {
-  //   callAPI("http://localhost:4001/api/categories/child", "GET", { idParent: idParent }, token).then((res) => setCategories(res));
-  // }, []);
   return (
     <View style={styles.container}>
-      <Switch type={type} setType={setType} />
+      <Switch type={selectedCategory.type} disabled={true} />
       <SearchBar search={search} setSearch={setSearch} />
-      {subCategories
-        ? subCategories
-            .filter((category) => category.type === type)
+      <DisplayBar key={selectedCategory._id} type="categorySubcategory" icon={selectedCategory.icon} label={selectedCategory.name} disabled={true} />
+      {selectedCategory && selectedCategory.subcategories
+        ? selectedCategory.subcategories
             .filter((category) => category.name.toLowerCase().includes(search.toLowerCase()))
             .map((category) => {
-              return <DisplayBar key={category._id} type="category" icon={category.icon} label={category.name} />;
+              return <DisplayBar key={category._id} type="subcategory" icon={category.icon} label={category.name} disabled={true} />;
             })
         : ""}
+      <AddButton screen={"AddSubcategory"} />
     </View>
   );
 };
