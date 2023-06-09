@@ -16,7 +16,9 @@ const Categories = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    callAPI("http://localhost:4001/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+    callAPI("/api/categories/parents", "GET", "", token)
+      .then((res) => setCategories(res))
+      .catch((error) => console.log("error", error));
   }, []);
   return (
     <View style={styles.container}>

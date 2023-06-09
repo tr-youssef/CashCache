@@ -11,16 +11,38 @@ const Dashboard = () => {
   const theme = "light"; //useColorScheme();
 
   useEffect(() => {
-    callAPI("http://localhost:4001/api/test", "GET", "", "").then((res) => setTest(res.message));
+    callAPI("/api/test", "GET", "", "").then((res) => setTest(res.message));
   }, []);
 
   return (
-    <View style={theme === "light" ? styles.containerLight : styles.containerDark}>
-      <Text style={theme === "light" ? styles.textLight : styles.textDark}>Dashboardd</Text>
-      <Text style={theme === "light" ? styles.textLight : styles.textDark}>{test}</Text>
-      <Modal style={styles.modal} isVisible={drawerIsOpen} animationIn="slideInLeft" onSwipeComplete={() => setDrawerIsOpen(false)} swipeDirection="left" animationOut="slideOutLeft" onBackdropPress={() => setDrawerIsOpen(false)}>
-        <View style={theme === "light" ? styles.modalContainerLight : styles.modalContainerDark}>
-          <Text style={theme === "light" ? styles.textLight : styles.textDark}>I am the modal content!</Text>
+    <View
+      style={theme === "light" ? styles.containerLight : styles.containerDark}
+    >
+      <Text style={theme === "light" ? styles.textLight : styles.textDark}>
+        Dashboardd
+      </Text>
+      <Text style={theme === "light" ? styles.textLight : styles.textDark}>
+        {test}
+      </Text>
+      <Modal
+        style={styles.modal}
+        isVisible={drawerIsOpen}
+        animationIn="slideInLeft"
+        onSwipeComplete={() => setDrawerIsOpen(false)}
+        swipeDirection="left"
+        animationOut="slideOutLeft"
+        onBackdropPress={() => setDrawerIsOpen(false)}
+      >
+        <View
+          style={
+            theme === "light"
+              ? styles.modalContainerLight
+              : styles.modalContainerDark
+          }
+        >
+          <Text style={theme === "light" ? styles.textLight : styles.textDark}>
+            I am the modal content!
+          </Text>
           <Button
             title="Hide modal"
             onPress={() => {
@@ -29,7 +51,11 @@ const Dashboard = () => {
           />
         </View>
       </Modal>
-      <Button style={[styles.button, styles.buttonOpen]} onPress={() => setDrawerIsOpen(true)} title="Show Modal" />
+      <Button
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setDrawerIsOpen(true)}
+        title="Show Modal"
+      />
     </View>
   );
 };
