@@ -12,8 +12,6 @@ export async function callAPI(path = "", methode = "GET", data = {}, token = "")
       authorization: `Bearer ${token}`,
     },
   };
-
-  console.log("URL", `http://${BaseIP}:${Port}${path}`);
   if (methode !== "GET") options.body = JSON.stringify(data);
   const response = await fetch(`http://${BaseIP}:${Port}${path}`, options);
   return response.json();
