@@ -28,7 +28,7 @@ const AddSubCategory = ({ navigation }) => {
         });
       })
       .catch((error) => {
-        console.error("Error saving category:", error);
+        console.error("Error saving Subcategory:", error);
       });
   };
 

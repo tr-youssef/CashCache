@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import BottomMenu from "./src/components/BottomMenu/BottomMenu.js";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +20,11 @@ export default function App() {
     return null;
   }
 
-  return <BottomMenu onLayoutRootView={onLayoutRootView} />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomMenu onLayoutRootView={onLayoutRootView} />
+    </GestureHandlerRootView>
+  );
 }
 
 const styles = StyleSheet.create({

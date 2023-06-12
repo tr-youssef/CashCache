@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
-
-import { RectButton } from "react-native-gesture-handler";
 
 const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
   const navigation = useNavigation();
@@ -20,7 +18,7 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
   if (disabled)
     return (
       <View style={type === "categorySubcategory" ? styles.containerCategorySubcategory : styles.container}>
-        <View style={styles.rectButton}>
+        <View style={styles.button}>
           <View style={styles.iconTitle}>
             <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
             <Text style={styles.text}>{category?.name}</Text>
@@ -39,13 +37,13 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
     );
   return (
     <View style={styles.container}>
-      <RectButton style={styles.rectButton} onPress={handlePress}>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
         <View style={styles.iconTitle}>
           <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
           <Text style={styles.text}>{category?.name}</Text>
         </View>
         {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" /> : <Text>{amount}</Text>}
-      </RectButton>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -54,22 +52,24 @@ export default DisplayBar;
 
 const styles = StyleSheet.create({
   container: {
-    width: 300,
+    width: "90%",
+    height: "5%",
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
   },
   containerCategorySubcategory: {
-    width: 300,
+    width: "90%",
+    height: "5%",
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginBottom: 40,
   },
-  rectButton: {
+  button: {
+    height: "100%",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 15,
-    paddingVertical: 5,
     justifyContent: "space-between",
   },
   iconTitle: {
