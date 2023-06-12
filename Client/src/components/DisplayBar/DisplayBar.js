@@ -54,13 +54,13 @@ export default DisplayBar;
 
 const styles = StyleSheet.create({
   container: {
-    width: 300,
+    width: 350,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
   },
   containerCategorySubcategory: {
-    width: 300,
+    width: 280,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginBottom: 40,

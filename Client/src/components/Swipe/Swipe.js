@@ -20,14 +20,14 @@ const Swipe = ({ children, editAction, deleteAction }) => {
       </Animated.View>
     );
   };
-  const renderRightActions = ({ editAction, deleteAction }) => (
+  const renderRightActions = () => (
     <View style={{ width: 100, height: 40, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
       {renderRightAction("edit", "#ffab00", true, editAction)}
       {renderRightAction("delete", "#dd2c00", false, deleteAction)}
     </View>
   );
   return (
-    <Swipeable ref={swipeableRowRef} friction={2} leftThreshold={30} rightThreshold={40} renderRightActions={() => renderRightActions({ editAction, deleteAction })}>
+    <Swipeable ref={swipeableRowRef} friction={2} leftThreshold={30} rightThreshold={40} renderRightActions={renderRightActions}>
       {children}
     </Swipeable>
   );
