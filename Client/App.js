@@ -16,7 +16,7 @@ export default function App() {
     Inter_900Black,
   });
 
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNacvigator();
 
   // const onLayoutRootView = useCallback(async () => {
   //   await SplashScreen.hideAsync();
