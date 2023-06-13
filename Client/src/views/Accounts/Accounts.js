@@ -1,10 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import AddButton from "../../components/AddButton/AddButton.js";
 
 const Accounts = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Accounts</Text>
+      <AddButton screen={"AddAccount"} />
     </View>
   );
 };

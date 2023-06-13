@@ -64,7 +64,6 @@ const Categories = ({ navigation }) => {
         renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
         keyExtractor={(item, index) => `message ${index}`}
       />
-
       <AddButton screen={"AddCategory"} />
     </View>
   );
