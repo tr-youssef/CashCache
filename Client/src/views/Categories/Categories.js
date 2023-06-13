@@ -29,8 +29,14 @@ const Categories = () => {
   const [type, setType] = useState("Expense");
   const [search, setSearch] = useState("");
 
-  const deleteAction = () => {
-    alert("delete");
+  const deleteAction = (idCategory) => {
+    callAPI(`/api/categories/${idCategory}`, "DELETE", {}, token)
+      .then(async () => {
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+      })
+      .catch((error) => {
+        console.error("Error saving category:", error);
+      });
   };
   const editAction = () => {
     alert("edit");
@@ -41,11 +47,12 @@ const Categories = () => {
       .then((res) => setCategories(res))
       .catch((error) => console.log("error", error));
   }, []);
+
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
       <SearchBar search={search} setSearch={setSearch} />
-      <FlatList data={categories} renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={deleteAction} />} keyExtractor={(item, index) => `message ${index}`} />
+      <FlatList data={categories} renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={() => deleteAction(item._id)} />} keyExtractor={(item, index) => `message ${index}`} />
 
       <AddButton screen={"AddCategory"} />
     </View>

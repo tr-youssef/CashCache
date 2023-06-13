@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { FlatList } from "react-native-gesture-handler";
+import { callAPI } from "../../utils/fetch/callAPI.js";
 import Swipe from "../../components/Swipe/Swipe.js";
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
@@ -20,10 +21,25 @@ const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
 
 const SubCategories = () => {
   const categoryContext = useContext(CategoriesContext);
-  const { selectedCategory } = categoryContext;
+  const { selectedCategory, setCategories, setSelectedCategory } = categoryContext;
   const [search, setSearch] = useState("");
-  const deleteAction = () => {
-    alert("delete");
+  const deleteAction = (idSubCategory) => {
+    const newSelectedCategory = {
+      ...selectedCategory,
+      subcategories: selectedCategory.subcategories.filter((subCategory) => subCategory._id !== idSubCategory),
+    };
+
+    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory, token)
+      .then(async () => {
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) => {
+          setCategories(res);
+          const newCategory = res.find((category) => category._id === selectedCategory._id);
+          setSelectedCategory(newCategory);
+        });
+      })
+      .catch((error) => {
+        console.error("Error saving Subcategory:", error);
+      });
   };
   const editAction = () => {
     alert("edit");
@@ -35,7 +51,7 @@ const SubCategories = () => {
       <DisplayBar key={selectedCategory._id} type="categorySubcategory" category={selectedCategory} disabled={true} />
       <FlatList
         data={selectedCategory.subcategories}
-        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={deleteAction} />}
+        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={() => deleteAction(item._id)} />}
         keyExtractor={(item, index) => `message ${index}`}
       />
 
