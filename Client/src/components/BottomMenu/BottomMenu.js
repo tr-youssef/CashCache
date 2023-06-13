@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "@rneui/themed";
 import { navigationRef } from "../../../src/utils/navigation/RootNavigation.js";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import DashboardNavigator from "../../../src/views/Dashboard/DashboardNavigator.js";
 import CategoriesNavigator from "../../../src/views/Categories/CategoriesNavigator.js";
@@ -10,28 +10,35 @@ import TransactionsNavigator from "../../../src/views/Transactions/TransactionsN
 
 const BottomMenu = ({ onLayoutRootView }) => {
   const Tab = createBottomTabNavigator();
+
+  const screenOptions = ({ route }) => ({
+    headerShown: false,
+    tabBarStyle: { backgroundColor: "#1A251D", borderTopWidth: 0 }, // Change the background color of the bottom tab bar
+    tabBarActiveTintColor: "#33CD48", // Change the active icon color
+    tabBarInactiveTintColor: "rgba(51, 205, 72, 0.4)", // Change the inactive icon color
+  });
   return (
     <NavigationContainer
       independent={true}
       // onReady={onLayoutRootView}
       ref={navigationRef}
     >
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen
           name="DashboardNavigator"
           component={DashboardNavigator}
-          options={{
+          options={({ route }) => ({
             tabBarLabel: "Dashboard",
-            tabBarIcon: () => <Icon name="dashboard" type="MaterialIcons" />,
+            tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="dashboard" type="MaterialIcons" />,
             headerShown: false,
-          }}
+          })}
         />
         <Tab.Screen
           name="CategoriesNavigator"
           component={CategoriesNavigator}
           options={{
             tabBarLabel: "Categories",
-            tabBarIcon: () => <Icon name="category" type="MaterialIcons" />,
+            tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="category" type="MaterialIcons" />,
             headerShown: false,
           }}
         />
@@ -40,9 +47,7 @@ const BottomMenu = ({ onLayoutRootView }) => {
           component={AccountsNavigator}
           options={{
             tabBarLabel: "Accounts",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="account-balance-wallet" type="MaterialIcons" />
-            ),
+            tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="account-balance-wallet" type="MaterialIcons" />,
             headerShown: false,
           }}
         />
@@ -51,9 +56,7 @@ const BottomMenu = ({ onLayoutRootView }) => {
           component={TransactionsNavigator}
           options={{
             tabBarLabel: "Transactions",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="format-list-bulleted" type="MaterialIcons" />
-            ),
+            tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="format-list-bulleted" type="MaterialIcons" />,
             headerShown: false,
           }}
         />

@@ -1,30 +1,51 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
-import React from "react";
+import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 
-const DisplayBar = ({ type = "category", icon, label, amount = "", idParent, subCategories, typeCategory }) => {
+import { RectButton } from "react-native-gesture-handler";
+
+const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
   const navigation = useNavigation();
+  const categoryContext = useContext(CategoriesContext);
+  const { setSelectedCategory } = categoryContext;
   const handlePress = () => {
     if (type === "category") {
-      navigation.navigate("SubCategory", {
-        idParent: idParent,
-        subCategories: subCategories,
-        typeCategory: typeCategory,
-        label: label,
-        icon: icon,
-      });
+      setSelectedCategory(category);
+      navigation.navigate("Subcategory");
     }
   };
+
+  if (disabled)
+    return (
+      <View style={type === "categorySubcategory" ? styles.containerCategorySubcategory : styles.container}>
+        <View style={styles.rectButton}>
+          <View style={styles.iconTitle}>
+            <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
+            <Text style={styles.text}>{category?.name}</Text>
+          </View>
+          {type === "category" ? (
+            <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" />
+          ) : type === "categorySubcategory" ? (
+            <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" />
+          ) : type === "subcategory" ? (
+            ""
+          ) : (
+            <Text>{amount}</Text>
+          )}
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
+      <RectButton style={styles.rectButton} onPress={handlePress}>
         <View style={styles.iconTitle}>
-          <Icon name={icon} size={20} color="#F2FFF5" type="MaterialIcons" />
-          <Text style={styles.text}>{label}</Text>
+          <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
+          <Text style={styles.text}>{category?.name}</Text>
         </View>
-        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : <Text>{amount}</Text>}
-      </TouchableOpacity>
+        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" /> : <Text>{amount}</Text>}
+      </RectButton>
     </View>
   );
 };
@@ -33,17 +54,22 @@ export default DisplayBar;
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    height: "5%",
+    width: 350,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
   },
-  button: {
-    height: "100%",
+  containerCategorySubcategory: {
+    width: 280,
+    backgroundColor: "#1A251D",
+    borderRadius: 20,
+    marginBottom: 40,
+  },
+  rectButton: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 15,
+    paddingVertical: 5,
     justifyContent: "space-between",
   },
   iconTitle: {

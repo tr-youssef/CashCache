@@ -7,7 +7,8 @@ import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 
-const AddCategory = ({ navigation }) => {
+const EditCategory = ({ route, navigation }) => {
+  const { category } = route.params;
   const categoryContext = useContext(CategoriesContext);
   const { setCategories } = categoryContext;
   const data = [
@@ -16,12 +17,12 @@ const AddCategory = ({ navigation }) => {
     { label: "Transfer", value: "Transfer" },
   ];
   const icons = ["fastfood", "home", "local-movies", "airplanemode-active", "payments", "compare-arrows"];
-  const [choiceCategory, setChoiceCategory] = useState(icons[0]);
-  const [name, setName] = useState("");
-  const [type, setType] = useState(data.length > 0 ? data[0].value : "");
+  const [choiceCategory, setChoiceCategory] = useState(category.icon);
+  const [name, setName] = useState(category.name);
+  const [type, setType] = useState(data.length > 0 ? category.type : "");
 
-  const saveCategory = (name, type, choiceCategory) => {
-    callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory }, token)
+  const updateCategory = (name, type, choiceCategory, category) => {
+    callAPI(`/api/categories/parent/${category._id}`, "PATCH", { name: name, type: type, icon: choiceCategory, subcategories: category.subcategories }, token)
       .then(async () => {
         await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
         navigation.navigate("Categories");
@@ -33,9 +34,9 @@ const AddCategory = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Add Category",
+      title: "Edit Category",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveCategory(name, type, choiceCategory)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => updateCategory(name, type, choiceCategory, category)} />,
     });
   }, [navigation, name, type, choiceCategory]);
 
@@ -56,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddCategory;
+export default EditCategory;

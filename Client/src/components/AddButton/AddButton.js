@@ -3,10 +3,11 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
-const BottomLeftButton = () => {
+const BottomLeftButton = ({ screen }) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    navigation.navigate("AddCategory");
+    if (screen === "AddCategory") navigation.navigate("AddCategory");
+    else if (screen === "AddSubcategory") navigation.navigate("AddSubcategory");
   };
   return (
     <View style={styles.container}>

@@ -10,24 +10,16 @@ import { colors } from "../../utils/theme/theme.js";
 const DashboardNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-  //const theme = useColorScheme();
-  const MyLightTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      backgroundColor: colors.light.lightBlue,
+
+  const screenOptions = {
+    headerStyle: {
+      backgroundColor: "#1A251D",
     },
-  };
-  const MyDarkTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      background: "red",
-    },
+    headerTintColor: "#F2FFF5", // Set the desired text color for the header
   };
   return (
     <DrawerContext.Provider value={{ drawerIsOpen, setDrawerIsOpen }}>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen
           name="Dashboard"
           component={Dashboard}
@@ -36,12 +28,13 @@ const DashboardNavigator = ({ navigation }) => {
               <Icon
                 name="filter-alt"
                 type="MaterialIcons"
+                color={"#33CD48"}
                 onPress={() => {
                   setDrawerIsOpen(!drawerIsOpen);
                 }}
               />
             ),
-            headerRight: () => <Icon name="settings" type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+            headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
           }}
         />
         <Stack.Screen name="Settings" component={Settings} />

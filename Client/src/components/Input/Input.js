@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { useState } from "react";
 
-const Input = ({ label, placeholder, datalist = "", value, setValue }) => {
+const Input = ({ label, placeholder, datalist = "", value, setValue, disabled }) => {
   const [isFocus, setIsFocus] = useState(false);
   return (
     <View style={styles.container}>
@@ -28,6 +28,8 @@ const Input = ({ label, placeholder, datalist = "", value, setValue }) => {
             setIsFocus(false);
           }}
         />
+      ) : disabled ? (
+        <TextInput value={value} placeholder={placeholder} placeholderTextColor="#888" style={styles.disabledInput} editable={false} selectTextOnFocus={false} />
       ) : (
         <TextInput value={value} placeholder={placeholder} placeholderTextColor="#888" style={styles.input} onChangeText={(text) => setValue(text)} />
       )}
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     color: "#F2FFF5",
   },
   input: { width: "60%", color: "#F2FFF5", backgroundColor: "#1A251D", height: "100%", borderRadius: 10, paddingLeft: 15 },
+  disabledInput: { width: "60%", color: "#F2FFF5", backgroundColor: "#808080", opacity: 0.4, height: "100%", borderRadius: 10, paddingLeft: 15 },
   dropdown: { width: "60%", color: "#F2FFF5", backgroundColor: "#1A251D", height: "100%", borderRadius: "10" },
   placeholderStyle: { color: "#F2FFF5" },
   selectedTextStyle: { backgroundColor: "#1A251D", color: "#F2FFF5", marginLeft: 15 },

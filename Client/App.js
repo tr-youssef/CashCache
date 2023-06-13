@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./src/views/Login/LoginScreen.js";
 import MySplashScreen from "./src/utils/MySplashScreen/MySplashScreen.js";
 // import HomeScreen from "./src/views/HomeScreen.js";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -51,7 +52,11 @@ export default function App() {
       </NavigationContainer>
     );
 
-  // return <BottomMenu onLayoutRootView={onLayoutRootView} />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomMenu onLayoutRootView={onLayoutRootView} />
+    </GestureHandlerRootView>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,22 +1,36 @@
 import { StyleSheet, View, Pressable, Text } from "react-native";
 import React, { useState } from "react";
 
-const Switch = ({ type, setType }) => {
+const Switch = ({ type, setType, disabled }) => {
   const [choice, setChoice] = useState(type);
 
   const handlePress = (selectedType) => {
     setChoice(selectedType);
     setType(selectedType);
   };
+  if (disabled)
+    return (
+      <View style={styles.container}>
+        <View style={choice === "Expense" ? [styles.selectDisabledButton, styles.button, styles.buttonFirst] : [styles.button, styles.buttonFirst]}>
+          <Text style={styles.text}>Expense</Text>
+        </View>
+        <View style={choice === "Income" ? [styles.selectDisabledButton, styles.button] : styles.button}>
+          <Text style={styles.text}>Income</Text>
+        </View>
+        <View style={choice === "Transfer" ? [styles.selectDisabledButton, styles.button, styles.buttonLast] : [styles.button, styles.buttonLast]}>
+          <Text style={styles.text}>Transfer</Text>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
-      <Pressable style={choice === "Expense" ? styles.selectButtonFirst : styles.buttonFirst} onPress={() => handlePress("Expense")}>
+      <Pressable style={choice === "Expense" ? [styles.selectButton, styles.button, styles.buttonFirst] : [styles.button, styles.buttonFirst]} onPress={() => handlePress("Expense")}>
         <Text style={styles.text}>Expense</Text>
       </Pressable>
-      <Pressable style={choice === "Income" ? styles.selectButton : styles.button} onPress={() => handlePress("Income")}>
+      <Pressable style={choice === "Income" ? [styles.selectButton, styles.button] : styles.button} onPress={() => handlePress("Income")}>
         <Text style={styles.text}>Income</Text>
       </Pressable>
-      <Pressable style={choice === "Transfer" ? styles.selectButtonLast : styles.buttonLast} onPress={() => handlePress("Transfer")}>
+      <Pressable style={choice === "Transfer" ? [styles.selectButton, styles.button, styles.buttonLast] : [styles.button, styles.buttonLast]} onPress={() => handlePress("Transfer")}>
         <Text style={styles.text}>Transfer</Text>
       </Pressable>
     </View>
@@ -36,31 +50,9 @@ const styles = StyleSheet.create({
     borderRadius: "20%",
   },
   button: { flex: 1, justifyContent: "center", alignItems: "center" },
-  selectButton: {
-    backgroundColor: "#33CD48",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonFirst: { flex: 1, justifyContent: "center", alignItems: "center", borderTopLeftRadius: "20%", borderBottomLeftRadius: "20%" },
-  selectButtonFirst: {
-    backgroundColor: "#33CD48",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopLeftRadius: "20%",
-    borderBottomLeftRadius: "20%",
-  },
-  buttonLast: { flex: 1, justifyContent: "center", alignItems: "center", borderTopRightRadius: "20%", borderBottomRightRadius: "20%" },
-  selectButtonLast: {
-    backgroundColor: "#33CD48",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopRightRadius: "20%",
-    borderBottomRightRadius: "20%",
-  },
-  text: {
-    color: "#F2FFF5",
-  },
+  selectButton: { backgroundColor: "#33CD48" },
+  selectDisabledButton: { backgroundColor: "#808080", opacity: 0.4 },
+  buttonFirst: { borderTopLeftRadius: "20%", borderBottomLeftRadius: "20%" },
+  buttonLast: { borderTopRightRadius: "20%", borderBottomRightRadius: "20%" },
+  text: { color: "#F2FFF5" },
 });
