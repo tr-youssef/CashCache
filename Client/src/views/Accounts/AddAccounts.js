@@ -35,15 +35,14 @@ const AddAccount = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add Account",
-
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccounts(name, InitialAmount)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccounts(name, initialAmount)} />,
     });
   }, [navigation, name, initialAmount]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
-      <Input label={"Initial amount :"} value={initialAmount} setValue={setInitialAmount} />
+      <Input label={"Initial amount :"} value={initialAmount.toString()} setValue={setInitialAmount} />
       <Card name={name} initialAmount={initialAmount} />
     </View>
   );
