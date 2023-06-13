@@ -8,7 +8,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./src/views/Login/LoginScreen.js";
 import MySplashScreen from "./src/utils/MySplashScreen/MySplashScreen.js";
 // import HomeScreen from "./src/views/HomeScreen.js";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -46,7 +45,7 @@ export default function App() {
             name="Home"
             options={{ headerShown: false }}
             // onLayoutRootView={onLayoutRootView}
-          />
+          ></Stack.Screen>
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
