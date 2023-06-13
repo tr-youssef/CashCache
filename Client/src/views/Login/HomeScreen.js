@@ -1,12 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityBase,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityBase, View } from "react-native";
 import React from "react";
-import { auth } from "../firebase";
+import { auth } from "../../utils/firebase/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
 

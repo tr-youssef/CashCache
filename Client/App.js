@@ -5,8 +5,8 @@ import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
 import BottomMenu from "./src/components/BottomMenu/BottomMenu.js";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "./src/views/LoginScreen.js";
-import MySplashScreen from "./src/views/MySplashScreen.js";
+import LoginScreen from "./src/views/Login/LoginScreen.js";
+import MySplashScreen from "./src/utils/MySplashScreen/MySplashScreen.js";
 // import HomeScreen from "./src/views/HomeScreen.js";
 
 // SplashScreen.preventAutoHideAsync();
@@ -16,7 +16,7 @@ export default function App() {
     Inter_900Black,
   });
 
-  const Stack = createNativeStackNacvigator();
+  const Stack = createNativeStackNavigator();
 
   // const onLayoutRootView = useCallback(async () => {
   //   await SplashScreen.hideAsync();
@@ -46,11 +46,7 @@ export default function App() {
             options={{ headerShown: false }}
             // onLayoutRootView={onLayoutRootView}
           />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreen}
-          />
+          <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
