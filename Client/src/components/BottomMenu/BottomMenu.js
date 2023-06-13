@@ -11,7 +11,11 @@ import TransactionsNavigator from "../../../src/views/Transactions/TransactionsN
 const BottomMenu = ({ onLayoutRootView }) => {
   const Tab = createBottomTabNavigator();
   return (
-    <NavigationContainer onReady={onLayoutRootView} ref={navigationRef}>
+    <NavigationContainer
+      independent={true}
+      // onReady={onLayoutRootView}
+      ref={navigationRef}
+    >
       <Tab.Navigator>
         <Tab.Screen
           name="DashboardNavigator"
@@ -36,7 +40,9 @@ const BottomMenu = ({ onLayoutRootView }) => {
           component={AccountsNavigator}
           options={{
             tabBarLabel: "Accounts",
-            tabBarIcon: ({ color, size }) => <Icon name="account-balance-wallet" type="MaterialIcons" />,
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="account-balance-wallet" type="MaterialIcons" />
+            ),
             headerShown: false,
           }}
         />
@@ -45,7 +51,9 @@ const BottomMenu = ({ onLayoutRootView }) => {
           component={TransactionsNavigator}
           options={{
             tabBarLabel: "Transactions",
-            tabBarIcon: ({ color, size }) => <Icon name="format-list-bulleted" type="MaterialIcons" />,
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="format-list-bulleted" type="MaterialIcons" />
+            ),
             headerShown: false,
           }}
         />

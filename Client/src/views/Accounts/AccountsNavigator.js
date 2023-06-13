@@ -4,6 +4,7 @@ import { Icon } from "@rneui/themed";
 import Accounts from "./Accounts.js";
 import Settings from "../Settings/Settings.js";
 
+
 const AccountsNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
   return (
