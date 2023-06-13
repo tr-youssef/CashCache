@@ -35,7 +35,7 @@ const AddCategory = ({ navigation }) => {
     navigation.setOptions({
       title: "Add Category",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" onPress={() => saveCategory(name, type, choiceCategory)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveCategory(name, type, choiceCategory)} />,
     });
   }, [navigation, name, type, choiceCategory]);
 

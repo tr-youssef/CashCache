@@ -35,7 +35,7 @@ const AddSubCategory = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add Subcategory",
-      headerRight: () => <Icon name="save" type="MaterialIcons" onPress={() => saveSubCategory(name, choiceCategory)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveSubCategory(name, choiceCategory)} />,
     });
   }, [navigation, name, choiceCategory]);
 

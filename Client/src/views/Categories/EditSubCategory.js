@@ -41,7 +41,7 @@ const EditSubCategory = ({ route, navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Edit Subcategory",
-      headerRight: () => <Icon name="save" type="MaterialIcons" onPress={() => updateSubCategory(name, choiceCategory)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => updateSubCategory(name, choiceCategory)} />,
     });
   }, [navigation, name, choiceCategory]);
 

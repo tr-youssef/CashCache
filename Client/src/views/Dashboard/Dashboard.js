@@ -1,48 +1,36 @@
-import { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, View, Button, useColorScheme } from "react-native";
-import { callAPI } from "../../utils/fetch/callAPI.js";
 import { DrawerContext } from "../../utils/context/DrawerContext.js";
 import Modal from "react-native-modal";
 import { colors } from "../../utils/theme/theme.js";
+import { Icon } from "@rneui/themed";
 
-const Dashboard = () => {
-  const [test, setTest] = useState("");
+const Dashboard = ({ navigation }) => {
   const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
-  const theme = "light"; //useColorScheme();
+  const theme = "dark"; //useColorScheme();
 
-  useEffect(() => {
-    callAPI("/api/test", "GET", "", "").then((res) => setTest(res.message));
-  }, []);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Dashboard",
+      headerLeft: () => (
+        <Icon
+          name="filter-alt"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => {
+            setDrawerIsOpen(!drawerIsOpen);
+          }}
+        />
+      ),
+    });
+  }, [navigation]);
 
   return (
-    <View
-      style={theme === "light" ? styles.containerLight : styles.containerDark}
-    >
-      <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-        Dashboardd
-      </Text>
-      <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-        {test}
-      </Text>
-      <Modal
-        style={styles.modal}
-        isVisible={drawerIsOpen}
-        animationIn="slideInLeft"
-        onSwipeComplete={() => setDrawerIsOpen(false)}
-        swipeDirection="left"
-        animationOut="slideOutLeft"
-        onBackdropPress={() => setDrawerIsOpen(false)}
-      >
-        <View
-          style={
-            theme === "light"
-              ? styles.modalContainerLight
-              : styles.modalContainerDark
-          }
-        >
-          <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-            I am the modal content!
-          </Text>
+    <View style={theme === "light" ? styles.containerLight : styles.containerDark}>
+      <Text style={theme === "light" ? styles.textLight : styles.textDark}>Dashboardd</Text>
+      <Modal style={styles.modal} isVisible={drawerIsOpen} animationIn="slideInLeft" onSwipeComplete={() => setDrawerIsOpen(false)} swipeDirection="left" animationOut="slideOutLeft" onBackdropPress={() => setDrawerIsOpen(false)}>
+        <View style={theme === "light" ? styles.modalContainerLight : styles.modalContainerDark}>
+          <Text style={theme === "light" ? styles.textLight : styles.textDark}>I am the modal content!</Text>
           <Button
             title="Hide modal"
             onPress={() => {
@@ -51,11 +39,6 @@ const Dashboard = () => {
           />
         </View>
       </Modal>
-      <Button
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setDrawerIsOpen(true)}
-        title="Show Modal"
-      />
     </View>
   );
 };

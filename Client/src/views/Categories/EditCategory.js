@@ -36,7 +36,7 @@ const EditCategory = ({ route, navigation }) => {
     navigation.setOptions({
       title: "Edit Category",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" onPress={() => updateCategory(name, type, choiceCategory, category)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => updateCategory(name, type, choiceCategory, category)} />,
     });
   }, [navigation, name, type, choiceCategory]);
 
