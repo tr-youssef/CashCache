@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { RefreshControl, StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 
@@ -22,9 +22,10 @@ const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
   );
 };
 
-const Categories = () => {
+const Categories = ({ navigation }) => {
   const categoryContext = useContext(CategoriesContext);
   const { categories, setCategories } = categoryContext;
+  const [selectCategories, setSelectCategories] = useState(categories);
 
   const [type, setType] = useState("Expense");
   const [search, setSearch] = useState("");
@@ -38,8 +39,10 @@ const Categories = () => {
         console.error("Error saving category:", error);
       });
   };
-  const editAction = () => {
-    alert("edit");
+  const editAction = (category) => {
+    navigation.navigate("EditCategory", {
+      category: category,
+    });
   };
 
   useEffect(() => {
@@ -48,11 +51,19 @@ const Categories = () => {
       .catch((error) => console.log("error", error));
   }, []);
 
+  useEffect(() => {
+    setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));
+  }, [categories, type, search]);
+
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
       <SearchBar search={search} setSearch={setSearch} />
-      <FlatList data={categories} renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={() => deleteAction(item._id)} />} keyExtractor={(item, index) => `message ${index}`} />
+      <FlatList
+        data={selectCategories}
+        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
+        keyExtractor={(item, index) => `message ${index}`}
+      />
 
       <AddButton screen={"AddCategory"} />
     </View>

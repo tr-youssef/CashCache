@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { FlatList } from "react-native-gesture-handler";
@@ -19,9 +19,11 @@ const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
   );
 };
 
-const SubCategories = () => {
+const SubCategories = ({ navigation }) => {
   const categoryContext = useContext(CategoriesContext);
   const { selectedCategory, setCategories, setSelectedCategory } = categoryContext;
+
+  const [selectSubCategories, setSelectSubCategories] = useState(selectedCategory);
   const [search, setSearch] = useState("");
   const deleteAction = (idSubCategory) => {
     const newSelectedCategory = {
@@ -41,17 +43,22 @@ const SubCategories = () => {
         console.error("Error saving Subcategory:", error);
       });
   };
-  const editAction = () => {
-    alert("edit");
+  const editAction = (subCategory) => {
+    navigation.navigate("EditSubcategory", {
+      subCategory: subCategory,
+    });
   };
+  useEffect(() => {
+    setSelectSubCategories(selectedCategory.subcategories.filter((category) => category.name.toLowerCase().includes(search.toLowerCase())));
+  }, [selectedCategory, search]);
   return (
     <View style={styles.container}>
       <Switch type={selectedCategory.type} disabled={true} />
       <SearchBar search={search} setSearch={setSearch} />
       <DisplayBar key={selectedCategory._id} type="categorySubcategory" category={selectedCategory} disabled={true} />
       <FlatList
-        data={selectedCategory.subcategories}
-        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={editAction} deleteAction={() => deleteAction(item._id)} />}
+        data={selectSubCategories}
+        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
         keyExtractor={(item, index) => `message ${index}`}
       />
 
