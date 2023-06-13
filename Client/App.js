@@ -39,10 +39,11 @@ export default function App() {
   } else
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Login" hide>
           <Stack.Screen
             component={BottomMenu}
             name="Home"
+            options={{ headerShown: false }}
             // onLayoutRootView={onLayoutRootView}
           />
           <Stack.Screen
