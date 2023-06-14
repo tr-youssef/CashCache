@@ -5,6 +5,7 @@ import Accounts from "./Accounts.js";
 import Settings from "../Settings/Settings.js";
 import AddAccount from "./AddAccounts.js";
 
+
 const AccountsNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
   const screenOptions = {
