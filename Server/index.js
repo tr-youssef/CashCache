@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import test from "./api/test.js";
 import routeCategories from "./api/routes/categories.js";
 import routeUsers from "./api/routes/users.js";
+import routeAccounts from "./api/routes/accounts.js";
 
 const app = express();
 app.use(express.json({ extended: false }));
@@ -14,6 +15,7 @@ dotenv.config();
 app.use("/api/test", test);
 app.use("/api/users", routeUsers);
 app.use("/api/categories", routeCategories);
+app.use("/api/accounts", routeAccounts);
 
 const PORT = process.env.PORT || 8080;
 
@@ -22,7 +24,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server running on port : ${PORT}`))
-  )
+  .then(() => app.listen(PORT, () => console.log(`Server running on port : ${PORT}`)))
   .catch((error) => console.log(error));

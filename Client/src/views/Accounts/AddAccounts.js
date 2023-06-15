@@ -2,15 +2,14 @@ import { StyleSheet, View } from "react-native";
 import React, { useContext } from "react";
 import { Icon } from "@rneui/themed";
 import Input from "../../components/Input/Input.js";
-import IconsSelector from "../../components/IconsSelector/IconsSelector.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
-import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
+import { AccountsContext } from "../../utils/context/AccountsContext.js";
 import Card from "../../components/Card/Card.js";
 
 const AddAccount = ({ navigation }) => {
-  // const categoryContext = useContext(CategoriesContext);
-  // const { setCategories } = categoryContext;
+  const AccountContext = useContext(AccountsContext);
+  const { setAccounts } = AccountContext;
   //   const data = [
   //     { label: "Expense", value: "Expense" },
   //     { label: "Income", value: "Income" },
@@ -21,11 +20,11 @@ const AddAccount = ({ navigation }) => {
   const [name, setName] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
 
-  const saveCategory = (name, type, choiceCategory) => {
-    callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory }, token)
+  const saveAccount = (name, initialAmount) => {
+    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
-        navigation.navigate("Categories");
+        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        navigation.navigate("Accounts");
       })
       .catch((error) => {
         console.error("Error saving category:", error);
@@ -35,7 +34,7 @@ const AddAccount = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add Account",
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccounts(name, initialAmount)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, initialAmount)} />,
     });
   }, [navigation, name, initialAmount]);
 
