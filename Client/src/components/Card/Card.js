@@ -13,11 +13,7 @@ const Card = ({ name, initialAmount }) => {
   }
   return (
     <View style={styles.container}>
-      <LinearGradient
-        // Background Linear Gradient
-        colors={["#72AEEB", "#C99DF3"]}
-        style={styles.background}
-      />
+      <LinearGradient colors={["#72AEEB", "#C99DF3"]} style={styles.background} />
       <View style={styles.top}>
         <Image style={styles.hologram} source={require("../../../assets/hologram.png")} />
         <Image style={styles.logo} source={require("../../../assets/visa.png")} />
@@ -26,7 +22,9 @@ const Card = ({ name, initialAmount }) => {
         <Text style={styles.text}>{formatNumber(initialAmount)}</Text>
       </View>
       <View style={styles.containerName}>
-        <Text style={styles.text}>{name}</Text>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
+          {name}
+        </Text>
       </View>
     </View>
   );
@@ -37,11 +35,10 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     marginTop: 25,
-    backgroundColor: "orange",
-    width: "60%",
-    height: "21%",
     borderRadius: 25,
     justifyContent: "space-between",
+    width: 240,
+    height: 150,
   },
   top: {
     padding: 15,

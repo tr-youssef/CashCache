@@ -10,13 +10,6 @@ import Card from "../../components/Card/Card.js";
 const AddAccount = ({ navigation }) => {
   const AccountContext = useContext(AccountsContext);
   const { setAccounts } = AccountContext;
-  //   const data = [
-  //     { label: "Expense", value: "Expense" },
-  //     { label: "Income", value: "Income" },
-  //     { label: "Transfer", value: "Transfer" },
-  //   ];
-  // const icons = ["fastfood", "home", "local-movies", "airplanemode-active", "payments", "compare-arrows"];
-  // const [choiceCategory, setChoiceCategory] = useState(icons[0]);
   const [name, setName] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
 

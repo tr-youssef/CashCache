@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RefreshControl, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
-
 import { FlatList } from "react-native-gesture-handler";
+
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
-
 import Swipe from "../../components/Swipe/Swipe.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
 import token from "../../utils/token.js";

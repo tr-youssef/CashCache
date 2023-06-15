@@ -3,17 +3,18 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 
-const AddButton = ({ screen }) => {
+const DeleteButton = ({ screen, action }) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    if (screen === "AddCategory") navigation.navigate("AddCategory");
-    else if (screen === "AddSubcategory") navigation.navigate("AddSubcategory");
-    else if (screen === "AddAccount") navigation.navigate("AddAccount");
+    if (screen === "AddAccount") {
+      action();
+      navigation.navigate("Accounts");
+    }
   };
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Icon name="add" size={20} color="#33CD48" type="MaterialIcons" />
+        <Icon name="delete" size={20} color="#33CD48" type="MaterialIcons" />
       </TouchableOpacity>
     </View>
   );
@@ -36,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddButton;
+export default DeleteButton;

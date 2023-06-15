@@ -4,7 +4,8 @@ import { AccountsContext } from "../../utils/context/AccountsContext.js";
 import { Icon } from "@rneui/themed";
 import Accounts from "./Accounts.js";
 import Settings from "../Settings/Settings.js";
-import AddAccount from "./AddAccounts.js";
+import AddAccount from "./AddAccount.js";
+import EditAccount from "./EditAccount.js";
 
 const AccountsNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
@@ -33,6 +34,13 @@ const AccountsNavigator = ({ navigation }) => {
         <Stack.Screen
           name="AddAccount"
           component={AddAccount}
+          options={{
+            headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+          }}
+        />
+        <Stack.Screen
+          name="EditAccount"
+          component={EditAccount}
           options={{
             headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
           }}
