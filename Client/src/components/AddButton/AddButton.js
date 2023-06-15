@@ -6,7 +6,7 @@ import { Icon } from "@rneui/themed";
 const BottomLeftButton = ({ screen }) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    if (screen === "AddCategory") navigation.navigate({ screen });
+    if (screen === "AddCategory") navigation.navigate("AddCategory");
     else if (screen === "AddSubcategory") navigation.navigate("AddSubcategory");
     else if (screen === "AddAccount") navigation.navigate("AddAccount");
   };

@@ -3,6 +3,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 
 const Card = ({ name, initialAmount }) => {
+  function randomHalf() {
+    return Math.random() < 0.5;
+  }
+  function formatNumber(number) {
+    const formattedNumber = number.toString().padStart(16, "0");
+    const result = formattedNumber.replace(/(\d{4})/g, "$1 ").trim();
+    return result;
+  }
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -10,9 +18,16 @@ const Card = ({ name, initialAmount }) => {
         colors={["#72AEEB", "#C99DF3"]}
         style={styles.background}
       />
-      <Image source="/assets/MasterCard.png" />
-      <Text style={styles.text}>{name}</Text>
-      <Text style={styles.text}>{initialAmount}</Text>
+      <View style={styles.top}>
+        <Image style={styles.hologram} source={require("../../../assets/hologram.png")} />
+        <Image style={styles.logo} source={require("../../../assets/visa.png")} />
+      </View>
+      <View style={styles.containerAmount}>
+        <Text style={styles.text}>{formatNumber(initialAmount)}</Text>
+      </View>
+      <View style={styles.containerName}>
+        <Text style={styles.text}>{name}</Text>
+      </View>
     </View>
   );
 };
@@ -24,8 +39,14 @@ const styles = StyleSheet.create({
     marginTop: 25,
     backgroundColor: "orange",
     width: "60%",
-    height: "20%",
+    height: "21%",
     borderRadius: 25,
+    justifyContent: "space-between",
+  },
+  top: {
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   background: {
     borderRadius: 25,
@@ -35,7 +56,20 @@ const styles = StyleSheet.create({
     top: 0,
     height: "100%",
   },
-  text: {
-    color: "red",
+  containerName: {
+    width: "100%",
+    paddingLeft: 22,
+    paddingBottom: 15,
   },
+  text: {
+    color: "white",
+    fontFamily: "Inconsolata_400Regular",
+    letterSpacing: 2,
+  },
+  containerAmount: {
+    width: "100%",
+    alignItems: "center",
+  },
+  logo: {},
+  hologram: {},
 });

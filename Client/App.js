@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
+import { Inconsolata_400Regular } from "@expo-google-fonts/inconsolata";
 import BottomMenu from "./src/components/BottomMenu/BottomMenu.js";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -14,9 +15,8 @@ import MySplashScreen from "./src/utils/MySplashScreen/MySplashScreen.js";
 export default function App() {
   let [fontsLoaded] = useFonts({
     Inter_900Black,
+    Inconsolata_400Regular,
   });
-
-  const Stack = createNativeStackNavigator();
 
   // const onLayoutRootView = useCallback(async () => {
   //   await SplashScreen.hideAsync();
@@ -34,22 +34,23 @@ export default function App() {
     }, 3000);
   }, []);
 
-  if (isloading) {
+  if (!fontsLoaded || isloading) {
     return <MySplashScreen />;
-  } else
-    return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" hide>
-          <Stack.Screen
-            component={BottomMenu}
-            name="Home"
-            options={{ headerShown: false }}
-            // onLayoutRootView={onLayoutRootView}
-          ></Stack.Screen>
-          <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
+  }
+  const Stack = createNativeStackNavigator();
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home" hide>
+        <Stack.Screen
+          component={BottomMenu}
+          name="Home"
+          options={{ headerShown: false }}
+          // onLayoutRootView={onLayoutRootView}
+        ></Stack.Screen>
+        <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

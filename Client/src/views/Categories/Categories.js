@@ -54,7 +54,6 @@ const Categories = ({ navigation }) => {
   useEffect(() => {
     setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));
   }, [categories, type, search]);
-
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
