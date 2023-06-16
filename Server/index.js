@@ -5,9 +5,7 @@ import dotenv from "dotenv";
 import test from "./api/test.js";
 import routeCategories from "./api/routes/categories.js";
 import routeUsers from "./api/routes/users.js";
-import tokens from "./api/routes/tokens.js";
-// import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
-import util from "util";
+import routePlaid from "./api/routes/plaid.js";
 
 const app = express();
 app.use(express.json({ extended: false }));
@@ -17,7 +15,7 @@ dotenv.config();
 app.use("/api/test", test);
 app.use("/api/users", routeUsers);
 app.use("/api/categories", routeCategories);
-app.use("/api/tokens", tokens);
+app.use("/api/plaid", routePlaid);
 
 const PORT = process.env.PORT || 8080;
 
@@ -26,7 +24,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server running on port : ${PORT}`))
-  )
+  .then(() => app.listen(PORT, () => console.log(`Server running on port : ${PORT}`)))
   .catch((error) => console.log(error));

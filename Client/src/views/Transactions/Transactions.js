@@ -1,18 +1,17 @@
-import { StyleSheet, Text, View, Platform } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
-import { PlaidLink } from "react-native-plaid-link-sdk";
+import PlaidLink from "@burstware/expo-plaid-link";
 
 const Transactions = () => {
   const [linkToken, setLinkToken] = useState(null);
-  const address = Platform.OS === "ios" ? "10.44.22.31" : "10.44.22.31";
+  const [token, setToken] = useState(null);
 
   const createLinkToken = useCallback(async () => {
-    await fetch(`http://localhost:4001/create_link_token`, {
+    await fetch(`http://10.44.22.68:4001/api/plaid/generate_link_token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ address: address }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -28,39 +27,30 @@ const Transactions = () => {
       createLinkToken();
     }
   }, [linkToken]);
-  console.log("linktoken :", linkToken);
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.heading}>
-        <Text style={styles.titleText}>Link your bank account</Text>
-      </View>
-      <View style={styles.bottom}>
-        <PlaidLink
-          tokenConfig={{
-            token: linkToken,
-            noLoadingState: false,
-          }}
-          onSuccess={async () => {
-            await fetch(`http://localhost:4001/exchange_public_token`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ public_token: success.publicToken }),
-            }).catch((err) => {
-              console.log(err);
-            });
-            navigation.navigate("Success", success);
-          }}
-          onExit={() => {
-            console.log(response);
-          }}
-        >
-          <View style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>Open Link</Text>
-          </View>
-        </PlaidLink>
-      </View>
+      <PlaidLink
+        linkToken={linkToken}
+        onSuccess={async (success) =>
+          await fetch("http://10.44.22.68:4001/api/plaid/exchange_public_token", {
+            method: "POST",
+            body: {
+              publicToken: success.publicToken,
+              accounts: success.metadata.accounts,
+              institution: success.metadata.institution,
+              linkSessionId: success.metadata.linkSessionId,
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("data", data);
+              setToken(data.link_token);
+            })
+            .catch((err) => {
+              console.log("err", err);
+            })
+        }
+      />
     </View>
   );
 };
