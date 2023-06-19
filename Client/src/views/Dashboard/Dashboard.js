@@ -7,7 +7,11 @@ import { Icon } from "@rneui/themed";
 
 import * as echarts from "echarts/core";
 import { LineChart, PieChart } from "echarts/charts";
-import { GridComponent, LegendComponent } from "echarts/components";
+import {
+  GridComponent,
+  LegendComponent,
+  TooltipComponent,
+} from "echarts/components";
 import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
 
 echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent]);
@@ -103,7 +107,7 @@ const Dashboard = ({ navigation }) => {
         style={theme === "light" ? styles.containerLight : styles.containerDark}
       >
         <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-          Dashboardd
+          Dashboard
         </Text>
         <Modal
           style={styles.modal}
