@@ -14,7 +14,7 @@ import {
 } from "echarts/components";
 import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
 
-echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent]);
+echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent, TooltipComponent]);
 
 const Dashboard = ({ navigation }) => {
   const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
