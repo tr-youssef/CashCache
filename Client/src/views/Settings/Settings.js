@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { Icon } from "@rneui/themed";
 
 const Settings = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Settings</Text>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Icon name="add" size={20} color="#33CD48" type="MaterialIcons" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -17,6 +21,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#050A05",
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    backgroundColor: "#1A251D",
+    padding: 10,
+    borderRadius: 50,
   },
   text: {
     color: "#F2FFF5",
