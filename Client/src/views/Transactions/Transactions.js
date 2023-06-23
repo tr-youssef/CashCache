@@ -7,8 +7,6 @@ import { callAPI } from "../../utils/fetch/callAPI.js";
 const Transactions = ({ navigation }) => {
   const plaidContext = useContext(PlaidContext);
   const { linkToken, setLinkToken, accessToken } = plaidContext;
-  console.log("accessToken", accessToken);
-
   const createLinkToken = useCallback(async () => {
     callAPI("/api/plaid/generate_link_token", "POST", {}, token)
       .then((res) => setLinkToken(res.link_token))
@@ -26,7 +24,7 @@ const Transactions = ({ navigation }) => {
       title: "Transactions",
       headerLeft: () => (
         <Icon
-          name="filter-alt"
+          name="sync"
           type="MaterialIcons"
           color={"#33CD48"}
           onPress={() => {
