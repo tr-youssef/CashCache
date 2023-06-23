@@ -41,6 +41,36 @@ export const addTransaction = async (req, res) => {
   }
 };
 
+export const addTransactions = async (req, res) => {
+  const transactionArray = req.body;
+  console.log("Transactions", transactionArray);
+  const token = req.headers.authorization.split(" ")[1];
+  if (token) {
+    let decodedData = jwt.verify(token, process.env.HASHCODE);
+    req.userId = decodedData?.id;
+  }
+  let resultArr = [];
+  try {
+    for (const newTransaction of transactionArray) {
+      console.log("newTransaction", newTransaction);
+      const transactionCreated = await Transactions.create({
+        amount: newTransaction.amount,
+        tranDate: newTransaction.tranDate,
+        note: newTransaction.note,
+        userId: newTransaction.userId,
+        categoryId: newTransaction.categoryId,
+        accountId: newTransaction.accountId,
+        tags: newTransaction.tags,
+      });
+      resultArr.push(transactionCreated);
+    }
+
+    res.status(201).json(resultArr);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const deleteTransaction = async (req, res) => {
   const { id } = req.params;
   const token = req.headers.authorization.split(" ")[1];
