@@ -7,6 +7,7 @@ import routeCategories from "./api/routes/categories.js";
 import routeUsers from "./api/routes/users.js";
 import routeAccounts from "./api/routes/accounts.js";
 import routePlaid from "./api/routes/plaid.js";
+import routeTransactions from "./api/routes/transactions.js";
 
 const app = express();
 app.use(express.json({ extended: false }));
@@ -18,6 +19,7 @@ app.use("/api/users", routeUsers);
 app.use("/api/categories", routeCategories);
 app.use("/api/accounts", routeAccounts);
 app.use("/api/plaid", routePlaid);
+app.use("/api/transactions", routeTransactions);
 
 const PORT = process.env.PORT || 8080;
 

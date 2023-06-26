@@ -1,0 +1,438 @@
+{
+	"info": {
+		"_postman_id": "070c12af-1759-4f4c-82d7-9f43625a1ff6",
+		"name": "Project3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6212594",
+		"_collection_link": "https://grey-spaceship-874146.postman.co/workspace/InceptionU~feea05a2-4b65-4612-b2a3-79e68d31801f/collection/6212594-070c12af-1759-4f4c-82d7-9f43625a1ff6?action=share&creator=6212594&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "CreateNewUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"pm.environment.set(\"JWT\", jsonData.token);",
+							"pm.environment.set(\"userID\", jsonData.user.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Larry\",\n    \"lastName\": \"Hengen\",\n    \"email\": \"lhengen@gmail.com\",\n    \"password\": \"letmein\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/users/signup",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignInUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"pm.environment.set(\"JWT\", jsonData.token);",
+							"pm.environment.set(\"userID\", jsonData.user.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"lhengen@gmail.com\",\n    \"password\": \"letmein\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/users/signin",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserCategories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/api/categories/parents",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"categories",
+						"parents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserAccounts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/api/accounts",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserTransactions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/api/transactions",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUserCategory",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Clothing\",\n    \"type\": \"Expense\",\n    \"icon\": \"home\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/categories/parent",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"categories",
+						"parent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUserAccount",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"TD Savings\",\n    \"initialAmount\": \"150.45\",\n    \"userId\": \"{{userID}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/accounts",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUserTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": \"21.99\",\n    \"tranDate\": \"2023-06-23T18:25:43.511Z\",\n    \"note\": \"the best sneakers ever!\",\n    \"userId\": \"{{userID}}\",\n    \"categoryId\": \"64959858c0e32768eca42c02\",\n    \"accountId\": \"649599fcc0e32768eca42c07\",\n    \"tags\": [\"footwear\", \"clothing\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/transactions",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUserTransactionsBulk",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n    \"amount\": \"21.99\",\n    \"tranDate\": \"2023-06-23T18:25:43.511Z\",\n    \"note\": \"the best crocs ever!\",\n    \"userId\": \"{{userID}}\",\n    \"categoryId\": \"64959858c0e32768eca42c02\",\n    \"accountId\": \"649599fcc0e32768eca42c07\",\n    \"tags\": [\"footwear\", \"clothing\"]\n    },\n    {\n    \"amount\": \"105.99\",\n    \"tranDate\": \"2023-06-01T18:25:43.511Z\",\n    \"note\": \"jacket\",\n    \"userId\": \"{{userID}}\",\n    \"categoryId\": \"64959858c0e32768eca42c02\",\n    \"accountId\": \"649599fcc0e32768eca42c07\",\n    \"tags\": [\"clothing\"]\n    }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/transactions/bulk",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"transactions",
+						"bulk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUserTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": \"21.99\",\n    \"tranDate\": \"2023-06-23T18:25:43.511Z\",\n    \"note\": \"the WORST sneakers ever!\",\n    \"userId\": \"{{userID}}\",\n    \"categoryId\": \"64959858c0e32768eca42c02\",\n    \"accountId\": \"649599fcc0e32768eca42c07\",\n    \"tags\": [\"footwear\", \"clothing\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/transactions/64959e629cd696aad87fdc6f",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"transactions",
+						"64959e629cd696aad87fdc6f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUserTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/api/transactions/64959dbd9cd696aad87fdc6a",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"api",
+						"transactions",
+						"64959dbd9cd696aad87fdc6a"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
