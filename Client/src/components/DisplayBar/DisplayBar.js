@@ -16,7 +16,6 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
       navigation.navigate("Subcategory");
     }
   };
-
   if (disabled)
     return (
       <View style={type === "categorySubcategory" ? styles.containerCategorySubcategory : styles.container}>
@@ -44,7 +43,7 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
           <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
           <Text style={styles.text}>{category?.name}</Text>
         </View>
-        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" /> : <Text>{amount}</Text>}
+        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? "" : <Text>{amount}</Text>}
       </RectButton>
     </View>
   );
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   containerCategorySubcategory: {
-    width: 280,
+    width: 350,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginBottom: 40,

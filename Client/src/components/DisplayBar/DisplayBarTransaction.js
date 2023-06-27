@@ -23,12 +23,12 @@ const DisplayBarTransaction = ({ type = "transaction", transaction, amount = "",
         <View style={styles.iconTitle}>
           {transaction.category.length > 0 ? (
             <View style={styles.iconTitle}>
-              <Icon name={transaction.category[0]?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
+              <Icon name={transaction.category[0]?.icon} size={20} color={transaction.category[0]?.type === "Expense" ? "#CD3337" : "#33CD48"} type="MaterialIcons" />
               <Text style={styles.text}>{transaction.category[0]?.name}</Text>
             </View>
           ) : (
             <View style={styles.iconTitle}>
-              <Icon name={transaction.subCategory[0]?.subcategories[0]?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
+              <Icon name={transaction.subCategory[0]?.subcategories[0]?.icon} size={20} color={transaction.subCategory[0]?.type === "Expense" ? "#CD3337" : "#33CD48"} type="MaterialIcons" />
               <Text style={styles.text}>{transaction.subCategory[0]?.subcategories[0].name}</Text>
             </View>
           )}
