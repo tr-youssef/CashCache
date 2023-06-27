@@ -28,9 +28,10 @@ export const getTransactions = async (req, res) => {
           from: "categories",
           localField: "categoryId",
           foreignField: "subcategories._id",
-          as: "subCategory",
+          as: "subcategoryCategory",
         },
       },
+
       { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$tranDate" } }, transaction: { $push: "$$ROOT" } } },
 
       {

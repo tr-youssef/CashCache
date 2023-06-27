@@ -53,15 +53,12 @@ const Categories = ({ navigation }) => {
   useEffect(() => {
     setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));
   }, [categories, type, search]);
+
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
       <SearchBar search={search} setSearch={setSearch} />
-      <FlatList
-        data={selectCategories}
-        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
-        keyExtractor={(item, index) => `message ${index}`}
-      />
+      <FlatList data={selectCategories} renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />} keyExtractor={(item) => item._id} />
       <AddButton screen={"AddCategory"} />
     </View>
   );

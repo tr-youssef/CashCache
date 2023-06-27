@@ -59,7 +59,7 @@ const SubCategories = ({ navigation }) => {
       <FlatList
         data={selectSubCategories}
         renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
-        keyExtractor={(item, index) => `message ${index}`}
+        keyExtractor={(item) => item._id}
       />
 
       <AddButton screen={"AddSubcategory"} />

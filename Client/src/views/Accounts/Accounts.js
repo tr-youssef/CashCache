@@ -32,7 +32,7 @@ const Accounts = ({ navigation }) => {
             <Card name={item.name} initialAmount={item.initialAmount} />
           </Pressable>
         )}
-        keyExtractor={(item, index) => `message ${index}`}
+        keyExtractor={(item) => item._id}
       />
       <AddButton screen={"AddAccount"} />
     </View>
