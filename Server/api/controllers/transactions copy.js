@@ -49,7 +49,6 @@ export const getTransactions = async (req, res) => {
 
 export const addTransaction = async (req, res) => {
   const newTransaction = req.body;
-  console.log("newTransaction", newTransaction);
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
@@ -73,7 +72,6 @@ export const addTransaction = async (req, res) => {
 
 export const addTransactions = async (req, res) => {
   const transactionArray = req.body;
-  console.log("Transactions", transactionArray);
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
@@ -82,7 +80,6 @@ export const addTransactions = async (req, res) => {
   let resultArr = [];
   try {
     for (const newTransaction of transactionArray) {
-      console.log("newTransaction", newTransaction);
       const transactionCreated = await Transactions.create({
         amount: newTransaction.amount,
         tranDate: newTransaction.tranDate,

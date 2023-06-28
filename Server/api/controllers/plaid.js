@@ -141,7 +141,6 @@ export const getTransactions = async (req, res) => {
     //     paginatedResponse.data.transactions,
     //   );
     // }
-    console.log("transactions", transactions);
     res.json({ transactions: transactions });
   } catch (error) {
     console.log("error.message", error.message);

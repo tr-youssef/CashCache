@@ -69,8 +69,6 @@ const Transactions = ({ navigation }) => {
       ),
     });
   }, [navigation, linkToken]);
-  //console.log("transactions", transactions);
-  console.log("selectTransactions", selectTransactions);
   return (
     <View style={styles.container}>
       <SearchBar search={search} setSearch={setSearch} />

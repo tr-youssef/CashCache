@@ -18,12 +18,9 @@ const LoginScreen = () => {
   });
 
   const handleSignUp = () => {
-    console.log("email", email);
-    console.log("password", password);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
       })
       .catch((error) => alert(error.message));
   };
@@ -32,7 +29,6 @@ const LoginScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(`Log In for User '${user.email}'`);
         navigation.navigate("Home");
       })
       .catch((error) => alert(error.message));
