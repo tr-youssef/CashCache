@@ -9,6 +9,7 @@ const AddButton = ({ screen }) => {
     if (screen === "AddCategory") navigation.navigate("AddCategory");
     else if (screen === "AddSubcategory") navigation.navigate("AddSubcategory");
     else if (screen === "AddAccount") navigation.navigate("AddAccount");
+    else if (screen === "AddTransaction") navigation.navigate("AddTransaction");
   };
   return (
     <View style={styles.container}>

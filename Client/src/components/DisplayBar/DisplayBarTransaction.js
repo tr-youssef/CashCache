@@ -6,20 +6,14 @@ import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 
 import { RectButton } from "react-native-gesture-handler";
 
-const DisplayBarTransaction = ({ type = "transaction", transaction, amount = "", disabled }) => {
+const DisplayBarTransaction = ({ transaction }) => {
   // const navigation = useNavigation();
   // const categoryContext = useContext(CategoriesContext);
   // const { setSelectedCategory } = categoryContext;
-  const handlePress = () => {
-    // if (type === "category") {
-    //   setSelectedCategory(category);
-    //   navigation.navigate("Subcategory");
-    // }
-  };
 
   return (
     <View style={styles.container}>
-      <RectButton style={styles.rectButton} onPress={handlePress}>
+      <View style={styles.rectButton}>
         <View style={styles.iconTitle}>
           {transaction.category.length > 0 ? (
             <View style={styles.iconTitle}>
@@ -33,8 +27,8 @@ const DisplayBarTransaction = ({ type = "transaction", transaction, amount = "",
             </View>
           )}
         </View>
-        <Text style={styles.text}>{transaction.amount}</Text>
-      </RectButton>
+        <Text style={styles.text}>{transaction.amount} CAD</Text>
+      </View>
     </View>
   );
 };

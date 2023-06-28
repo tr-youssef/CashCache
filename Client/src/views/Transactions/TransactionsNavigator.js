@@ -4,6 +4,7 @@ import { Icon } from "@rneui/themed";
 import { PlaidContext } from "../../utils/context/PlaidContext.js";
 import { TransactionsContext } from "../../utils/context/TransactionsContext.js";
 import Transactions from "./Transactions.js";
+import AddTransaction from "./AddTransaction.js";
 import Settings from "../Settings/Settings.js";
 import TransactionsPlaid from "./TransactionsPlaid.js";
 
@@ -35,6 +36,13 @@ const TransactionsNavigator = ({ navigation }) => {
           <Stack.Screen
             name="Transactions"
             component={Transactions}
+            options={{
+              headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+            }}
+          />
+          <Stack.Screen
+            name="AddTransaction"
+            component={AddTransaction}
             options={{
               headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
             }}
