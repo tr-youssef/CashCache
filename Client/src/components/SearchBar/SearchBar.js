@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 15,
     marginBottom: 15,
+    borderColor: "#33CD48",
+    borderWidth: 1,
   },
   icon: {
     marginRight: 10,

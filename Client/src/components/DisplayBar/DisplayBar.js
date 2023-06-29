@@ -49,6 +49,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
+    borderColor: "#33CD48",
+    borderWidth: 1,
   },
   containerCategorySubcategory: {
     width: 350,

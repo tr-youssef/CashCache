@@ -12,7 +12,7 @@ const DisplayBarTransaction = ({ transaction }) => {
   // const { setSelectedCategory } = categoryContext;
 
   return (
-    <View style={styles.container}>
+    <View style={transaction.category[0]?.type === "Expense" || transaction.subCategory[0]?.type === "Expense" ? styles.containerRed : styles.containerGreen}>
       <View style={styles.rectButton}>
         <View style={styles.iconTitle}>
           {transaction.category.length > 0 ? (
@@ -36,11 +36,23 @@ const DisplayBarTransaction = ({ transaction }) => {
 export default DisplayBarTransaction;
 
 const styles = StyleSheet.create({
-  container: {
+  containerRed: {
     width: 350,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
+    borderColor: "#CD3337",
+    borderWidth: 1,
+    borderRadius: 20,
+  },
+  containerGreen: {
+    width: 350,
+    backgroundColor: "#1A251D",
+    borderRadius: 20,
+    marginTop: 5,
+    borderColor: "#33CD48",
+    borderWidth: 1,
+    borderRadius: 20,
   },
   rectButton: {
     flexDirection: "row",
