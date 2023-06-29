@@ -31,6 +31,14 @@ export const getTransactions = async (req, res) => {
           as: "subCategory",
         },
       },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "accountId",
+          foreignField: "_id",
+          as: "account",
+        },
+      },
       { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$tranDate" } }, transaction: { $push: "$$ROOT" } } },
 
       {
@@ -58,11 +66,12 @@ export const addTransaction = async (req, res) => {
       amount: newTransaction.amount,
       tranDate: newTransaction.tranDate,
       note: newTransaction.note,
-      userId: newTransaction.userId,
+      userId: req.userId,
       categoryId: newTransaction.categoryId,
       accountId: newTransaction.accountId,
-      tags: newTransaction.tags,
+      //tags: newTransaction.tags,
     });
+    console.log("transactionCreated", transactionCreated);
     res.status(201).json(transactionCreated);
   } catch (error) {
     res.status(500).json({ error: error.message });

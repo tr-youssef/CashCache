@@ -6,16 +6,18 @@ import React, { useState, useEffect, useContext } from "react";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { TransactionsContext } from "../../utils/context/TransactionsContext.js";
 
-const AddTransaction = ({ navigation }) => {
+const EditTransaction = ({ route, navigation }) => {
+  const { transaction } = route.params;
   const { setTransactions } = useContext(TransactionsContext);
-  const [amount, setAmount] = useState("");
-  const [type, setType] = useState("Expense");
+  const [amount, setAmount] = useState(transaction.amount);
+  const [type, setType] = useState(transaction.category[0].type);
   const [accounts, setAccounts] = useState([]);
   const [account, setAccount] = useState("");
   const [categories, setCategories] = useState("");
   const [category, setCategory] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [note, setNote] = useState("");
+  const [date, setDate] = useState(new Date(transaction.tranDate));
+  const [note, setNote] = useState(transaction.note);
+  let firstTime = true;
 
   useEffect(() => {
     callAPI("/api/accounts", "GET", "", token)
@@ -25,7 +27,7 @@ const AddTransaction = ({ navigation }) => {
           value: res._id,
         }));
         setAccounts(transformedData);
-        setAccount(transformedData[0].value);
+        setAccount(transaction.accountId);
       })
       .catch((error) => console.log("error", error));
   }, []);
@@ -43,8 +45,21 @@ const AddTransaction = ({ navigation }) => {
       .catch((error) => console.log("error", error));
   }, [type]);
 
-  const saveTransaction = (amount, account, category, date, note) => {
-    callAPI("/api/transactions", "POST", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
+  useEffect(() => {
+    callAPI("/api/categories/parents", "GET", "", token)
+      .then((res) => {
+        const transformedData = res.map((res) => ({
+          label: res.name,
+          value: res._id,
+          type: res.type,
+        }));
+        setCategories(transformedData);
+        setCategory(transaction.categoryId);
+      })
+      .catch((error) => console.log("error", error));
+  }, []);
+  const updateTransaction = (amount, account, category, date, note, transaction) => {
+    callAPI(`/api/transactions/${transaction._id}`, "PATCH", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
       .then(async (res) => {
         await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
         navigation.navigate("Transactions");
@@ -56,16 +71,15 @@ const AddTransaction = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Add Transaction",
+      title: "Edit Transaction",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveTransaction(amount, account, category, date, note)} />,
+      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => updateTransaction(amount, account, category, date, note, transaction)} />,
     });
   }, [navigation, amount, account, category, date, note]);
   return (
     <View style={styles.container}>
-      100
       <Switch type={type} setType={setType} />
-      <Input label={"Amount :"} value={amount.toString()} setValue={setAmount} placeholder={"0"} />
+      <Input label={"Amount :"} value={amount.toString()} setValue={setAmount} />
       <Input label={"Account :"} datalist={accounts} value={account} setValue={setAccount} />
       <Input label={"Category :"} datalist={categories} value={category} setValue={setCategory} />
       <Input label={"Date :"} date={date} setDate={setDate} />
@@ -74,7 +88,7 @@ const AddTransaction = ({ navigation }) => {
   );
 };
 
-export default AddTransaction;
+export default EditTransaction;
 
 const styles = StyleSheet.create({
   container: {

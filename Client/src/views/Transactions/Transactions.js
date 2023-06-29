@@ -22,7 +22,7 @@ const Transactions = ({ navigation }) => {
   const SwipeableRow = ({ items, index, deleteAction, editAction }) => {
     return items.map((item) => {
       return (
-        <Swipe editAction={editAction} deleteAction={deleteAction} key={item._id}>
+        <Swipe editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} key={item._id}>
           <Row item={item} key={index} />
         </Swipe>
       );
@@ -79,6 +79,21 @@ const Transactions = ({ navigation }) => {
     );
   }, [transactions, search]);
 
+  const deleteAction = (idTransaction) => {
+    callAPI(`/api/transactions/${idTransaction}`, "DELETE", {}, token)
+      .then(async (res) => {
+        await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
+      })
+      .catch((error) => {
+        console.error("Error deleting transaction:", error);
+      });
+  };
+  const editAction = (transaction) => {
+    navigation.navigate("EditTransaction", {
+      transaction: transaction,
+    });
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Transactions",
@@ -99,7 +114,7 @@ const Transactions = ({ navigation }) => {
       <SearchBar search={search} setSearch={setSearch} />
       <SectionList
         sections={sections}
-        renderItem={({ item, index }) => <SwipeableRow items={item.transaction} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
+        renderItem={({ item, index }) => <SwipeableRow items={item.transaction} key={item._id} index={index} editAction={editAction} deleteAction={deleteAction} />}
         keyExtractor={(item) => item._id}
         renderSectionHeader={renderSectionHeader}
       />

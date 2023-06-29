@@ -8,7 +8,6 @@ const Input = ({ label, placeholder, datalist = "", date = "", setDate, value, s
   const [isFocus, setIsFocus] = useState(false);
   const [show, setShow] = useState(false);
   const onChange = (event, selectedDate) => {
-    setShow(false);
     setDate(selectedDate);
   };
 
@@ -37,7 +36,6 @@ const Input = ({ label, placeholder, datalist = "", date = "", setDate, value, s
       ) : date ? (
         <TouchableOpacity
           onPress={() => {
-            console.log("show", show);
             setShow(true);
           }}
           style={styles.touchable}
@@ -97,15 +95,3 @@ const styles = StyleSheet.create({
 });
 
 export default Input;
-
-/*
-  <DateTimePicker
-          display="calendar"
-          onChange={(e) => {
-            console.log("e", new Date(e.nativeEvent.timestamp));
-          }}
-          value={date}
-          themeVariant="dark"
-          locale="en-EN"
-          style={styles.datetime}
-        />*/

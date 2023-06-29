@@ -35,7 +35,7 @@ const Categories = ({ navigation }) => {
         await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
       })
       .catch((error) => {
-        console.error("Error saving category:", error);
+        console.error("Error deleting category:", error);
       });
   };
   const editAction = (category) => {
