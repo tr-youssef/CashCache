@@ -93,9 +93,10 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
         userId: {
           $eq: new mongoose.Types.ObjectId(`${req.userId}`),
         },
-        accountId: {
-          $eq: new mongoose.Types.ObjectId(`${accountId}`),
-        },
+        //we decided that we should aggregate all accounts
+        // accountId: {
+        //   $eq: new mongoose.Types.ObjectId(`${accountId}`),
+        // },
       },
     },
     {
@@ -130,6 +131,9 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
         categoryName: {
           $first: "$categoryName",
         },
+        subCategoryName: {
+          $first: "$categoryName",
+        },
         subcategoryName: {
           $first: "$subcategoryName",
         },
@@ -143,10 +147,11 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
     },
   ]);
 
-  console.log("tranAgg", tranAgg);
+  // console.log("tranAgg", tranAgg);
 
   try {
     const results = await tranAgg.exec();
+    console.log(results);
     const chartData = results.map((elem) => ({
       value: elem.amount,
       name: elem.categoryName,

@@ -28,9 +28,13 @@ const Dashboard = ({ navigation }) => {
   const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
   const theme = "dark"; //useColorScheme();
   const [chartData, setChartData] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+  );
 
   const skiaRef = useRef(null);
-  option = {
+  let option = {
     tooltip: {
       trigger: "item",
     },
@@ -64,48 +68,39 @@ const Dashboard = ({ navigation }) => {
           show: false,
         },
         data: chartData,
-
-        // data: [
-        //   { value: 100, name: "test" },
-        //   // { value: 1048, name: "Rent" },
-        //   // { value: 735, name: "Utilities" },
-        //   // { value: 580, name: "Transportation" },
-        //   // { value: 484, name: "Groceries" },
-        //   // { value: 300, name: "Entertainment" },
-        // ],
       },
     ],
   };
 
   React.useEffect(() => {
     callAPI(
-      "/api/transactions/agg/?startDate=2023-06-01&endDate=2023-06-30&accountId=649599fcc0e32768eca42c07",
+      `/api/transactions/agg?startDate=${startDate}&endDate=${currentDate}`,
       "GET",
       "",
       token
     )
       .then((res) => {
-        // option.series[0].data = [{ value: 100, name: "test" }];
+        console.log("res", res);
         setChartData(res);
-        option.series[0].data = chartData;
+        console.log("chartData", chartData);
+        option.series[0].data = res;
+        let chart;
+        if (skiaRef.current) {
+          chart = echarts.init(
+            skiaRef.current,
+            theme === "light" ? "light" : "dark",
+            {
+              renderer: "svg",
+              width: 400,
+              height: 400,
+            }
+          );
+          chart.setOption(option);
+        }
+        return () => chart?.dispose();
       })
       .catch((error) => console.log("error", error));
-
-    let chart;
-    if (skiaRef.current) {
-      chart = echarts.init(
-        skiaRef.current,
-        theme === "light" ? "light" : "dark",
-        {
-          renderer: "svg",
-          width: 400,
-          height: 400,
-        }
-      );
-      chart.setOption(option);
-    }
-    return () => chart?.dispose();
-  }, [chartData]);
+  }, []);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
