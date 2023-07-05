@@ -36,5 +36,6 @@ const transactionSchema = new mongoose.Schema({
 });
 
 const Transactions = mongoose.model("Transactions", transactionSchema);
+const tranAgg = mongoose.Collection;
 
 export default Transactions;

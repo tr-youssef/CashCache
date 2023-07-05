@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import Transactions from "../models/transactions.js";
+import mongoose from "mongoose";
 
 export const getTransactions = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
@@ -66,6 +67,91 @@ export const addTransactions = async (req, res) => {
     }
 
     res.status(201).json(resultArr);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const aggregateTransactionsByDateRange = async (req, res) => {
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const accountId = req.query.accountId;
+
+  const token = req.headers.authorization.split(" ")[1];
+  if (token) {
+    let decodedData = jwt.verify(token, process.env.HASHCODE);
+    req.userId = decodedData?.id;
+  }
+
+  const tranAgg = Transactions.aggregate([
+    {
+      $match: {
+        tranDate: {
+          $gte: new Date(`${startDate}`),
+          $lt: new Date(`${endDate}`),
+        },
+        userId: {
+          $eq: new mongoose.Types.ObjectId(`${req.userId}`),
+        },
+        accountId: {
+          $eq: new mongoose.Types.ObjectId(`${accountId}`),
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "categories",
+      },
+    },
+    {
+      $addFields: {
+        category: {
+          $arrayElemAt: ["$categories", 0],
+        },
+        subcategory: {
+          $arrayElemAt: ["$categories.subcategories", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        categoryName: "$category.name",
+        subcategoryName: "$subcategory.name",
+        amount: 1,
+        categoryType: "$category.type",
+      },
+    },
+    {
+      $group: {
+        _id: "$categoryName",
+        categoryName: {
+          $first: "$categoryName",
+        },
+        subcategoryName: {
+          $first: "$subcategoryName",
+        },
+        categoryType: {
+          $first: "$categoryType",
+        },
+        amount: {
+          $sum: "$amount",
+        },
+      },
+    },
+  ]);
+
+  console.log("tranAgg", tranAgg);
+
+  try {
+    const results = await tranAgg.exec();
+    const chartData = results.map((elem) => ({
+      value: elem.amount,
+      name: elem.categoryName,
+    }));
+    res.status(200).json(chartData);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
