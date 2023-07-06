@@ -79,6 +79,7 @@ export const addTransaction = async (req, res) => {
 
 export const addTransactions = async (req, res) => {
   const transactionArray = req.body;
+  console.log("transactionArray", transactionArray);
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
