@@ -17,7 +17,6 @@ const EditTransaction = ({ route, navigation }) => {
   const [category, setCategory] = useState("");
   const [date, setDate] = useState(new Date(transaction.tranDate));
   const [note, setNote] = useState(transaction.note);
-  let firstTime = true;
 
   useEffect(() => {
     callAPI("/api/accounts", "GET", "", token)

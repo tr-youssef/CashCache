@@ -63,7 +63,6 @@ const AddTransaction = ({ navigation }) => {
   }, [navigation, amount, account, category, date, note]);
   return (
     <View style={styles.container}>
-      100
       <Switch type={type} setType={setType} />
       <Input label={"Amount :"} value={amount.toString()} setValue={setAmount} placeholder={"0"} />
       <Input label={"Account :"} datalist={accounts} value={account} setValue={setAccount} />
