@@ -24,6 +24,8 @@ const Accounts = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={accounts}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <Pressable
             style={styles.containerCard}
