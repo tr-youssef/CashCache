@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { FlatList } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
 
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
@@ -22,6 +23,7 @@ const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
 };
 
 const Categories = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const categoryContext = useContext(CategoriesContext);
   const { categories, setCategories } = categoryContext;
   const [selectCategories, setSelectCategories] = useState(categories);
@@ -48,7 +50,7 @@ const Categories = ({ navigation }) => {
     callAPI("/api/categories/parents", "GET", "", token)
       .then((res) => setCategories(res))
       .catch((error) => console.log("error", error));
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));

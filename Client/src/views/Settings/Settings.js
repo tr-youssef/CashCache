@@ -3,6 +3,7 @@ import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { Icon } from "@rneui/themed";
 
 const Settings = () => {
+  const handlePress = () => {};
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Settings</Text>

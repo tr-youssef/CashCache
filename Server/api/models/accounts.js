@@ -14,6 +14,9 @@ const accountSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "user is required"],
   },
+  plaidId: {
+    type: String,
+  },
 });
 
 const Accounts = mongoose.model("Accounts", accountSchema);

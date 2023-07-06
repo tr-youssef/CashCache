@@ -71,7 +71,6 @@ export const addTransaction = async (req, res) => {
       accountId: newTransaction.accountId,
       //tags: newTransaction.tags,
     });
-    console.log("transactionCreated", transactionCreated);
     res.status(201).json(transactionCreated);
   } catch (error) {
     res.status(500).json({ error: error.message });

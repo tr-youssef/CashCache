@@ -105,7 +105,6 @@ export const syncTransactions = async (req, res, next) => {
       const compareTxnsByDateAscending = (a, b) => (a.date > b.date) - (a.date < b.date);
       // Return the 8 most recent transactions
       const recently_added = [...added].sort(compareTxnsByDateAscending).slice(-8);
-      console.log("recently_added", recently_added);
       res.json({ latest_transactions: recently_added });
     })
     .catch(next);
@@ -142,6 +141,19 @@ export const getTransactions = async (req, res) => {
     //   );
     // }
     res.json({ transactions: transactions });
+  } catch (error) {
+    console.log("error.message", error.message);
+    res.status(500).send(error.message);
+  }
+};
+
+export const getAccounts = async (req, res) => {
+  const access_token = req.body.access_token;
+  try {
+    const authResponse = await plaidClient.accountsGet({
+      access_token: access_token,
+    });
+    res.json(authResponse.data);
   } catch (error) {
     console.log("error.message", error.message);
     res.status(500).send(error.message);

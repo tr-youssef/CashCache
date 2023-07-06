@@ -46,6 +46,7 @@ export const addAccount = async (req, res) => {
     const accountCreated = await Accounts.create({
       name: newAccount.name,
       initialAmount: newAccount.initialAmount,
+      plaidId: newAccount.plaidId,
       userId: req.userId,
     });
     res.status(201).json(accountCreated);

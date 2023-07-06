@@ -8,6 +8,7 @@ import AddTransaction from "./AddTransaction.js";
 import EditTransaction from "./EditTransaction.js";
 import Settings from "../Settings/Settings.js";
 import TransactionsPlaid from "./TransactionsPlaid.js";
+import ValidationTransactions from "./ValidationTransactions.js";
 
 const TransactionsNavigator = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
@@ -53,6 +54,15 @@ const TransactionsNavigator = ({ navigation }) => {
             component={EditTransaction}
             options={{
               headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+            }}
+          />
+          <Stack.Screen
+            name="ValidationTransactions"
+            component={ValidationTransactions}
+            options={{
+              headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
+              headerLeft: () => null,
+              headerBackVisible: false,
             }}
           />
           <Stack.Screen name="Plaid" component={TransactionsPlaid} options={{ headerShown: false }} />

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useCallback, useState } from "react";
 import { StyleSheet, SectionList, View, Text } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { PlaidContext } from "../../utils/context/PlaidContext.js";
 import { Icon } from "@rneui/themed";
 import { callAPI } from "../../utils/fetch/callAPI.js";
@@ -11,12 +12,13 @@ import AddButton from "../../components/AddButton/AddButton.js";
 import moment from "moment";
 
 const Transactions = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const plaidContext = useContext(PlaidContext);
   const transactionContext = useContext(TransactionsContext);
   const { transactions, setTransactions } = transactionContext;
   const [selectTransactions, setSelectTransactions] = useState(transactions);
   const [search, setSearch] = useState("");
-  const { linkToken, setLinkToken } = plaidContext;
+  const { linkToken, setLinkToken, accessToken } = plaidContext;
 
   const Row = ({ item, editAction, deleteAction }) => <DisplayBarTransaction key={item._id} transaction={item} type="transactions" editAction={editAction} deleteAction={deleteAction} />;
   const SwipeableRow = ({ items, index, deleteAction, editAction }) => {
@@ -31,7 +33,7 @@ const Transactions = ({ navigation }) => {
   const renderSectionHeader = ({ section }) => (
     <View style={styles.sectionContainer}>
       <Text style={styles.text}>{moment(section.date).format("MMM D, YYYY")}</Text>
-      <Text style={styles.text}>{section.sum} CAD</Text>
+      <Text style={styles.text}>{section.sum.toFixed(2)} CAD</Text>
     </View>
   );
   const transactionsByDate = selectTransactions.reduce((acc, transaction) => {
@@ -66,7 +68,7 @@ const Transactions = ({ navigation }) => {
     callAPI("/api/transactions", "GET", "", token)
       .then((res) => setTransactions(res))
       .catch((error) => console.log("error", error));
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     setSelectTransactions(
@@ -103,7 +105,7 @@ const Transactions = ({ navigation }) => {
           type="MaterialIcons"
           color={"#33CD48"}
           onPress={() => {
-            navigation.navigate("Plaid");
+            accessToken ? alert("test") : navigation.navigate("Plaid");
           }}
         />
       ),
