@@ -8,8 +8,6 @@ export function setToken(value) {
   token = value;
 }
 
-// import token from "../token.js";
-
 export async function callAPI(
   path = "",
   httpMethod = "GET",

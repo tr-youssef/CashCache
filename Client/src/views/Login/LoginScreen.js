@@ -14,7 +14,6 @@ import {
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { setToken, callAPI } from "../../utils/fetch/callAPI";
-import token from "../../utils/token";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");

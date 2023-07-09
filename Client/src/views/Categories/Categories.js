@@ -8,7 +8,6 @@ import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
 import Swipe from "../../components/Swipe/Swipe.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
-// import token from "../../utils/token.js";
 import AddButton from "../../components/AddButton/AddButton.js";
 
 const Row = ({ item, editAction, deleteAction }) => (
