@@ -1,5 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
-import { StyleSheet, Text, View, Button, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  useColorScheme,
+  ScrollViewBase,
+} from "react-native";
 import { DrawerContext } from "../../utils/context/DrawerContext.js";
 import Modal from "react-native-modal";
 import { colors } from "../../utils/theme/theme.js";
@@ -14,6 +21,7 @@ import {
 } from "echarts/components";
 import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
 import { token, callAPI } from "../../utils/fetch/callAPI.js";
+import { ScrollView } from "react-native-gesture-handler";
 
 echarts.use([
   SVGRenderer,
@@ -25,7 +33,6 @@ echarts.use([
 ]);
 
 const Dashboard = ({ navigation }) => {
-  const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
   const theme = "dark"; //useColorScheme();
   const [chartData, setChartData] = useState([]);
   const [endDate, setEndDate] = useState(new Date());
@@ -34,10 +41,20 @@ const Dashboard = ({ navigation }) => {
     new Date(endDate.getFullYear(), endDate.getMonth(), 1)
   );
 
+  function currencyFormatter(data) {
+    data = parseFloat(data);
+    return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+  }
+
   const skiaRef = useRef(null);
   let option = {
+    backgroundColor: styles.containerDark.backgroundColor,
     tooltip: {
       trigger: "item",
+      formatter: function (params) {
+        var val = currencyFormatter(params.value);
+        return val;
+      },
     },
     legend: {
       top: "5%",
@@ -45,7 +62,6 @@ const Dashboard = ({ navigation }) => {
     },
     series: [
       {
-        // name: "Access From",
         type: "pie",
         radius: ["40%", "70%"],
         avoidLabelOverlap: false,
@@ -56,12 +72,12 @@ const Dashboard = ({ navigation }) => {
         },
         label: {
           show: false,
-          position: "center",
+          position: "left",
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: 40,
+            fontSize: 20,
             fontWeight: "bold",
           },
         },
@@ -103,62 +119,15 @@ const Dashboard = ({ navigation }) => {
     // }
   }, [startDate, endDate]);
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: "Dashboard",
-      headerLeft: () => (
-        <Icon
-          name="filter-alt"
-          type="MaterialIcons"
-          color={"#33CD48"}
-          onPress={() => {
-            setDrawerIsOpen(!drawerIsOpen);
-          }}
-        />
-      ),
-    });
-  }, [navigation]);
-
   return (
     <>
       {/* {token != "" && token != undefined && <SkiaChart ref={skiaRef} />} */}
-      {chartData != [] && <SkiaChart ref={skiaRef} />}
+      {/* chartData != [] && <SkiaChart ref={skiaRef} /> */}
 
       <View
         style={theme === "light" ? styles.containerLight : styles.containerDark}
       >
-        <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-          Dashboard
-        </Text>
-        <Modal
-          style={styles.modal}
-          isVisible={drawerIsOpen}
-          animationIn="slideInLeft"
-          onSwipeComplete={() => setDrawerIsOpen(false)}
-          swipeDirection="left"
-          animationOut="slideOutLeft"
-          onBackdropPress={() => setDrawerIsOpen(false)}
-        >
-          <View
-            style={
-              theme === "light"
-                ? styles.modalContainerLight
-                : styles.modalContainerDark
-            }
-          >
-            <Text
-              style={theme === "light" ? styles.textLight : styles.textDark}
-            >
-              I am the modal content!
-            </Text>
-            <Button
-              title="Hide modal"
-              onPress={() => {
-                setDrawerIsOpen(false);
-              }}
-            />
-          </View>
-        </Modal>
+        <SkiaChart ref={skiaRef} />
       </View>
     </>
   );
@@ -184,22 +153,5 @@ const styles = StyleSheet.create({
   },
   textDark: {
     color: colors.dark.white,
-  },
-  modal: { margin: 0 },
-  modalContainerLight: {
-    backgroundColor: colors.light.lightBlue,
-    width: "60%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalContainerDark: {
-    backgroundColor: colors.dark.black,
-    width: "60%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
