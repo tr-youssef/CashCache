@@ -22,9 +22,9 @@ const EditCategory = ({ route, navigation }) => {
   const [type, setType] = useState(data.length > 0 ? category.type : "");
 
   const updateCategory = (name, type, choiceCategory, category) => {
-    callAPI(`/api/categories/parent/${category._id}`, "PATCH", { name: name, type: type, icon: choiceCategory, subcategories: category.subcategories }, token)
+    callAPI(`/api/categories/parent/${category._id}`, "PATCH", { name: name, type: type, icon: choiceCategory, subcategories: category.subcategories })
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+        await callAPI("/api/categories/parents", "GET", "").then((res) => setCategories(res));
         navigation.navigate("Categories");
       })
       .catch((error) => {

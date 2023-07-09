@@ -14,9 +14,9 @@ const AddAccount = ({ navigation }) => {
   const [initialAmount, setInitialAmount] = useState(0);
 
   const saveAccount = (name, initialAmount) => {
-    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
+    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount })
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "").then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {

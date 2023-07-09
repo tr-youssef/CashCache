@@ -8,10 +8,18 @@ import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
 import Swipe from "../../components/Swipe/Swipe.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
-import token from "../../utils/token.js";
+// import token from "../../utils/token.js";
 import AddButton from "../../components/AddButton/AddButton.js";
 
-const Row = ({ item, editAction, deleteAction }) => <DisplayBar key={item._id} category={item} type="category" editAction={editAction} deleteAction={deleteAction} />;
+const Row = ({ item, editAction, deleteAction }) => (
+  <DisplayBar
+    key={item._id}
+    category={item}
+    type="category"
+    editAction={editAction}
+    deleteAction={deleteAction}
+  />
+);
 
 const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
   return (
@@ -30,9 +38,11 @@ const Categories = ({ navigation }) => {
   const [search, setSearch] = useState("");
 
   const deleteAction = (idCategory) => {
-    callAPI(`/api/categories/${idCategory}`, "DELETE", {}, token)
+    callAPI(`/api/categories/${idCategory}`, "DELETE", {})
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+        await callAPI("/api/categories/parents", "GET", "").then((res) =>
+          setCategories(res)
+        );
       })
       .catch((error) => {
         console.error("Error saving category:", error);
@@ -45,13 +55,19 @@ const Categories = ({ navigation }) => {
   };
 
   useEffect(() => {
-    callAPI("/api/categories/parents", "GET", "", token)
+    callAPI("/api/categories/parents", "GET")
       .then((res) => setCategories(res))
       .catch((error) => console.log("error", error));
   }, []);
 
   useEffect(() => {
-    setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));
+    setSelectCategories(
+      categories.filter(
+        (category) =>
+          category.type === type &&
+          category.name.toLowerCase().includes(search.toLowerCase())
+      )
+    );
   }, [categories, type, search]);
   return (
     <View style={styles.container}>
@@ -59,7 +75,15 @@ const Categories = ({ navigation }) => {
       <SearchBar search={search} setSearch={setSearch} />
       <FlatList
         data={selectCategories}
-        renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />}
+        renderItem={({ item, index }) => (
+          <SwipeableRow
+            item={item}
+            key={item._id}
+            index={index}
+            editAction={() => editAction(item)}
+            deleteAction={() => deleteAction(item._id)}
+          />
+        )}
         keyExtractor={(item, index) => `message ${index}`}
       />
       <AddButton screen={"AddCategory"} />

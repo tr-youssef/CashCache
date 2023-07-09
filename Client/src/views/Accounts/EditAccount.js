@@ -16,9 +16,9 @@ const EditAccount = ({ route, navigation }) => {
   const [initialAmount, setInitialAmount] = useState(item.initialAmount);
 
   const saveAccount = (name, initialAmount) => {
-    callAPI(`/api/accounts/${item._id}`, "PATCH", { name: name, initialAmount: initialAmount }, token)
+    callAPI(`/api/accounts/${item._id}`, "PATCH", { name: name, initialAmount: initialAmount })
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "").then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -27,9 +27,9 @@ const EditAccount = ({ route, navigation }) => {
   };
 
   const deleteAccount = (idAccount) => {
-    callAPI(`/api/accounts/${item._id}`, "DELETE", { id: idAccount }, token)
+    callAPI(`/api/accounts/${item._id}`, "DELETE", { id: idAccount })
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "").then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {

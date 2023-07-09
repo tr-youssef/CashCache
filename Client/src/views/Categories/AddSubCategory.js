@@ -18,9 +18,9 @@ const AddSubCategory = ({ navigation }) => {
       ...selectedCategory,
       subcategories: [...selectedCategory.subcategories, { name: name, icon: choiceCategory }],
     };
-    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory, token)
+    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => {
+        await callAPI("/api/categories/parents", "GET", "").then((res) => {
           setCategories(res);
           const newCategory = res.find((category) => category._id === selectedCategory._id);
           setSelectedCategory(newCategory);

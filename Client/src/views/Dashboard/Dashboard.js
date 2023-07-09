@@ -13,7 +13,7 @@ import {
   TooltipComponent,
 } from "echarts/components";
 import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
-import { callAPI } from "../../utils/fetch/callAPI.js";
+import { token, callAPI } from "../../utils/fetch/callAPI.js";
 
 echarts.use([
   SVGRenderer,
@@ -28,9 +28,10 @@ const Dashboard = ({ navigation }) => {
   const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
   const theme = "dark"; //useColorScheme();
   const [chartData, setChartData] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  //todo - address date ranges spanning a year
   const [startDate, setStartDate] = useState(
-    new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    new Date(endDate.getFullYear(), endDate.getMonth(), 1)
   );
 
   const skiaRef = useRef(null);
@@ -44,7 +45,7 @@ const Dashboard = ({ navigation }) => {
     },
     series: [
       {
-        name: "Access From",
+        // name: "Access From",
         type: "pie",
         radius: ["40%", "70%"],
         avoidLabelOverlap: false,
@@ -73,11 +74,10 @@ const Dashboard = ({ navigation }) => {
   };
 
   React.useEffect(() => {
+    // if (token !== "" && token !== undefined) {
     callAPI(
-      `/api/transactions/agg?startDate=${startDate}&endDate=${currentDate}`,
-      "GET",
-      "",
-      token
+      `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
+      "GET"
     )
       .then((res) => {
         console.log("res", res);
@@ -100,7 +100,8 @@ const Dashboard = ({ navigation }) => {
         return () => chart?.dispose();
       })
       .catch((error) => console.log("error", error));
-  }, []);
+    // }
+  }, [startDate, endDate]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -120,7 +121,8 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <>
-      <SkiaChart ref={skiaRef} />
+      {/* {token != "" && token != undefined && <SkiaChart ref={skiaRef} />} */}
+      {chartData != [] && <SkiaChart ref={skiaRef} />}
 
       <View
         style={theme === "light" ? styles.containerLight : styles.containerDark}

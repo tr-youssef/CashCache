@@ -1,19 +1,36 @@
 //BaseIP must be updated whenever your NIC card IP changes.  On a PC you can find it using ipconfig,
 //and on a Mac:
 // ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk "{print $2}"
-export const BaseIP = "10.44.22.152";
-export const Port = "4001";
+const ServerIP = "192.168.0.199";
+const Port = "4001";
+export let token = "";
+export function setToken(value) {
+  token = value;
+}
 
-export async function callAPI(path = "", methode = "GET", data = {}, token = "") {
-  const options = {
-    method: methode,
+// import token from "../token.js";
+
+export async function callAPI(
+  path = "",
+  httpMethod = "GET",
+  data = {}
+  // token = ""
+) {
+  let options = {
+    method: httpMethod,
     headers: {
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
     },
   };
 
-  if (methode !== "GET") options.body = JSON.stringify(data);
-  const response = await fetch(`http://${BaseIP}:${Port}${path}`, options);
+  //signIn and signUp requests do not supply tokens
+  if (token !== "" && token != undefined) {
+    options.headers.authorization = `Bearer ${token}`;
+  }
+
+  if (httpMethod !== "GET") options.body = JSON.stringify(data);
+  console.log("path", path);
+  console.log("option", options);
+  const response = await fetch(`http://${ServerIP}:${Port}${path}`, options);
   return response.json();
 }

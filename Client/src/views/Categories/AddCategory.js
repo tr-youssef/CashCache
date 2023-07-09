@@ -21,9 +21,9 @@ const AddCategory = ({ navigation }) => {
   const [type, setType] = useState(data.length > 0 ? data[0].value : "");
 
   const saveCategory = (name, type, choiceCategory) => {
-    callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory }, token)
+    callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory })
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
+        await callAPI("/api/categories/parents", "GET", "").then((res) => setCategories(res));
         navigation.navigate("Categories");
       })
       .catch((error) => {

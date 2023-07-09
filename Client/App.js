@@ -40,14 +40,18 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" hide>
+      <Stack.Navigator initialRouteName="Login" hide>
         <Stack.Screen
           component={BottomMenu}
           name="Home"
           options={{ headerShown: false }}
           // onLayoutRootView={onLayoutRootView}
         ></Stack.Screen>
-        <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

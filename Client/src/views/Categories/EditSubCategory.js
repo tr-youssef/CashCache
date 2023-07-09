@@ -24,9 +24,9 @@ const EditSubCategory = ({ route, navigation }) => {
 
     const updatedSelectedCategory = { ...selectedCategory, subcategories: updatedSubcategories };
 
-    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", updatedSelectedCategory, token)
+    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", updatedSelectedCategory)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "", token).then((res) => {
+        await callAPI("/api/categories/parents", "GET", "").then((res) => {
           setCategories(res);
           const newCategory = res.find((category) => category._id === selectedCategory._id);
           setSelectedCategory(newCategory);
