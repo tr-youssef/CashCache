@@ -33,8 +33,10 @@ echarts.use([
 ]);
 
 const Dashboard = ({ navigation }) => {
-  const theme = "dark"; //useColorScheme();
-  const [chartData, setChartData] = useState([]);
+  // const theme = useColorScheme(); //results in top and bottom bands of white
+  const theme = "dark";
+  // const [chartData, setChartData] = useState([]);
+  const [userToken, setUserToken] = useState(token);
   const [endDate, setEndDate] = useState(new Date());
   //todo - address date ranges spanning a year
   const [startDate, setStartDate] = useState(
@@ -84,40 +86,41 @@ const Dashboard = ({ navigation }) => {
         labelLine: {
           show: false,
         },
-        data: chartData,
+        data: [],
       },
     ],
   };
 
   React.useEffect(() => {
-    // if (token !== "" && token !== undefined) {
-    callAPI(
-      `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
-      "GET"
-    )
-      .then((res) => {
-        console.log("res", res);
-        setChartData(res);
-        console.log("chartData", chartData);
-        option.series[0].data = res;
-        let chart;
-        if (skiaRef.current) {
-          chart = echarts.init(
-            skiaRef.current,
-            theme === "light" ? "light" : "dark",
-            {
-              renderer: "svg",
-              width: 400,
-              height: 400,
-            }
-          );
-          chart.setOption(option);
-        }
-        return () => chart?.dispose();
-      })
-      .catch((error) => console.log("error", error));
-    // }
-  }, [startDate, endDate]);
+    console.log("token", token);
+    if (userToken !== "" && userToken !== undefined) {
+      callAPI(
+        `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
+        "GET"
+      )
+        .then((res) => {
+          console.log("res", res);
+          // setChartData(res);
+          // console.log("chartData", chartData);
+          option.series[0].data = res;
+          let chart;
+          if (skiaRef.current) {
+            chart = echarts.init(
+              skiaRef.current,
+              theme === "light" ? "light" : "dark",
+              {
+                renderer: "svg",
+                width: 400,
+                height: 400,
+              }
+            );
+            chart.setOption(option);
+          }
+          return () => chart?.dispose();
+        })
+        .catch((error) => console.log("error", error));
+    }
+  }, [startDate, endDate, userToken]);
 
   return (
     <>
