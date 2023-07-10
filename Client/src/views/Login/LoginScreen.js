@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { setToken, callAPI } from "../../utils/fetch/callAPI";
+import { colors } from "../../utils/theme/theme.js";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -129,11 +130,6 @@ const LoginScreen = () => {
           blurOnSubmit={false}
           onBlur={(e) => {
             validateEmail(email);
-            // if (!validateEmail(email)) {
-            //   alert("Invalid email address");
-            //   //re-focus control
-            //   emailRef.current?.focus();
-            // }
           }}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
@@ -148,14 +144,7 @@ const LoginScreen = () => {
           secureTextEntry
           onBlur={(e) => {
             validatePassword(password);
-            // console.log("password", password);
-            // if (!validatePassword(password)) {
-            //   alert("Invalid password.  Must be at least 6 characters");
-            //   //re-focus control
-            //   passwordRef.current?.focus();
-            // }
           }}
-          // onEndEditing={() => {alert("editing has ended")}}
         />
       </View>
 
@@ -181,6 +170,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#050A05",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -201,7 +191,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: colors.dark.greenElec,
     width: "100%",
     padding: 15,
     borderRadius: 10,
@@ -210,7 +200,7 @@ const styles = StyleSheet.create({
   buttonOutline: {
     backgroundColor: "white",
     marginTop: 5,
-    borderColor: "#0782F9",
+    borderColor: colors.dark.greenElec,
     borderWidth: 2,
   },
   buttonText: {
@@ -219,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "#0782F9",
+    color: colors.dark.greenElec,
     fontWeight: "700",
     fontSize: 16,
   },
