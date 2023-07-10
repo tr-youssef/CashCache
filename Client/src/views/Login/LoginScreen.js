@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { auth } from "../../utils/firebase/firebase";
 import {
   createUserWithEmailAndPassword,
@@ -19,6 +19,8 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -28,9 +30,42 @@ const LoginScreen = () => {
     });
   });
 
-  const handleSignUp = () => {
-    console.log("email", email);
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
+
+  const validatePassword = () => {
     console.log("password", password);
+    // return String(password).length >= 6;
+    if (String(password).length < 6) {
+      alert("Invalid password.  Must be at least 6 characters");
+      passwordRef.current?.focus();
+      return false;
+    }
+    return true;
+  };
+
+  const validateEmail = () => {
+    var re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // return re.test(email);
+    if (!re.test(email)) {
+      alert("Invalid email address");
+      emailRef.current?.focus();
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignUp = () => {
+    if (!validateEmail()) {
+      return;
+    }
+
+    if (!validatePassword()) {
+      return;
+    }
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
@@ -49,6 +84,14 @@ const LoginScreen = () => {
   };
 
   const handleLogin = () => {
+    if (!validateEmail(email)) {
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      return;
+    }
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
@@ -80,16 +123,39 @@ const LoginScreen = () => {
           autoCapitalize="none"
           placeholder="Email"
           value={email}
+          type={email}
+          ref={emailRef}
+          keyboardType="email-address"
+          blurOnSubmit={false}
+          onBlur={(e) => {
+            validateEmail(email);
+            // if (!validateEmail(email)) {
+            //   alert("Invalid email address");
+            //   //re-focus control
+            //   emailRef.current?.focus();
+            // }
+          }}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Password"
+          ref={passwordRef}
           value={password}
           minLength={4}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
+          onBlur={(e) => {
+            validatePassword(password);
+            // console.log("password", password);
+            // if (!validatePassword(password)) {
+            //   alert("Invalid password.  Must be at least 6 characters");
+            //   //re-focus control
+            //   passwordRef.current?.focus();
+            // }
+          }}
+          // onEndEditing={() => {alert("editing has ended")}}
         />
       </View>
 
