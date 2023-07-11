@@ -1,54 +1,27 @@
-import React, { useContext, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  useColorScheme,
-  ScrollViewBase,
-} from "react-native";
-import { DrawerContext } from "../../utils/context/DrawerContext.js";
-import Modal from "react-native-modal";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
+import { callAPI } from "../../utils/fetch/callAPI.js";
 import { colors } from "../../utils/theme/theme.js";
-import { Icon } from "@rneui/themed";
-
 import * as echarts from "echarts/core";
 import { LineChart, PieChart } from "echarts/charts";
-import {
-  GridComponent,
-  LegendComponent,
-  TooltipComponent,
-} from "echarts/components";
-import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
-import { token, callAPI } from "../../utils/fetch/callAPI.js";
-import { ScrollView } from "react-native-gesture-handler";
+import { GridComponent, LegendComponent, TooltipComponent } from "echarts/components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-echarts.use([
-  SVGRenderer,
-  LineChart,
-  PieChart,
-  GridComponent,
-  LegendComponent,
-  TooltipComponent,
-]);
+echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent, TooltipComponent]);
 
 const Dashboard = ({ navigation }) => {
-  // const theme = useColorScheme(); //results in top and bottom bands of white
-  console.log("token", token);
-  const theme = "dark";
   const [endDate, setEndDate] = useState(new Date());
-  //todo - address date ranges spanning a year
-  const [startDate, setStartDate] = useState(
-    new Date(endDate.getFullYear(), endDate.getMonth(), 1)
-  );
+  const [startDate, setStartDate] = useState(new Date(endDate.getFullYear(), endDate.getMonth(), 1));
   const skiaRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
   function currencyFormatter(data) {
     data = parseFloat(data);
     return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
   }
 
-  let option = {
+  const option = {
     backgroundColor: styles.containerDark.backgroundColor,
     tooltip: {
       trigger: "item",
@@ -90,79 +63,61 @@ const Dashboard = ({ navigation }) => {
     ],
   };
 
-  const LoadPieChartData = () => {
-    if (token !== "" && token !== undefined) {
-      console.log("LoadPieChartData");
-      callAPI(
-        `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
-        "GET"
-      )
-        .then((res) => {
-          option.series[0].data = res;
-          let chart;
-          if (skiaRef.current) {
-            chart = echarts.init(
-              skiaRef.current,
-              theme === "light" ? "light" : "dark",
-              {
-                renderer: "svg",
-                width: 400,
-                height: 400,
-              }
-            );
-            chart.setOption(option);
-          }
-          return () => chart?.dispose();
-        })
-        .catch((error) => console.log("error", error));
+  const LoadPieChartData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        await callAPI(`/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`, "GET", {}, token)
+          .then((res) => {
+            option.series[0].data = res;
+            if (chartInstanceRef.current) {
+              chartInstanceRef.current.setOption(option);
+            }
+          })
+          .catch((error) => console.log("error", error));
+      }
+    } catch (error) {
+      console.log("error", error);
     }
   };
 
-  React.useEffect(() => {
-    console.log("displqy piechart");
+  useEffect(() => {
     LoadPieChartData();
-  }, [startDate, endDate]);
+    navigation.addListener("focus", LoadPieChartData);
+  }, [startDate, endDate, navigation]);
 
-  React.useEffect(() => {
-    navigation.addListener("focus", () => {
-      console.log("focus listener reloading");
-      LoadPieChartData();
-    });
+  useEffect(() => {
+    if (skiaRef.current && !chartInstanceRef.current) {
+      chartInstanceRef.current = echarts.init(skiaRef.current, "dark", {
+        renderer: "svg",
+        width: 400,
+        height: 400,
+      });
+      chartInstanceRef.current.setOption(option);
+    }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.dispose();
+        chartInstanceRef.current = null;
+      }
+    };
   }, []);
 
   return (
-    <>
-      {/* {token != "" && token != undefined && <SkiaChart ref={skiaRef} />} */}
-      {/* chartData != [] && <SkiaChart ref={skiaRef} /> */}
-
-      <View
-        style={theme === "light" ? styles.containerLight : styles.containerDark}
-      >
-        <SkiaChart ref={skiaRef} />
-      </View>
-    </>
+    <View style={styles.containerDark}>
+      <SkiaChart ref={skiaRef} />
+    </View>
   );
 };
 
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  containerLight: {
-    flex: 1,
-    backgroundColor: colors.light.lightBlue,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   containerDark: {
     flex: 1,
     backgroundColor: colors.dark.black,
     alignItems: "center",
     justifyContent: "center",
-  },
-  textLight: {
-    color: colors.light.black,
-  },
-  textDark: {
-    color: colors.dark.white,
   },
 });

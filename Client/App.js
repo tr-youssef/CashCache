@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
@@ -47,11 +47,7 @@ export default function App() {
           options={{ headerShown: false }}
           // onLayoutRootView={onLayoutRootView}
         ></Stack.Screen>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={LoginScreen}
-        />
+        <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

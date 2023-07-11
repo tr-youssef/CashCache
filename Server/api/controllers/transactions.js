@@ -144,7 +144,6 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
     },
   ]);
 
-
   try {
     const results = await tranAgg.exec();
     const chartData = results.map((elem) => ({
@@ -169,9 +168,7 @@ export const deleteTransaction = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    transactionDeleted.deletedCount > 0
-      ? res.status(200).json({ message: "Transaction deleted" })
-      : res.status(404).json({ message: `No Transaction with id: ${id}` });
+    transactionDeleted.deletedCount > 0 ? res.status(200).json({ message: "Transaction deleted" }) : res.status(404).json({ message: `No Transaction with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

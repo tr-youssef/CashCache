@@ -1,7 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../../utils/firebase/firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import { callAPI } from "../../utils/fetch/callAPI";
+import { token, setToken, callAPI } from "../../utils/fetch/callAPI";
 import { colors } from "../../utils/theme/theme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -13,6 +15,18 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Home");
+      }
+    });
+
+    emailRef.current.focus();
+
+    return () => unsubscribe();
+  }, []);
 
   const validatePassword = () => {
     if (password.length < 6) {
@@ -33,41 +47,53 @@ const LoginScreen = () => {
     return true;
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = () => {
     setError("");
 
     if (!validateEmail() || !validatePassword()) {
       return;
     }
-    await callAPI("/api/users/signup", "POST", {
-      email: email,
-      password: password,
-    })
-      .then(async (response) => {
-        if (response.token) {
-          await AsyncStorage.setItem("token", response.token);
-          navigation.navigate("Home");
-        } else setError(response.message);
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCredentials) => {
+        const user = userCredentials.user;
+
+        await callAPI("/api/users/signup", "POST", {
+          email: user.email,
+          password: user.passsword,
+        })
+          .then((resp) => {
+            AsyncStorage.setItem("token", resp.token);
+          })
+          .catch((error) => setError("Sign up error: " + error.message));
       })
       .catch((error) => setError("Sign up error: " + error.message));
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setError("");
 
     if (!validateEmail() || !validatePassword()) {
       return;
     }
 
-    await callAPI("/api/users/signin", "POST", {
-      email: email,
-      password: password,
-    })
-      .then(async (response) => {
-        if (response.token) {
-          await AsyncStorage.setItem("token", response.token);
-          navigation.navigate("Home");
-        } else setError(response.message);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        userCredentials.password = password;
+        return userCredentials;
+      })
+      .then(async (userCredentials) => {
+        await callAPI("/api/users/signin", "POST", {
+          email: userCredentials._tokenResponse.email,
+          password: userCredentials.password,
+        })
+          .then((resp) => {
+            AsyncStorage.setItem("token", resp.token);
+
+            navigation.navigate("Home");
+          })
+          .catch((error) => setError("Sign in error: " + error.message));
       })
       .catch((error) => setError("Sign in error: " + error.message));
   };

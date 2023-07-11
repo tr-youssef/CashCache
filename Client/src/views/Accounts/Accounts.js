@@ -4,6 +4,7 @@ import AddButton from "../../components/AddButton/AddButton.js";
 import { AccountsContext } from "../../utils/context/AccountsContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import Card from "../../components/Card/Card.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Accounts = ({ navigation }) => {
   const AccountContext = useContext(AccountsContext);
@@ -14,9 +15,13 @@ const Accounts = ({ navigation }) => {
   };
 
   useEffect(() => {
-    callAPI("/api/accounts", "GET", "")
-      .then((res) => setAccounts(res))
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      callAPI("/api/accounts", "GET", "", token)
+        .then((res) => setAccounts(res))
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, []);
   return (
     <View style={styles.container}>

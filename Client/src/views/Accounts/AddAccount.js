@@ -6,6 +6,7 @@ import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
 import { AccountsContext } from "../../utils/context/AccountsContext.js";
 import Card from "../../components/Card/Card.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddAccount = ({ navigation }) => {
   const AccountContext = useContext(AccountsContext);
@@ -13,10 +14,11 @@ const AddAccount = ({ navigation }) => {
   const [name, setName] = useState("");
   const [initialAmount, setInitialAmount] = useState(0);
 
-  const saveAccount = (name, initialAmount) => {
-    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount })
+  const saveAccount = async (name, initialAmount) => {
+    const token = await AsyncStorage.getItem("token");
+    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "").then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {
