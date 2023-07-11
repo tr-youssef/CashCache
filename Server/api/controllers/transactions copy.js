@@ -28,17 +28,10 @@ export const getTransactions = async (req, res) => {
           from: "categories",
           localField: "categoryId",
           foreignField: "subcategories._id",
-          as: "subCategory",
+          as: "subcategoryCategory",
         },
       },
-      {
-        $lookup: {
-          from: "accounts",
-          localField: "accountId",
-          foreignField: "_id",
-          as: "account",
-        },
-      },
+
       { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$tranDate" } }, transaction: { $push: "$$ROOT" } } },
 
       {
@@ -66,10 +59,10 @@ export const addTransaction = async (req, res) => {
       amount: newTransaction.amount,
       tranDate: newTransaction.tranDate,
       note: newTransaction.note,
-      userId: req.userId,
+      userId: newTransaction.userId,
       categoryId: newTransaction.categoryId,
       accountId: newTransaction.accountId,
-      //tags: newTransaction.tags,
+      tags: newTransaction.tags,
     });
     res.status(201).json(transactionCreated);
   } catch (error) {
@@ -100,93 +93,6 @@ export const addTransactions = async (req, res) => {
     }
 
     res.status(201).json(resultArr);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const aggregateTransactionsByDateRange = async (req, res) => {
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
-  const accountId = req.query.accountId;
-
-  const token = req.headers.authorization.split(" ")[1];
-  if (token) {
-    let decodedData = jwt.verify(token, process.env.HASHCODE);
-    req.userId = decodedData?.id;
-  }
-
-  const tranAgg = Transactions.aggregate([
-    {
-      $match: {
-        tranDate: {
-          $gte: new Date(`${startDate}`),
-          $lt: new Date(`${endDate}`),
-        },
-        userId: {
-          $eq: new mongoose.Types.ObjectId(`${req.userId}`),
-        },
-        //we decided that we should aggregate all accounts
-        // accountId: {
-        //   $eq: new mongoose.Types.ObjectId(`${accountId}`),
-        // },
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "categoryId",
-        foreignField: "_id",
-        as: "categories",
-      },
-    },
-    {
-      $addFields: {
-        category: {
-          $arrayElemAt: ["$categories", 0],
-        },
-        subcategory: {
-          $arrayElemAt: ["$categories.subcategories", 0],
-        },
-      },
-    },
-    {
-      $project: {
-        categoryName: "$category.name",
-        subcategoryName: "$subcategory.name",
-        amount: 1,
-        categoryType: "$category.type",
-      },
-    },
-    {
-      $group: {
-        _id: "$categoryName",
-        categoryName: {
-          $first: "$categoryName",
-        },
-        subCategoryName: {
-          $first: "$categoryName",
-        },
-        subcategoryName: {
-          $first: "$subcategoryName",
-        },
-        categoryType: {
-          $first: "$categoryType",
-        },
-        amount: {
-          $sum: "$amount",
-        },
-      },
-    },
-  ]);
-
-  try {
-    const results = await tranAgg.exec();
-    const chartData = results.map((elem) => ({
-      value: elem.amount,
-      name: elem.categoryName,
-    }));
-    res.status(200).json(chartData);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

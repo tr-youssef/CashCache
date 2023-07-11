@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import { StyleSheet, FlatList, View, Pressable } from "react-native";
 import AddButton from "../../components/AddButton/AddButton.js";
 import { AccountsContext } from "../../utils/context/AccountsContext.js";
@@ -7,6 +8,7 @@ import Card from "../../components/Card/Card.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Accounts = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const AccountContext = useContext(AccountsContext);
   const { accounts, setAccounts } = AccountContext;
 
@@ -27,6 +29,8 @@ const Accounts = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={accounts}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <Pressable
             style={styles.containerCard}
@@ -37,7 +41,7 @@ const Accounts = ({ navigation }) => {
             <Card name={item.name} initialAmount={item.initialAmount} />
           </Pressable>
         )}
-        keyExtractor={(item, index) => `message ${index}`}
+        keyExtractor={(item) => item._id}
       />
       <AddButton screen={"AddAccount"} />
     </View>

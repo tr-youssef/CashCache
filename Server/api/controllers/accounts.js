@@ -35,6 +35,26 @@ export const getAccountById = async (req, res) => {
   }
 };
 
+export const getAccountByPlaidId = async (req, res) => {
+  const { id } = req.params;
+  console.log("id", id);
+  const token = req.headers.authorization.split(" ")[1];
+  if (token) {
+    let decodedData = jwt.verify(token, process.env.HASHCODE);
+    req.userId = decodedData?.id;
+  }
+  try {
+    const account = await Accounts.findOne({
+      plaidId: id,
+      userId: req.userId,
+    });
+    console.log("account", account);
+    res.status(200).json(account);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const addAccount = async (req, res) => {
   const newAccount = req.body;
   const token = req.headers.authorization.split(" ")[1];
@@ -46,6 +66,7 @@ export const addAccount = async (req, res) => {
     const accountCreated = await Accounts.create({
       name: newAccount.name,
       initialAmount: newAccount.initialAmount,
+      plaidId: newAccount.plaidId,
       userId: req.userId,
     });
     res.status(201).json(accountCreated);

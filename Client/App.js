@@ -34,9 +34,9 @@ export default function App() {
     }, 3000);
   }, []);
 
-  if (!fontsLoaded || isloading) {
-    return <MySplashScreen />;
-  }
+  // if (!fontsLoaded || isloading) {
+  //   return <MySplashScreen />;
+  // }
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>

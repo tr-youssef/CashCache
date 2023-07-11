@@ -6,7 +6,7 @@ import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 
 import { RectButton } from "react-native-gesture-handler";
 
-const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
+const DisplayBar = ({ type = "category", category, disabled }) => {
   const navigation = useNavigation();
   const categoryContext = useContext(CategoriesContext);
   const { setSelectedCategory } = categoryContext;
@@ -16,7 +16,6 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
       navigation.navigate("Subcategory");
     }
   };
-
   if (disabled)
     return (
       <View style={type === "categorySubcategory" ? styles.containerCategorySubcategory : styles.container}>
@@ -25,15 +24,7 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
             <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
             <Text style={styles.text}>{category?.name}</Text>
           </View>
-          {type === "category" ? (
-            <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" />
-          ) : type === "categorySubcategory" ? (
-            <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" />
-          ) : type === "subcategory" ? (
-            ""
-          ) : (
-            <Text>{amount}</Text>
-          )}
+          {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "categorySubcategory" ? <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" /> : ""}
         </View>
       </View>
     );
@@ -44,7 +35,7 @@ const DisplayBar = ({ type = "category", category, amount = "", disabled }) => {
           <Icon name={category?.icon} size={20} color="#F2FFF5" type="MaterialIcons" />
           <Text style={styles.text}>{category?.name}</Text>
         </View>
-        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? <Icon name="keyboard-arrow-down" size={20} color="#F2FFF5" type="MaterialIcons" /> : <Text>{amount}</Text>}
+        {type === "category" ? <Icon name="keyboard-arrow-right" size={20} color="#F2FFF5" type="MaterialIcons" /> : type === "subcategory" ? "" : <Text>{amount}</Text>}
       </RectButton>
     </View>
   );
@@ -58,9 +49,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginTop: 5,
+    borderColor: "#33CD48",
+    borderWidth: 1,
   },
   containerCategorySubcategory: {
-    width: 280,
+    width: 350,
     backgroundColor: "#1A251D",
     borderRadius: 20,
     marginBottom: 40,

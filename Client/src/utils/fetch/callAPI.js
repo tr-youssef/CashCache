@@ -16,7 +16,10 @@ export async function callAPI(path = "", httpMethod = "GET", data = {}, token) {
     options.headers.authorization = `Bearer ${token}`;
   }
 
-  if (httpMethod !== "GET") options.body = JSON.stringify(data);
-  const response = await fetch(`http://${ServerIP}:${Port}${path}`, options);
-  return response.json();
+    if (httpMethod !== "GET") options.body = JSON.stringify(data);
+    const response = await fetch(`http://${ServerIP}:${Port}${path}`, options);
+    return response.json();
+  } catch (error) {
+    console.log("error :", error.message);
+  }
 }

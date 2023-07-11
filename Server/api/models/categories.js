@@ -34,6 +34,9 @@ const categoriesSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "User is required"],
   },
+  plaidId: {
+    type: String,
+  },
   subcategories: [subcategorySchema],
 });
 

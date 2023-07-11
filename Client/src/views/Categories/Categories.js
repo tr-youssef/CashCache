@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { FlatList } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
 
 import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
@@ -29,6 +30,7 @@ const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
 };
 
 const Categories = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const categoryContext = useContext(CategoriesContext);
   const { categories, setCategories } = categoryContext;
   const [selectCategories, setSelectCategories] = useState(categories);
@@ -44,7 +46,7 @@ const Categories = ({ navigation }) => {
         );
       })
       .catch((error) => {
-        console.error("Error saving category:", error);
+        console.error("Error deleting category:", error);
       });
   };
   const editAction = (category) => {
@@ -57,7 +59,7 @@ const Categories = ({ navigation }) => {
     callAPI("/api/categories/parents", "GET")
       .then((res) => setCategories(res))
       .catch((error) => console.log("error", error));
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     setSelectCategories(
@@ -68,23 +70,12 @@ const Categories = ({ navigation }) => {
       )
     );
   }, [categories, type, search]);
+
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
       <SearchBar search={search} setSearch={setSearch} />
-      <FlatList
-        data={selectCategories}
-        renderItem={({ item, index }) => (
-          <SwipeableRow
-            item={item}
-            key={item._id}
-            index={index}
-            editAction={() => editAction(item)}
-            deleteAction={() => deleteAction(item._id)}
-          />
-        )}
-        keyExtractor={(item, index) => `message ${index}`}
-      />
+      <FlatList data={selectCategories} renderItem={({ item, index }) => <SwipeableRow item={item} key={item._id} index={index} editAction={() => editAction(item)} deleteAction={() => deleteAction(item._id)} />} keyExtractor={(item) => item._id} />
       <AddButton screen={"AddCategory"} />
     </View>
   );

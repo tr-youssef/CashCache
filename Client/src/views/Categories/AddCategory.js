@@ -8,8 +8,7 @@ import { useState } from "react";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 
 const AddCategory = ({ navigation }) => {
-  const categoryContext = useContext(CategoriesContext);
-  const { setCategories } = categoryContext;
+  const { setCategories } = useContext(CategoriesContext);
   const data = [
     { label: "Expense", value: "Expense" },
     { label: "Income", value: "Income" },
