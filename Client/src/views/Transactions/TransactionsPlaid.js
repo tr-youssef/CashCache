@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Plaid from "../../utils/plaid/Plaid.js";
 import { PlaidContext } from "../../utils/context/PlaidContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TransactionsPlaid = ({ navigation }) => {
   const plaidContext = useContext(PlaidContext);
@@ -15,6 +16,7 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const fetchPlaidAccounts = async () => {
     try {
+      const token = await AsyncStorage.getItem("token");
       const accounts = await callAPI("/api/accounts", "GET", "", token);
       const tempAccounts = accounts.filter((account) => account.plaidId).map((account) => account.plaidId);
       setPlaidAccounts(tempAccounts);
@@ -38,6 +40,7 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const exchangePublicToken = async (publicToken) => {
     try {
+      const token = await AsyncStorage.getItem("token");
       const res = await callAPI("/api/plaid/exchange_public_token", "POST", { publicToken }, token);
       return res;
     } catch (error) {
@@ -47,6 +50,7 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const getPlaidAccounts = async (accessToken) => {
     try {
+      const token = await AsyncStorage.getItem("token");
       const nameAccounts = await callAPI("/api/plaid/getAccounts", "POST", { access_token: accessToken }, token);
       return nameAccounts;
     } catch (error) {
@@ -56,6 +60,7 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const syncTransactions = async (accessToken, plaidNameAccounts) => {
     try {
+      const token = await AsyncStorage.getItem("token");
       const transactions = await callAPI("/api/plaid/synctransactions", "POST", { access_token: accessToken }, token);
       for (const transaction of transactions.latest_transactions) {
         const existingAccount = await findAccountByPlaidId(transaction.account_id);
@@ -71,10 +76,10 @@ const TransactionsPlaid = ({ navigation }) => {
   };
 
   const createTransaction = async (transaction, existingAccount) => {
-    console.log("existingAccount2", existingAccount);
     try {
       const { account_id, amount, date } = transaction;
       const categoryId = transaction.amount > 0 ? "64a6e7ede4a6c55040e9c7fc" : "64a6e81fe4a6c55040e9c7fe";
+      const token = await AsyncStorage.getItem("token");
       await callAPI("/api/transactions", "POST", { amount, tranDate: date, categoryId, accountId: existingAccount._id }, token);
     } catch (error) {
       throw new Error(error);
@@ -87,6 +92,7 @@ const TransactionsPlaid = ({ navigation }) => {
       const name = findAccountName(plaidNameAccounts, account_id);
       const initialAmount = 0;
       const plaidId = account_id;
+      const token = await AsyncStorage.getItem("token");
       const res = await callAPI("/api/accounts", "POST", { name, initialAmount, plaidId }, token);
       await createTransaction({ amount, date }, { _id: res._id });
       setPlaidAccounts((prevAccounts) => [...prevAccounts, account_id]);
@@ -97,6 +103,7 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const findAccountByPlaidId = async (plaidId) => {
     try {
+      const token = await AsyncStorage.getItem("token");
       const account = await callAPI(`/api/accounts/plaid/${plaidId}`, "GET", "", token);
       return account;
     } catch (error) {

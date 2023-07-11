@@ -16,7 +16,7 @@ const AddAccount = ({ navigation }) => {
 
   const saveAccount = async (name, initialAmount) => {
     const token = await AsyncStorage.getItem("token");
-    callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
+    await callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
       .then(async () => {
         await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");

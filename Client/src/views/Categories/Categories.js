@@ -10,16 +10,9 @@ import SearchBar from "../../components/SearchBar/SearchBar.js";
 import Swipe from "../../components/Swipe/Swipe.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
 import AddButton from "../../components/AddButton/AddButton.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Row = ({ item, editAction, deleteAction }) => (
-  <DisplayBar
-    key={item._id}
-    category={item}
-    type="category"
-    editAction={editAction}
-    deleteAction={deleteAction}
-  />
-);
+const Row = ({ item, editAction, deleteAction }) => <DisplayBar key={item._id} category={item} type="category" editAction={editAction} deleteAction={deleteAction} />;
 
 const SwipeableRow = ({ item, index, deleteAction, editAction }) => {
   return (
@@ -38,12 +31,11 @@ const Categories = ({ navigation }) => {
   const [type, setType] = useState("Expense");
   const [search, setSearch] = useState("");
 
-  const deleteAction = (idCategory) => {
-    callAPI(`/api/categories/${idCategory}`, "DELETE", {})
+  const deleteAction = async (idCategory) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(`/api/categories/${idCategory}`, "DELETE", {}, token)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "").then((res) =>
-          setCategories(res)
-        );
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
       })
       .catch((error) => {
         console.error("Error deleting category:", error);
@@ -56,19 +48,17 @@ const Categories = ({ navigation }) => {
   };
 
   useEffect(() => {
-    callAPI("/api/categories/parents", "GET")
-      .then((res) => setCategories(res))
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/categories/parents", "GET", {}, token)
+        .then((res) => setCategories(res))
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, [isFocused]);
 
   useEffect(() => {
-    setSelectCategories(
-      categories.filter(
-        (category) =>
-          category.type === type &&
-          category.name.toLowerCase().includes(search.toLowerCase())
-      )
-    );
+    setSelectCategories(categories.filter((category) => category.type === type && category.name.toLowerCase().includes(search.toLowerCase())));
   }, [categories, type, search]);
 
   return (

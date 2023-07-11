@@ -5,6 +5,7 @@ import { Icon } from "@rneui/themed";
 import React, { useState, useEffect, useContext } from "react";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { TransactionsContext } from "../../utils/context/TransactionsContext.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditTransaction = ({ route, navigation }) => {
   const { transaction } = route.params;
@@ -19,47 +20,60 @@ const EditTransaction = ({ route, navigation }) => {
   const [note, setNote] = useState(transaction.note);
 
   useEffect(() => {
-    callAPI("/api/accounts", "GET", "", token)
-      .then((res) => {
-        const transformedData = res.map((res) => ({
-          label: res.name,
-          value: res._id,
-        }));
-        setAccounts(transformedData);
-        setAccount(transaction.accountId);
-      })
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/accounts", "GET", "", token)
+        .then((res) => {
+          const transformedData = res.map((res) => ({
+            label: res.name,
+            value: res._id,
+          }));
+          setAccounts(transformedData);
+          setAccount(transaction.accountId);
+        })
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, []);
   useEffect(() => {
-    callAPI("/api/categories/parents", "GET", "", token)
-      .then((res) => {
-        const transformedData = res.map((res) => ({
-          label: res.name,
-          value: res._id,
-          type: res.type,
-        }));
-        setCategories(transformedData.filter((category) => category.type === type));
-        setCategory(transformedData.filter((category) => category.type === type)[0].value);
-      })
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/categories/parents", "GET", "", token)
+        .then((res) => {
+          const transformedData = res.map((res) => ({
+            label: res.name,
+            value: res._id,
+            type: res.type,
+          }));
+          setCategories(transformedData.filter((category) => category.type === type));
+          setCategory(transformedData.filter((category) => category.type === type)[0].value);
+        })
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, [type]);
 
   useEffect(() => {
-    callAPI("/api/categories/parents", "GET", "", token)
-      .then((res) => {
-        const transformedData = res.map((res) => ({
-          label: res.name,
-          value: res._id,
-          type: res.type,
-        }));
-        setCategories(transformedData);
-        setCategory(transaction.categoryId);
-      })
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/categories/parents", "GET", "", token)
+        .then((res) => {
+          const transformedData = res.map((res) => ({
+            label: res.name,
+            value: res._id,
+            type: res.type,
+          }));
+          setCategories(transformedData);
+          setCategory(transaction.categoryId);
+        })
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, []);
-  const updateTransaction = (amount, account, category, date, note, transaction) => {
-    callAPI(`/api/transactions/${transaction._id}`, "PATCH", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
-      .then(async (res) => {
+  const updateTransaction = async (amount, account, category, date, note, transaction) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(`/api/transactions/${transaction._id}`, "PATCH", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
+      .then(async () => {
         await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
         navigation.navigate("Transactions");
       })

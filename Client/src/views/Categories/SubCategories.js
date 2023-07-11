@@ -8,6 +8,7 @@ import Switch from "../../components/Switch/Switch.js";
 import SearchBar from "../../components/SearchBar/SearchBar.js";
 import DisplayBar from "../../components/DisplayBar/DisplayBar.js";
 import AddButton from "../../components/AddButton/AddButton.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Row = ({ item, editAction, deleteAction }) => <DisplayBar key={item._id} category={item} type="subcategory" editAction={editAction} deleteAction={deleteAction} />;
 
@@ -25,15 +26,17 @@ const SubCategories = ({ navigation }) => {
 
   const [selectSubCategories, setSelectSubCategories] = useState(selectedCategory);
   const [search, setSearch] = useState("");
-  const deleteAction = (idSubCategory) => {
+
+  const deleteAction = async (idSubCategory) => {
     const newSelectedCategory = {
       ...selectedCategory,
       subcategories: selectedCategory.subcategories.filter((subCategory) => subCategory._id !== idSubCategory),
     };
 
-    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory)
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory, token)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "").then((res) => {
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) => {
           setCategories(res);
           const newCategory = res.find((category) => category._id === selectedCategory._id);
           setSelectedCategory(newCategory);

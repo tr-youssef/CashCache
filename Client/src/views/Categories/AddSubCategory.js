@@ -5,6 +5,7 @@ import Input from "../../components/Input/Input.js";
 import IconsSelector from "../../components/IconsSelector/IconsSelector.js";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddSubCategory = ({ navigation }) => {
   const categoryContext = useContext(CategoriesContext);
@@ -13,14 +14,15 @@ const AddSubCategory = ({ navigation }) => {
   const [name, setName] = useState("");
   const [choiceCategory, setChoiceCategory] = useState(icons[0]);
 
-  const saveSubCategory = (name, choiceCategory) => {
+  const saveSubCategory = async (name, choiceCategory) => {
+    const token = await AsyncStorage.getItem("token");
     const newSelectedCategory = {
       ...selectedCategory,
       subcategories: [...selectedCategory.subcategories, { name: name, icon: choiceCategory }],
     };
-    callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory)
+    await callAPI(`/api/categories/parent/${selectedCategory._id}`, "PATCH", newSelectedCategory, token)
       .then(async () => {
-        await callAPI("/api/categories/parents", "GET", "").then((res) => {
+        await callAPI("/api/categories/parents", "GET", "", token).then((res) => {
           setCategories(res);
           const newCategory = res.find((category) => category._id === selectedCategory._id);
           setSelectedCategory(newCategory);

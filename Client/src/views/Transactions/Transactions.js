@@ -10,6 +10,7 @@ import DisplayBarTransaction from "../../components/DisplayBar/DisplayBarTransac
 import Swipe from "../../components/Swipe/Swipe.js";
 import AddButton from "../../components/AddButton/AddButton.js";
 import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Transactions = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -53,7 +54,8 @@ const Transactions = ({ navigation }) => {
   const sections = Object.values(transactionsByDate);
 
   const createLinkToken = useCallback(async () => {
-    callAPI("/api/plaid/generate_link_token", "POST", {}, token)
+    const token = await AsyncStorage.getItem("token");
+    await callAPI("/api/plaid/generate_link_token", "POST", {}, token)
       .then((res) => setLinkToken(res.link_token))
       .catch((error) => console.log("error", error));
   }, [setLinkToken]);
@@ -65,9 +67,13 @@ const Transactions = ({ navigation }) => {
   }, [linkToken]);
 
   useEffect(() => {
-    callAPI("/api/transactions", "GET", "", token)
-      .then((res) => setTransactions(res))
-      .catch((error) => console.log("error", error));
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/transactions", "GET", "", token)
+        .then((res) => setTransactions(res))
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
   }, [isFocused]);
 
   useEffect(() => {
@@ -81,9 +87,10 @@ const Transactions = ({ navigation }) => {
     );
   }, [transactions, search]);
 
-  const deleteAction = (idTransaction) => {
-    callAPI(`/api/transactions/${idTransaction}`, "DELETE", {}, token)
-      .then(async (res) => {
+  const deleteAction = async (idTransaction) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(`/api/transactions/${idTransaction}`, "DELETE", {}, token)
+      .then(async () => {
         await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
       })
       .catch((error) => {
