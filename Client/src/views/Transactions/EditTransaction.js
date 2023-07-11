@@ -35,23 +35,6 @@ const EditTransaction = ({ route, navigation }) => {
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = await AsyncStorage.getItem("token");
-      await callAPI("/api/categories/parents", "GET", "", token)
-        .then((res) => {
-          const transformedData = res.map((res) => ({
-            label: res.name,
-            value: res._id,
-            type: res.type,
-          }));
-          setCategories(transformedData.filter((category) => category.type === type));
-          setCategory(transformedData.filter((category) => category.type === type)[0].value);
-        })
-        .catch((error) => console.log("error", error));
-    };
-    fetchData();
-  }, [type]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +53,25 @@ const EditTransaction = ({ route, navigation }) => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("token");
+      await callAPI("/api/categories/parents", "GET", "", token)
+        .then((res) => {
+          const transformedData = res.map((res) => ({
+            label: res.name,
+            value: res._id,
+            type: res.type,
+          }));
+          setCategories(transformedData.filter((category) => category.type === type));
+          setCategory(transformedData.filter((category) => category.type === type)[0].value);
+        })
+        .catch((error) => console.log("error", error));
+    };
+    fetchData();
+  }, [type]);
+
   const updateTransaction = async (amount, account, category, date, note, transaction) => {
     const token = await AsyncStorage.getItem("token");
     await callAPI(`/api/transactions/${transaction._id}`, "PATCH", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
