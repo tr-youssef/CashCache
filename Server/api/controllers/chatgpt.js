@@ -25,7 +25,7 @@ userInterface.on("line", async (input) => {
   const res = await openai.createCompletion({
     model: "davinci:ft-personal-2023-06-26-23-43-26",
     prompt: input,
-    max_tokens: 100,
+    max_tokens: 1000,
   });
   console.log(res.data.choices[0].text);
 });
