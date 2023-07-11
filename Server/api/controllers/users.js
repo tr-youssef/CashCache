@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import Users from "../models/users.js";
 
 export const signin = async (req, res) => {
-  console.log("in signin server method");
   const { email, password } = req.body;
   try {
     const existingUser = await Users.findOne({

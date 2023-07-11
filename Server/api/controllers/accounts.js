@@ -37,7 +37,6 @@ export const getAccountById = async (req, res) => {
 
 export const addAccount = async (req, res) => {
   const newAccount = req.body;
-  console.log("newAccount", newAccount);
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);

@@ -13,7 +13,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
-import { setToken, callAPI } from "../../utils/fetch/callAPI";
+import { token,setToken, callAPI } from "../../utils/fetch/callAPI";
 import { colors } from "../../utils/theme/theme.js";
 
 const LoginScreen = () => {
@@ -36,7 +36,6 @@ const LoginScreen = () => {
   }, []);
 
   const validatePassword = () => {
-    console.log("password", password);
     // return String(password).length >= 6;
     if (String(password).length < 6) {
       alert("Invalid password.  Must be at least 6 characters");
@@ -70,15 +69,12 @@ const LoginScreen = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
 
         callAPI("/api/users/signup", "POST", {
           email: user.email,
           password: user.passsword,
         }).then((resp) => {
-          console.log("resp", resp);
           setToken(resp.token);
-          console.log("token", token);
         });
       })
       .catch((error) => alert(error.message));
@@ -100,16 +96,13 @@ const LoginScreen = () => {
         return userCredentials;
       })
       .then((userCredentials) => {
-        console.log("userCredentials", userCredentials);
-
         callAPI("/api/users/signin", "POST", {
           email: userCredentials._tokenResponse.email,
           password: userCredentials.password,
         })
           .then((resp) => {
-            console.log("resp", resp);
             setToken(resp.token);
-            console.log(`Log In for User '${resp.user.email}'`);
+            console.log(token);
             navigation.navigate("Home");
           })
           .catch((error) => alert("signin error: " + error));

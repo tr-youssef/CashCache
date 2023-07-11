@@ -34,21 +34,20 @@ echarts.use([
 
 const Dashboard = ({ navigation }) => {
   // const theme = useColorScheme(); //results in top and bottom bands of white
+  console.log("token", token);
   const theme = "dark";
-  // const [chartData, setChartData] = useState([]);
-  const [userToken, setUserToken] = useState(token);
   const [endDate, setEndDate] = useState(new Date());
   //todo - address date ranges spanning a year
   const [startDate, setStartDate] = useState(
     new Date(endDate.getFullYear(), endDate.getMonth(), 1)
   );
+  const skiaRef = useRef(null);
 
   function currencyFormatter(data) {
     data = parseFloat(data);
     return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
   }
 
-  const skiaRef = useRef(null);
   let option = {
     backgroundColor: styles.containerDark.backgroundColor,
     tooltip: {
@@ -91,17 +90,14 @@ const Dashboard = ({ navigation }) => {
     ],
   };
 
-  React.useEffect(() => {
-    console.log("token", token);
-    if (userToken !== "" && userToken !== undefined) {
+  const LoadPieChartData = () => {
+    if (token !== "" && token !== undefined) {
+      console.log("LoadPieChartData");
       callAPI(
         `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
         "GET"
       )
         .then((res) => {
-          console.log("res", res);
-          // setChartData(res);
-          // console.log("chartData", chartData);
           option.series[0].data = res;
           let chart;
           if (skiaRef.current) {
@@ -120,7 +116,19 @@ const Dashboard = ({ navigation }) => {
         })
         .catch((error) => console.log("error", error));
     }
-  }, [startDate, endDate, userToken]);
+  };
+
+  React.useEffect(() => {
+    console.log("displqy piechart");
+    LoadPieChartData();
+  }, [startDate, endDate]);
+
+  React.useEffect(() => {
+    navigation.addListener("focus", () => {
+      console.log("focus listener reloading");
+      LoadPieChartData();
+    });
+  }, []);
 
   return (
     <>
