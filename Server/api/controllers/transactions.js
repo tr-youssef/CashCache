@@ -110,7 +110,7 @@ export const addTransactions = async (req, res) => {
   }
 };
 
-export const aggregateTransactionsByDateRange = async (req, res) => {
+export const ExpensesByDateRange = async (req, res) => {
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
   const accountId = req.query.accountId;
@@ -199,6 +199,7 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
       value: elem.amount,
       name: elem.categoryName,
     }));
+    console.log("chartData", chartData);
     res.status(200).json(chartData);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -11,6 +11,7 @@ import {
   TooltipComponent,
 } from "echarts/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native-gesture-handler";
 
 echarts.use([
   SVGRenderer,
@@ -81,7 +82,7 @@ const Dashboard = ({ navigation }) => {
       const token = await AsyncStorage.getItem("token");
       if (token) {
         await callAPI(
-          `/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`,
+          `/api/transactions/agg/expenses/?startDate=${startDate}&endDate=${endDate}`,
           "GET",
           {},
           token
@@ -123,10 +124,10 @@ const Dashboard = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.containerDark}>
+    <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
       <Text style={styles.chartTitle}> Expenses </Text>
       <SkiaChart ref={skiaRef} />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -142,6 +143,5 @@ const styles = StyleSheet.create({
   chartTitle: {
     color: "white",
     fontWeight: "bold",
-
-  }
+  },
 });
