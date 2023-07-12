@@ -1,18 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { colors } from "../../utils/theme/theme.js";
 import * as echarts from "echarts/core";
 import { LineChart, PieChart } from "echarts/charts";
-import { GridComponent, LegendComponent, TooltipComponent } from "echarts/components";
+import {
+  GridComponent,
+  LegendComponent,
+  TooltipComponent,
+} from "echarts/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native-gesture-handler";
 
-echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent, TooltipComponent]);
+echarts.use([
+  SVGRenderer,
+  LineChart,
+  PieChart,
+  GridComponent,
+  LegendComponent,
+  TooltipComponent,
+]);
 
 const Dashboard = ({ navigation }) => {
   const [endDate, setEndDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date(endDate.getFullYear(), endDate.getMonth(), 1));
+  const [startDate, setStartDate] = useState(
+    new Date(endDate.getFullYear(), endDate.getMonth(), 1)
+  );
   const skiaRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
@@ -31,13 +45,13 @@ const Dashboard = ({ navigation }) => {
       },
     },
     legend: {
-      top: "5%",
+      top: "2%",
       left: "center",
     },
     series: [
       {
         type: "pie",
-        radius: ["40%", "70%"],
+        radius: ["30%", "60%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 10,
@@ -51,7 +65,7 @@ const Dashboard = ({ navigation }) => {
         emphasis: {
           label: {
             show: true,
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: "bold",
           },
         },
@@ -67,7 +81,12 @@ const Dashboard = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        await callAPI(`/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`, "GET", {}, token)
+        await callAPI(
+          `/api/transactions/agg/expenses/?startDate=${startDate}&endDate=${endDate}`,
+          "GET",
+          {},
+          token
+        )
           .then((res) => {
             option.series[0].data = res;
             if (chartInstanceRef.current) {
@@ -105,9 +124,10 @@ const Dashboard = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.containerDark}>
+    <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
+      <Text style={styles.chartTitle}> Expenses </Text>
       <SkiaChart ref={skiaRef} />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -119,5 +139,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark.black,
     alignItems: "center",
     justifyContent: "center",
+  },
+  chartTitle: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
