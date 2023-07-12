@@ -14,7 +14,7 @@ const Accounts = ({ navigation }) => {
   };
 
   useEffect(() => {
-    callAPI("/api/accounts", "GET", "", token)
+    ("/api/accounts", "GET", "", token)
       .then((res) => setAccounts(res))
       .catch((error) => console.log("error", error));
   }, []);

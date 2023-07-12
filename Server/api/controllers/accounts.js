@@ -29,7 +29,9 @@ export const getAccountById = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    account ? res.status(200).json(account) : res.status(404).send({ message: `No Account with id: ${id}` });
+    account
+      ? res.status(200).json(account)
+      : res.status(404).send({ message: `No Account with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -37,7 +39,6 @@ export const getAccountById = async (req, res) => {
 
 export const addAccount = async (req, res) => {
   const newAccount = req.body;
-  console.log("newAccount", newAccount);
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
@@ -67,7 +68,9 @@ export const deleteAccount = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    accountDeleted.deletedCount > 0 ? res.status(200).json({ message: "Account deleted" }) : res.status(404).json({ message: `No Account with id: ${id}` });
+    accountDeleted.deletedCount > 0
+      ? res.status(200).json({ message: "Account deleted" })
+      : res.status(404).json({ message: `No Account with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

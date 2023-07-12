@@ -17,7 +17,16 @@ const Bot = () => {
         GiftedChat.append(previousMessage, userMessage)
       );
       const messageText = userMessage.text.toLowerCase();
-      const keywords = ["budget", "money", "save", "$", "savings"];
+      const keywords = [
+        "budget",
+        "budgeting",
+        "money",
+        "save",
+        "$",
+        "savings",
+        "saving",
+        "investment",
+      ];
 
       //add more keywords as needed
       if (!keywords.some((keyword) => messageText.includes(keyword))) {
@@ -35,31 +44,26 @@ const Bot = () => {
         );
         return;
       }
-
       //if messsage has keywords
       const response = await callAPI(
         "/api/chat",
         "POST",
         {
-          prompt: `make a budget for ${messageText}`,
-          max_tokens: 1000,
-          temperature: 0.2,
-          n: 1,
+          prompt: messageText,
         },
-        {
-          CHAT_API_KEY,
-        }
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRyLnlvdXNzZWZAZ21haWwuY29tIiwiaWQiOiI2NDdlZDUxNzY1YTY1YmRmMDhmMWJkZmUiLCJpYXQiOjE2ODkxOTA0NTgsImV4cCI6MTY4OTIzMzY1OH0.YbuvIYBfh3gBh3OyKJ8-p6-kbtgG4DynX4zYEIVMpqQ"
       );
-      console.log(response.data);
 
-      const budget = response.data.choices[0].text.trim();
+      console.log("response.data :", response);
+
+      //const budget = response.data.choices[0].text.trim();
       const botMessage = {
         _id: new Date().getTime() + 1,
-        text: budget,
+        text: response.bot,
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: "Money Bot",
+          name: "Budget Bot",
         },
       };
 
@@ -67,7 +71,7 @@ const Bot = () => {
         GiftedChat.append(previousMessage, botMessage)
       );
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
     }
   };
 
