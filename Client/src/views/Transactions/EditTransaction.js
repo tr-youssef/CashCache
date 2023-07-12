@@ -64,19 +64,44 @@ const EditTransaction = ({ route, navigation }) => {
             value: res._id,
             type: res.type,
           }));
-          setCategories(transformedData.filter((category) => category.type === type));
-          setCategory(transformedData.filter((category) => category.type === type)[0].value);
+          setCategories(
+            transformedData.filter((category) => category.type === type)
+          );
+          setCategory(
+            transformedData.filter((category) => category.type === type)[0]
+              .value
+          );
         })
         .catch((error) => console.log("error", error));
     };
     fetchData();
   }, [type]);
 
-  const updateTransaction = async (amount, account, category, date, note, transaction) => {
+  const updateTransaction = async (
+    amount,
+    account,
+    category,
+    date,
+    note,
+    transaction
+  ) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI(`/api/transactions/${transaction._id}`, "PATCH", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
+    await callAPI(
+      `/api/transactions/${transaction._id}`,
+      "PATCH",
+      {
+        amount: amount,
+        accountId: account,
+        categoryId: category,
+        tranDate: date,
+        note: note,
+      },
+      token
+    )
       .then(async () => {
-        await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
+        await callAPI("/api/transactions", "GET", "", token).then((res) =>
+          setTransactions(res)
+        );
         navigation.navigate("Transactions");
       })
       .catch((error) => {
@@ -88,15 +113,47 @@ const EditTransaction = ({ route, navigation }) => {
     navigation.setOptions({
       title: "Edit Transaction",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => updateTransaction(amount, account, category, date, note, transaction)} />,
+      headerRight: () => (
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() =>
+            updateTransaction(
+              amount,
+              account,
+              category,
+              date,
+              note,
+              transaction
+            )
+          }
+        />
+      ),
     });
   }, [navigation, amount, account, category, date, note]);
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
-      <Input label={"Amount :"} value={amount.toString()} setValue={setAmount} />
-      <Input label={"Account :"} datalist={accounts} value={account} setValue={setAccount} />
-      <Input label={"Category :"} datalist={categories} value={category} setValue={setCategory} />
+      <Input
+        label={"Amount :"}
+        keyboardType={"decimal-pad"}
+        placeholder="amount"
+        value={amount.toString()}
+        setValue={setAmount}
+      />
+      <Input
+        label={"Account :"}
+        datalist={accounts}
+        value={account}
+        setValue={setAccount}
+      />
+      <Input
+        label={"Category :"}
+        datalist={categories}
+        value={category}
+        setValue={setCategory}
+      />
       <Input label={"Date :"} date={date} setDate={setDate} />
       <Input label={"Note :"} value={note} setValue={setNote} line={4} />
     </View>
