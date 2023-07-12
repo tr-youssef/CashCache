@@ -1,8 +1,7 @@
 //BaseIP must be updated whenever your NIC card IP changes.  On a PC you can find it using ipconfig,
 //and on a Mac:
 // ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk "{print $2}"
-export const BaseIP = "10.44.22.31";
-export const Port = "4001";
+
 const ServerIP = "10.0.0.52";
 const Port = "4001";
 
