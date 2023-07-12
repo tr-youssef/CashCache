@@ -6,6 +6,7 @@ import test from "./api/test.js";
 import routeCategories from "./api/routes/categories.js";
 import routeUsers from "./api/routes/users.js";
 import routeAccounts from "./api/routes/accounts.js";
+import routeChat from "./api/routes/chatGPT.js";
 import routePlaid from "./api/routes/plaid.js";
 import routeTransactions from "./api/routes/transactions.js";
 
@@ -14,10 +15,14 @@ app.use(express.json({ extended: false }));
 app.use(cors());
 dotenv.config();
 
+// import { Configuration, OpenAIApi } from "openai";
+// import readline from "readline";
+
 app.use("/api/test", test);
 app.use("/api/users", routeUsers);
 app.use("/api/categories", routeCategories);
 app.use("/api/accounts", routeAccounts);
+app.use("/api/chat", routeChat);
 app.use("/api/plaid", routePlaid);
 app.use("/api/transactions", routeTransactions);
 
@@ -28,5 +33,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => app.listen(PORT, () => console.log(`Server running on port : ${PORT}`)))
+  .then(() =>
+    app.listen(PORT, () => console.log(`Server running on port : ${PORT}`))
+  )
   .catch((error) => console.log(error));

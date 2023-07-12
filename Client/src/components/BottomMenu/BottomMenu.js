@@ -8,6 +8,7 @@ import DashboardNavigator from "../../../src/views/Dashboard/DashboardNavigator.
 import CategoriesNavigator from "../../../src/views/Categories/CategoriesNavigator.js";
 import AccountsNavigator from "../../../src/views/Accounts/AccountsNavigator.js";
 import TransactionsNavigator from "../../../src/views/Transactions/TransactionsNavigator.js";
+import BotNavigator from "../../../src/views/Youai/YouaiNavigator.js";
 
 const BottomMenu = ({ onLayoutRootView }) => {
   const Tab = createBottomTabNavigator();
@@ -31,7 +32,13 @@ const BottomMenu = ({ onLayoutRootView }) => {
             component={DashboardNavigator}
             options={({ route }) => ({
               tabBarLabel: "Dashboard",
-              tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="dashboard" type="MaterialIcons" />,
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
+                  name="dashboard"
+                  type="MaterialIcons"
+                />
+              ),
               headerShown: false,
             })}
           />
@@ -40,7 +47,13 @@ const BottomMenu = ({ onLayoutRootView }) => {
             component={CategoriesNavigator}
             options={{
               tabBarLabel: "Categories",
-              tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="category" type="MaterialIcons" />,
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
+                  name="category"
+                  type="MaterialIcons"
+                />
+              ),
               headerShown: false,
             }}
           />
@@ -49,7 +62,13 @@ const BottomMenu = ({ onLayoutRootView }) => {
             component={AccountsNavigator}
             options={{
               tabBarLabel: "Accounts",
-              tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="account-balance-wallet" type="MaterialIcons" />,
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
+                  name="account-balance-wallet"
+                  type="MaterialIcons"
+                />
+              ),
               headerShown: false,
             }}
           />
@@ -58,7 +77,28 @@ const BottomMenu = ({ onLayoutRootView }) => {
             component={TransactionsNavigator}
             options={{
               tabBarLabel: "Transactions",
-              tabBarIcon: ({ focused }) => <Icon color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"} name="format-list-bulleted" type="MaterialIcons" />,
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
+                  name="format-list-bulleted"
+                  type="MaterialIcons"
+                />
+              ),
+              headerShown: false,
+            }}
+          />
+          <Tab.Screen
+            name="BotNavigator"
+            component={BotNavigator}
+            options={{
+              // tabBarLabel: "ChatBot",
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
+                  name="format-list-bulleted"
+                  type="MaterialIcons"
+                />
+              ),
               headerShown: false,
             }}
           />
