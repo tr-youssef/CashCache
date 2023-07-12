@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { CHAT_API_KEY } from "@env";
 import { callAPI } from "../../utils/fetch/callAPI";
 
 const Bot = () => {
@@ -53,9 +52,7 @@ const Bot = () => {
         },
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRyLnlvdXNzZWZAZ21haWwuY29tIiwiaWQiOiI2NDdlZDUxNzY1YTY1YmRmMDhmMWJkZmUiLCJpYXQiOjE2ODkxOTA0NTgsImV4cCI6MTY4OTIzMzY1OH0.YbuvIYBfh3gBh3OyKJ8-p6-kbtgG4DynX4zYEIVMpqQ"
       );
-
-      console.log("response.data :", response);
-
+      console.log(response);
       //const budget = response.data.choices[0].text.trim();
       const botMessage = {
         _id: new Date().getTime() + 1,
