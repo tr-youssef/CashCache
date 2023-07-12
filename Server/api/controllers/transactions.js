@@ -39,7 +39,12 @@ export const getTransactions = async (req, res) => {
           as: "account",
         },
       },
-      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$tranDate" } }, transaction: { $push: "$$ROOT" } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$tranDate" } },
+          transaction: { $push: "$$ROOT" },
+        },
+      },
 
       {
         $sort: {
@@ -159,6 +164,14 @@ export const aggregateTransactionsByDateRange = async (req, res) => {
       },
     },
     {
+      //only aggregate for Expenses
+      $match: {
+        categoryType: {
+          $eq: "Expense",
+        },
+      },
+    },
+    {
       $group: {
         _id: "$categoryName",
         categoryName: {
@@ -204,7 +217,9 @@ export const deleteTransaction = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    transactionDeleted.deletedCount > 0 ? res.status(200).json({ message: "Transaction deleted" }) : res.status(404).json({ message: `No Transaction with id: ${id}` });
+    transactionDeleted.deletedCount > 0
+      ? res.status(200).json({ message: "Transaction deleted" })
+      : res.status(404).json({ message: `No Transaction with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
