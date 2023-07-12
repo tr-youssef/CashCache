@@ -6,6 +6,7 @@ import IconsSelector from "../../components/IconsSelector/IconsSelector.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditCategory = ({ route, navigation }) => {
   const { category } = route.params;
@@ -21,8 +22,9 @@ const EditCategory = ({ route, navigation }) => {
   const [name, setName] = useState(category.name);
   const [type, setType] = useState(data.length > 0 ? category.type : "");
 
-  const updateCategory = (name, type, choiceCategory, category) => {
-    callAPI(`/api/categories/parent/${category._id}`, "PATCH", { name: name, type: type, icon: choiceCategory, subcategories: category.subcategories }, token)
+  const updateCategory = async (name, type, choiceCategory, category) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(`/api/categories/parent/${category._id}`, "PATCH", { name: name, type: type, icon: choiceCategory, subcategories: category.subcategories }, token)
       .then(async () => {
         await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
         navigation.navigate("Categories");

@@ -1,183 +1,122 @@
-import React, { useContext, useRef } from "react";
-import { StyleSheet, Text, View, Button, useColorScheme } from "react-native";
-import { DrawerContext } from "../../utils/context/DrawerContext.js";
-import Modal from "react-native-modal";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
+import { callAPI } from "../../utils/fetch/callAPI.js";
 import { colors } from "../../utils/theme/theme.js";
-import { Icon } from "@rneui/themed";
-
 import * as echarts from "echarts/core";
 import { LineChart, PieChart } from "echarts/charts";
-import {
-  GridComponent,
-  LegendComponent,
-  TooltipComponent,
-} from "echarts/components";
-import { SVGRenderer, SkiaChart } from "@wuba/react-native-echarts";
+import { GridComponent, LegendComponent, TooltipComponent } from "echarts/components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 echarts.use([SVGRenderer, LineChart, PieChart, GridComponent, LegendComponent, TooltipComponent]);
 
 const Dashboard = ({ navigation }) => {
-  const { drawerIsOpen, setDrawerIsOpen } = useContext(DrawerContext);
-  const theme = "dark"; //useColorScheme();
-
+  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(endDate.getFullYear(), endDate.getMonth(), 1));
   const skiaRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
-  React.useEffect(() => {
-    option = {
-      tooltip: {
-        trigger: "item",
+  function currencyFormatter(data) {
+    data = parseFloat(data);
+    return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+  }
+
+  const option = {
+    backgroundColor: styles.containerDark.backgroundColor,
+    tooltip: {
+      trigger: "item",
+      formatter: function (params) {
+        var val = currencyFormatter(params.value);
+        return val;
       },
-      legend: {
-        top: "5%",
-        left: "center",
-      },
-      series: [
-        {
-          name: "Access From",
-          type: "pie",
-          radius: ["40%", "70%"],
-          avoidLabelOverlap: false,
-          itemStyle: {
-            borderRadius: 10,
-            borderColor: "#fff",
-            borderWidth: 2,
-          },
-          label: {
-            show: false,
-            position: "center",
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: 40,
-              fontWeight: "bold",
-            },
-          },
-          labelLine: {
-            show: false,
-          },
-          data: [
-            { value: 1048, name: "Rent" },
-            { value: 735, name: "Utilities" },
-            { value: 580, name: "Transportation" },
-            { value: 484, name: "Groceries" },
-            { value: 300, name: "Entertainment" },
-          ],
+    },
+    legend: {
+      top: "5%",
+      left: "center",
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: "#fff",
+          borderWidth: 2,
         },
-      ],
-    };
+        label: {
+          show: false,
+          position: "left",
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        data: [],
+      },
+    ],
+  };
 
-    let chart;
-    if (skiaRef.current) {
-      chart = echarts.init(
-        skiaRef.current,
-        theme === "light" ? "light" : "dark",
-        {
-          renderer: "svg",
-          width: 400,
-          height: 400,
-        }
-      );
-      chart.setOption(option);
+  const LoadPieChartData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        await callAPI(`/api/transactions/agg?startDate=${startDate}&endDate=${endDate}`, "GET", {}, token)
+          .then((res) => {
+            option.series[0].data = res;
+            if (chartInstanceRef.current) {
+              chartInstanceRef.current.setOption(option);
+            }
+          })
+          .catch((error) => console.log("error", error));
+      }
+    } catch (error) {
+      console.log("error", error);
     }
-    return () => chart?.dispose();
+  };
+
+  useEffect(() => {
+    LoadPieChartData();
+    navigation.addListener("focus", LoadPieChartData);
+  }, [startDate, endDate, navigation]);
+
+  useEffect(() => {
+    if (skiaRef.current && !chartInstanceRef.current) {
+      chartInstanceRef.current = echarts.init(skiaRef.current, "dark", {
+        renderer: "svg",
+        width: 400,
+        height: 400,
+      });
+      chartInstanceRef.current.setOption(option);
+    }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.dispose();
+        chartInstanceRef.current = null;
+      }
+    };
   }, []);
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: "Dashboard",
-      headerLeft: () => (
-        <Icon
-          name="filter-alt"
-          type="MaterialIcons"
-          color={"#33CD48"}
-          onPress={() => {
-            setDrawerIsOpen(!drawerIsOpen);
-          }}
-        />
-      ),
-    });
-  }, [navigation]);
-
   return (
-    <>
+    <View style={styles.containerDark}>
       <SkiaChart ref={skiaRef} />
-
-      <View
-        style={theme === "light" ? styles.containerLight : styles.containerDark}
-      >
-        <Text style={theme === "light" ? styles.textLight : styles.textDark}>
-          Dashboard
-        </Text>
-        <Modal
-          style={styles.modal}
-          isVisible={drawerIsOpen}
-          animationIn="slideInLeft"
-          onSwipeComplete={() => setDrawerIsOpen(false)}
-          swipeDirection="left"
-          animationOut="slideOutLeft"
-          onBackdropPress={() => setDrawerIsOpen(false)}
-        >
-          <View
-            style={
-              theme === "light"
-                ? styles.modalContainerLight
-                : styles.modalContainerDark
-            }
-          >
-            <Text
-              style={theme === "light" ? styles.textLight : styles.textDark}
-            >
-              I am the modal content!
-            </Text>
-            <Button
-              title="Hide modal"
-              onPress={() => {
-                setDrawerIsOpen(false);
-              }}
-            />
-          </View>
-        </Modal>
-      </View>
-    </>
+    </View>
   );
 };
 
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  containerLight: {
-    flex: 1,
-    backgroundColor: colors.light.lightBlue,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   containerDark: {
     flex: 1,
     backgroundColor: colors.dark.black,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textLight: {
-    color: colors.light.black,
-  },
-  textDark: {
-    color: colors.dark.white,
-  },
-  modal: { margin: 0 },
-  modalContainerLight: {
-    backgroundColor: colors.light.lightBlue,
-    width: "60%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalContainerDark: {
-    backgroundColor: colors.dark.black,
-    width: "60%",
-    height: "100%",
-    display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },

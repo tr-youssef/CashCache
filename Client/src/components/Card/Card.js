@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   text: {
-    color: "white",
+    color: "#F2FFF5",
     fontFamily: "Inconsolata_400Regular",
     letterSpacing: 2,
   },

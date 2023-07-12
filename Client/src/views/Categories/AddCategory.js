@@ -6,10 +6,10 @@ import IconsSelector from "../../components/IconsSelector/IconsSelector.js";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
 import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddCategory = ({ navigation }) => {
-  const categoryContext = useContext(CategoriesContext);
-  const { setCategories } = categoryContext;
+  const { setCategories } = useContext(CategoriesContext);
   const data = [
     { label: "Expense", value: "Expense" },
     { label: "Income", value: "Income" },
@@ -20,8 +20,9 @@ const AddCategory = ({ navigation }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState(data.length > 0 ? data[0].value : "");
 
-  const saveCategory = (name, type, choiceCategory) => {
-    callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory }, token)
+  const saveCategory = async (name, type, choiceCategory) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI("/api/categories/parent", "POST", { name: name, type: type, icon: choiceCategory }, token)
       .then(async () => {
         await callAPI("/api/categories/parents", "GET", "", token).then((res) => setCategories(res));
         navigation.navigate("Categories");

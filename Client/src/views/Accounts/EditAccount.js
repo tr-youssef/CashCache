@@ -6,6 +6,7 @@ import { callAPI } from "../../utils/fetch/callAPI.js";
 import { useState } from "react";
 import Card from "../../components/Card/Card.js";
 import { AccountsContext } from "../../utils/context/AccountsContext.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteButton from "../../components/DeleteButton/DeleteButton.js";
 
 const EditAccount = ({ route, navigation }) => {
@@ -15,10 +16,18 @@ const EditAccount = ({ route, navigation }) => {
   const [name, setName] = useState(item.name);
   const [initialAmount, setInitialAmount] = useState(item.initialAmount);
 
-  const saveAccount = (name, initialAmount) => {
-    callAPI(`/api/accounts/${item._id}`, "PATCH", { name: name, initialAmount: initialAmount }, token)
+  const saveAccount = async (name, initialAmount) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(
+      `/api/accounts/${item._id}`,
+      "PATCH",
+      { name: name, initialAmount: initialAmount },
+      token
+    )
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "", token).then((res) =>
+          setAccounts(res)
+        );
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -26,10 +35,18 @@ const EditAccount = ({ route, navigation }) => {
       });
   };
 
-  const deleteAccount = (idAccount) => {
-    callAPI(`/api/accounts/${item._id}`, "DELETE", { id: idAccount }, token)
+  const deleteAccount = async (idAccount) => {
+    const token = await AsyncStorage.getItem("token");
+    await callAPI(
+      `/api/accounts/${item._id}`,
+      "DELETE",
+      { id: idAccount },
+      token
+    )
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "", token).then((res) =>
+          setAccounts(res)
+        );
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -40,14 +57,26 @@ const EditAccount = ({ route, navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add Account",
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, initialAmount)} />,
+      headerRight: () => (
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => saveAccount(name, initialAmount)}
+        />
+      ),
     });
   }, [navigation, name, initialAmount]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
-      <Input label={"Initial amount :"} value={initialAmount.toString()} setValue={setInitialAmount} />
+      <Input
+        label={"Initial amount :"}
+        value={initialAmount.toString()}
+        setValue={setInitialAmount}
+        keyboardType="decimal-pad"
+      />
       <Card name={name} initialAmount={initialAmount} />
       <DeleteButton
         screen={"AddAccount"}

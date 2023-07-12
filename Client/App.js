@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
@@ -34,13 +34,13 @@ export default function App() {
     }, 3000);
   }, []);
 
-  if (!fontsLoaded || isloading) {
-    return <MySplashScreen />;
-  }
+  // if (!fontsLoaded || isloading) {
+  //   return <MySplashScreen />;
+  // }
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" hide>
+      <Stack.Navigator initialRouteName="Login" hide>
         <Stack.Screen
           component={BottomMenu}
           name="Home"
