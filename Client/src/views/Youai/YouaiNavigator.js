@@ -15,7 +15,7 @@ const BotNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Transactions"
+        name="Budget Bot"
         component={Bot}
         options={{
           headerRight: () => (

@@ -88,7 +88,7 @@ const BottomMenu = ({ onLayoutRootView }) => {
             }}
           />
           <Tab.Screen
-            name="BotNavigator"
+            name="Budget Bot"
             component={BotNavigator}
             options={{
               // tabBarLabel: "ChatBot",

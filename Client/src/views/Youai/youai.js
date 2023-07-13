@@ -52,7 +52,6 @@ const Bot = () => {
         },
         "YOUR_API_KEY"
       );
-
       const botMessage = {
         _id: new Date().getTime() + 1,
         text: response.bot,
@@ -88,46 +87,22 @@ const Bot = () => {
   }, [loading]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          backgroundColor: "#050A05",
-          padding: 10,
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottomWidth: 1,
-          marginTop: 40,
-          marginBottom: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 32,
-            fontWeight: "bold",
-          }}
-        >
-          Budget Bot
-        </Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Budget Bot</Text>
       </View>
       <GiftedChat
         messages={messages}
         onSend={(newMessages) => handleSend(newMessages)}
         user={{ _id: 1 }}
-        isTyping={loading} // Pass the loading state to the isTyping prop
-        forceGetKeyboardHeight={forceRender} // Force a re-render of the component
+        isTyping={loading}
+        forceGetKeyboardHeight={forceRender}
         renderLoading={() => {
           if (loading) {
             return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <ActivityIndicator size="small" color="#000000" />
-                <Text style={{ marginLeft: 5 }}>Thinking{loadingDots}</Text>
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color="#00FF00" />
+                <Text style={styles.loadingText}>Thinking{loadingDots}</Text>
               </View>
             );
           }
@@ -137,5 +112,36 @@ const Bot = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#050A05",
+  },
+  header: {
+    backgroundColor: "#050A05",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderBottomWidth: 1,
+    marginTop: 40,
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#00FF00",
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  loadingText: {
+    marginLeft: 5,
+    color: "#00FF00",
+  },
+});
 
 export default Bot;
