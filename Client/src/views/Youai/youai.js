@@ -1,6 +1,6 @@
 // import React, { useState, useEffect } from "react";
 // import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
-// import { GiftedChat } from "react-native-gifted-chat";
+// import { GiftedChat, Bubble } from "react-native-gifted-chat";
 // import { callAPI } from "../../utils/fetch/callAPI";
 
 // const Bot = () => {
@@ -97,6 +97,33 @@
 //         user={{ _id: 1 }}
 //         isTyping={loading}
 //         forceGetKeyboardHeight={forceRender}
+//         renderBubble={(props) => (
+//           <Bubble
+//             {...props}
+//             wrapperStyle={{
+//               left: {
+//                 borderWidth: 1,
+//                 borderColor: "#00FF00",
+//                 backgroundColor: "#000000",
+//                 borderRadius: 15,
+//               },
+//               right: {
+//                 borderWidth: 1,
+//                 borderColor: "#00FF00",
+//                 backgroundColor: "#000000",
+//                 borderRadius: 15,
+//               },
+//             }}
+//             textStyle={{
+//               left: {
+//                 color: "#FFFFFF",
+//               },
+//               right: {
+//                 color: "#FFFFFF",
+//               },
+//             }}
+//           />
+//         )}
 //         renderLoading={() => {
 //           if (loading) {
 //             return (
@@ -124,7 +151,7 @@
 //     alignItems: "center",
 //     justifyContent: "center",
 //     borderBottomWidth: 1,
-//     marginTop: 40,
+//     marginTop: 1,
 //     marginBottom: 5,
 //   },
 //   title: {
@@ -148,7 +175,12 @@
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import {
+  GiftedChat,
+  Bubble,
+  InputToolbar,
+  Composer,
+} from "react-native-gifted-chat";
 import { callAPI } from "../../utils/fetch/callAPI";
 
 const Bot = () => {
@@ -283,6 +315,25 @@ const Bot = () => {
           }
           return null;
         }}
+        renderInputToolbar={(props) => (
+          <InputToolbar
+            {...props}
+            containerStyle={styles.inputToolbarContainer}
+            primaryStyle={{
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: "#00FF00",
+              marginBottom: 0, // Add this line to eliminate the space
+            }}
+            renderComposer={(composerProps) => (
+              <Composer
+                {...composerProps}
+                placeholderTextColor="#FFFFFF" // Set placeholder text color to white
+                textInputStyle={{ color: "#FFFFFF", flex: 1, height: 30 }} // Set input text color to white
+              />
+            )}
+          />
+        )}
       />
     </View>
   );
@@ -299,7 +350,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderBottomWidth: 1,
-    marginTop: 40,
+    marginTop: 1,
     marginBottom: 5,
   },
   title: {
@@ -316,6 +367,13 @@ const styles = StyleSheet.create({
   loadingText: {
     marginLeft: 5,
     color: "#00FF00",
+  },
+  inputToolbarContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: "#000000",
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });
 
