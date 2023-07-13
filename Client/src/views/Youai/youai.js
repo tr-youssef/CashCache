@@ -370,11 +370,11 @@ const styles = StyleSheet.create({
     color: "#00FF00",
   },
   inputToolbarContainer: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
     backgroundColor: "#000000",
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
   },
 });
 
