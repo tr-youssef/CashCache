@@ -44,8 +44,13 @@ const AddTransaction = ({ navigation }) => {
             value: res._id,
             type: res.type,
           }));
-          setCategories(transformedData.filter((category) => category.type === type));
-          setCategory(transformedData.filter((category) => category.type === type)[0].value);
+          setCategories(
+            transformedData.filter((category) => category.type === type)
+          );
+          setCategory(
+            transformedData.filter((category) => category.type === type)[0]
+              .value
+          );
         })
         .catch((error) => console.log("error", error));
     };
@@ -54,9 +59,22 @@ const AddTransaction = ({ navigation }) => {
 
   const saveTransaction = async (amount, account, category, date, note) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI("/api/transactions", "POST", { amount: amount, accountId: account, categoryId: category, tranDate: date, note: note }, token)
+    await callAPI(
+      "/api/transactions",
+      "POST",
+      {
+        amount: amount,
+        accountId: account,
+        categoryId: category,
+        tranDate: date,
+        note: note,
+      },
+      token
+    )
       .then(async () => {
-        await callAPI("/api/transactions", "GET", "", token).then((res) => setTransactions(res));
+        await callAPI("/api/transactions", "GET", "", token).then((res) =>
+          setTransactions(res)
+        );
         navigation.navigate("Transactions");
       })
       .catch((error) => {
@@ -68,15 +86,38 @@ const AddTransaction = ({ navigation }) => {
     navigation.setOptions({
       title: "Add Transaction",
 
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveTransaction(amount, account, category, date, note)} />,
+      headerRight: () => (
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => saveTransaction(amount, account, category, date, note)}
+        />
+      ),
     });
   }, [navigation, amount, account, category, date, note]);
   return (
     <View style={styles.container}>
       <Switch type={type} setType={setType} />
-      <Input label={"Amount :"} value={amount.toString()} setValue={setAmount} placeholder={"0"} />
-      <Input label={"Account :"} datalist={accounts} value={account} setValue={setAccount} />
-      <Input label={"Category :"} datalist={categories} value={category} setValue={setCategory} />
+      <Input
+        label={"Amount :"}
+        value={amount.toString()}
+        setValue={setAmount}
+        placeholder={"0"}
+        keyboardType={"decimal-pad"}
+      />
+      <Input
+        label={"Account :"}
+        datalist={accounts}
+        value={account}
+        setValue={setAccount}
+      />
+      <Input
+        label={"Category :"}
+        datalist={categories}
+        value={category}
+        setValue={setCategory}
+      />
       <Input label={"Date :"} date={date} setDate={setDate} />
       <Input label={"Note :"} value={note} setValue={setNote} line={4} />
     </View>

@@ -111,9 +111,13 @@ export const addTransactions = async (req, res) => {
 };
 
 export const ExpensesByDateRange = async (req, res) => {
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
   const accountId = req.query.accountId;
+  let startDate = new Date(`${req.query.startDate}`);
+  let endDate = new Date(`${req.query.endDate}`);
+  startDate.setUTCHours(0, 0, 0, 0);
+  endDate.setUTCHours(23, 59, 59, 999);
+  // console.log("startDate", startDate);
+  // console.log("endDate", endDate);
 
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
@@ -125,8 +129,8 @@ export const ExpensesByDateRange = async (req, res) => {
     {
       $match: {
         tranDate: {
-          $gte: new Date(`${startDate}`),
-          $lt: new Date(`${endDate}`),
+          $gte: startDate,
+          $lt: endDate,
         },
         userId: {
           $eq: new mongoose.Types.ObjectId(`${req.userId}`),
