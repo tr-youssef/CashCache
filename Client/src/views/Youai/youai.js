@@ -221,6 +221,7 @@ const Bot = () => {
         setMessages((previousMessage) =>
           GiftedChat.append(previousMessage, botMessage)
         );
+        setLoading(false);
         return;
       }
 
