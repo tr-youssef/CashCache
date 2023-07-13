@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import { callAPI } from "../../utils/fetch/callAPI";
 
 const Bot = () => {
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingDots, setLoadingDots] = useState("");
+  const [forceRender, setForceRender] = useState(false);
 
   const handleSend = async (newMessages = []) => {
     try {
-      //gets user msg
+      setLoading(true);
       const userMessage = newMessages[0];
-
-      //add the users msg
       setMessages((previousMessage) =>
         GiftedChat.append(previousMessage, userMessage)
       );
@@ -27,7 +28,6 @@ const Bot = () => {
         "investment",
       ];
 
-      //add more keywords as needed
       if (!keywords.some((keyword) => messageText.includes(keyword))) {
         const botMessage = {
           _id: new Date().getTime() + 1,
@@ -43,17 +43,16 @@ const Bot = () => {
         );
         return;
       }
-      //if messsage has keywords
+
       const response = await callAPI(
         "/api/chat",
         "POST",
         {
           prompt: messageText,
         },
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRyLnlvdXNzZWZAZ21haWwuY29tIiwiaWQiOiI2NDdlZDUxNzY1YTY1YmRmMDhmMWJkZmUiLCJpYXQiOjE2ODkxOTA0NTgsImV4cCI6MTY4OTIzMzY1OH0.YbuvIYBfh3gBh3OyKJ8-p6-kbtgG4DynX4zYEIVMpqQ"
+        "YOUR_API_KEY"
       );
-      console.log(response);
-      //const budget = response.data.choices[0].text.trim();
+
       const botMessage = {
         _id: new Date().getTime() + 1,
         text: response.bot,
@@ -63,14 +62,30 @@ const Bot = () => {
           name: "Budget Bot",
         },
       };
-
       setMessages((previousMessage) =>
         GiftedChat.append(previousMessage, botMessage)
       );
+      setLoading(false);
     } catch (error) {
       console.log("error", error);
     }
   };
+
+  useEffect(() => {
+    let dots = "";
+    const interval = setInterval(() => {
+      dots = dots.length === 3 ? "" : dots + ".";
+      setLoadingDots(dots);
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    setForceRender((prev) => !prev);
+  }, [loading]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -81,7 +96,7 @@ const Bot = () => {
           alignItems: "center",
           justifyContent: "center",
           borderBottomWidth: 1,
-          maginTop: 40,
+          marginTop: 40,
           marginBottom: 5,
         }}
       >
@@ -98,6 +113,26 @@ const Bot = () => {
         messages={messages}
         onSend={(newMessages) => handleSend(newMessages)}
         user={{ _id: 1 }}
+        isTyping={loading} // Pass the loading state to the isTyping prop
+        forceGetKeyboardHeight={forceRender} // Force a re-render of the component
+        renderLoading={() => {
+          if (loading) {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <ActivityIndicator size="small" color="#000000" />
+                <Text style={{ marginLeft: 5 }}>Thinking{loadingDots}</Text>
+              </View>
+            );
+          }
+          return null;
+        }}
       />
     </View>
   );
