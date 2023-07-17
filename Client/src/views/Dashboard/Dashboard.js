@@ -27,7 +27,7 @@ const Dashboard = ({ navigation }) => {
   const [startDate, setStartDate] = useState(
     new Date(endDate.getFullYear(), endDate.getMonth(), 1)
   );
-  const skiaRef = useRef(null);
+  const ExpensesByCategoryRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
   function currencyFormatter(data) {
@@ -77,7 +77,7 @@ const Dashboard = ({ navigation }) => {
     ],
   };
 
-  const LoadPieChartData = async () => {
+  const LoadExpensesByCategory = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
@@ -101,17 +101,21 @@ const Dashboard = ({ navigation }) => {
   };
 
   useEffect(() => {
-    LoadPieChartData();
-    navigation.addListener("focus", LoadPieChartData);
+    LoadExpensesByCategory();
+    navigation.addListener("focus", LoadExpensesByCategory);
   }, [startDate, endDate, navigation]);
 
   useEffect(() => {
-    if (skiaRef.current && !chartInstanceRef.current) {
-      chartInstanceRef.current = echarts.init(skiaRef.current, "dark", {
-        renderer: "svg",
-        width: 400,
-        height: 400,
-      });
+    if (ExpensesByCategoryRef.current && !chartInstanceRef.current) {
+      chartInstanceRef.current = echarts.init(
+        ExpensesByCategoryRef.current,
+        "dark",
+        {
+          renderer: "svg",
+          width: 400,
+          height: 400,
+        }
+      );
       chartInstanceRef.current.setOption(option);
     }
 
@@ -126,7 +130,7 @@ const Dashboard = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
       <Text style={styles.chartTitle}> Expenses </Text>
-      <SkiaChart ref={skiaRef} />
+      <SkiaChart ref={ExpensesByCategoryRef} />
     </ScrollView>
   );
 };
