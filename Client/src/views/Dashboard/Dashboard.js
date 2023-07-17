@@ -4,38 +4,73 @@ import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { colors } from "../../utils/theme/theme.js";
 import * as echarts from "echarts/core";
-import { LineChart, PieChart } from "echarts/charts";
-import {
-  GridComponent,
-  LegendComponent,
-  TooltipComponent,
-} from "echarts/components";
+import { LineChart, PieChart, BarChart } from "echarts/charts";
+import { GridComponent, LegendComponent, TooltipComponent } from "echarts/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 
-echarts.use([
-  SVGRenderer,
-  LineChart,
-  PieChart,
-  GridComponent,
-  LegendComponent,
-  TooltipComponent,
-]);
+echarts.use([SVGRenderer, LineChart, PieChart, BarChart, GridComponent, LegendComponent, TooltipComponent]);
 
 const Dashboard = ({ navigation }) => {
-  const [endDate, setEndDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(
-    new Date(endDate.getFullYear(), endDate.getMonth(), 1)
-  );
   const ExpensesByCategoryRef = useRef(null);
-  const chartInstanceRef = useRef(null);
+  const ExpensesTrendRef = useRef(null);
+
+  const ExpenseByCategoryChartInstanceRef = useRef(null);
+  const ExpenseTrendChartInstanceRef = useRef(null);
+  let dt = new Date();
+  dt.setHours(23, 59, 59, 999);
+  const [endDate, setEndDate] = useState(dt);
+  dt = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+  dt.setHours(0, 0, 0, 0);
+  const [startDate, setStartDate] = useState(dt);
+  const numHistoricalExpenseTrendMonths = 4;
+  const localeToUse = "en-CA";
 
   function currencyFormatter(data) {
     data = parseFloat(data);
-    return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+    return data.toLocaleString(localeToUse, { style: "currency", currency: "CAD" });
   }
 
-  const option = {
+  const optionExpenseTrend = {
+    backgroundColor: styles.containerDark.backgroundColor,
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+      valueFormatter: currencyFormatter,
+    },
+    grid: {
+      left: "13%",
+      right: "14%",
+      bottom: "13%",
+      containLabel: true,
+    },
+    xAxis: [
+      {
+        type: "category",
+        data: ["Feb", "Mar", "Apr", "May", "June", "July"],
+        axisTick: {
+          alignWithLabel: true,
+        },
+      },
+    ],
+    yAxis: [
+      {
+        type: "value",
+      },
+    ],
+    series: [
+      {
+        name: "Expenses",
+        type: "bar",
+        barWidth: "60%",
+        data: [52, 200, 334, 390, 330, 220],
+      },
+    ],
+  };
+
+  const optionExpensesByCategory = {
     backgroundColor: styles.containerDark.backgroundColor,
     tooltip: {
       trigger: "item",
@@ -77,20 +112,43 @@ const Dashboard = ({ navigation }) => {
     ],
   };
 
-  const LoadExpensesByCategory = async () => {
+  function getMonthNames() {
+    //this may break if months span a year
+    let result = [];
+    let dt = getExpenseTrendStartDate();
+    result.push(dt.toLocaleString(localeToUse, { month: "short" }));
+    do {
+      dt.setMonth(dt.getMonth() + 1);
+      result.push(dt.toLocaleString(localeToUse, { month: "short" }));
+    } while (dt.getMonth() !== endDate.getMonth());
+    // console.log("result", result);
+    return result;
+  }
+
+  function getExpenseTrendStartDate() {
+    let dt = new Date(startDate);
+    dt.setMonth(dt.getMonth() - numHistoricalExpenseTrendMonths);
+    dt.setDate(1); //first of month X months ago
+    return dt;
+  }
+
+  const LoadExpenseTrend = async () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
         await callAPI(
-          `/api/transactions/agg/expenses/?startDate=${startDate}&endDate=${endDate}`,
+          `/api/transactions/agg/expense_trend/?startDate=${getExpenseTrendStartDate()}&endDate=${endDate}`,
           "GET",
           {},
           token
         )
           .then((res) => {
-            option.series[0].data = res;
-            if (chartInstanceRef.current) {
-              chartInstanceRef.current.setOption(option);
+            //todo - set xaxis.data array with label values and series[0].data array with $ amounts
+            // optionExpenseTrend.series[0].data = res;
+            if (ExpenseTrendChartInstanceRef.current) {
+              ExpenseTrendChartInstanceRef.current.xAxis.data = getMonthNames();
+              ExpenseTrendChartInstanceRef.current.xAxis.data
+              // ExpenseTrendChartInstanceRef.current.setOption(optionExpenseTrend);
             }
           })
           .catch((error) => console.log("error", error));
@@ -100,37 +158,90 @@ const Dashboard = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    LoadExpensesByCategory();
-    navigation.addListener("focus", LoadExpensesByCategory);
-  }, [startDate, endDate, navigation]);
+  const LoadExpensesByCategory = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        await callAPI(
+          `/api/transactions/agg/expenses_by_category/?startDate=${startDate}&endDate=${endDate}`,
+          "GET",
+          {},
+          token
+        )
+          .then((res) => {
+            optionExpensesByCategory.series[0].data = res;
+            if (ExpenseByCategoryChartInstanceRef.current) {
+              ExpenseByCategoryChartInstanceRef.current.setOption(optionExpensesByCategory);
+            }
+          })
+          .catch((error) => console.log("error loading ExpensesByCategory", error));
+      }
+    } catch (error) {
+      console.log("error loading ExpensesByCategory", error);
+    }
+  };
 
   useEffect(() => {
-    if (ExpensesByCategoryRef.current && !chartInstanceRef.current) {
-      chartInstanceRef.current = echarts.init(
-        ExpensesByCategoryRef.current,
-        "dark",
-        {
-          renderer: "svg",
-          width: 400,
-          height: 400,
-        }
-      );
-      chartInstanceRef.current.setOption(option);
+    if (ExpensesByCategoryRef.current && !ExpenseByCategoryChartInstanceRef.current) {
+      ExpenseByCategoryChartInstanceRef.current = echarts.init(ExpensesByCategoryRef.current, "dark", {
+        renderer: "svg",
+        width: 400,
+        height: 400,
+      });
+      ExpenseByCategoryChartInstanceRef.current.setOption(optionExpensesByCategory);
     }
 
     return () => {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.dispose();
-        chartInstanceRef.current = null;
+      if (ExpenseByCategoryChartInstanceRef.current) {
+        ExpenseByCategoryChartInstanceRef.current.dispose();
+        ExpenseByCategoryChartInstanceRef.current = null;
       }
     };
   }, []);
 
+  useEffect(() => {
+    if (ExpensesTrendRef.current && !ExpenseTrendChartInstanceRef.current) {
+      ExpenseTrendChartInstanceRef.current = echarts.init(ExpensesTrendRef.current, "dark", {
+        renderer: "svg",
+        width: 400,
+        height: 400,
+      });
+      ExpenseTrendChartInstanceRef.current.setOption(optionExpenseTrend);
+    }
+
+    return () => {
+      if (ExpenseTrendChartInstanceRef.current) {
+        ExpenseTrendChartInstanceRef.current.dispose();
+        ExpenseTrendChartInstanceRef.current = null;
+      }
+    };
+  }, []);
+
+  const LoadAllCharts = () => {
+    getExpenseTrendStartDate();
+    LoadExpensesByCategory();
+    LoadExpenseTrend();
+  };
+
+  //refresh all charts in Dashboard when focused in case data changed
+  useEffect(() => {
+    LoadAllCharts;
+    navigation.addListener("focus", LoadAllCharts);
+  }, [startDate, endDate, navigation]);
+
   return (
     <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
-      <Text style={styles.chartTitle}> Expenses </Text>
-      <SkiaChart ref={ExpensesByCategoryRef} />
+      <Text style={styles.chartTitle}> Expenses By Category </Text>
+      <Text style={styles.dateRange}>{`${startDate.toLocaleDateString(localeToUse)} - ${endDate.toLocaleDateString(
+        localeToUse
+      )}`}</Text>
+      <SkiaChart style={styles.chart} ref={ExpensesByCategoryRef} />
+
+      <Text style={styles.chartTitle}> Expenses Trend </Text>
+      <Text style={styles.dateRange}>{`${getExpenseTrendStartDate().toLocaleDateString(
+        localeToUse
+      )} - ${endDate.toLocaleDateString(localeToUse)}`}</Text>
+      <SkiaChart style={styles.chart} ref={ExpensesTrendRef} />
     </ScrollView>
   );
 };
@@ -142,10 +253,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.black,
     alignItems: "center",
-    justifyContent: "center",
   },
   chartTitle: {
     color: "white",
     fontWeight: "bold",
+  },
+  dateRange: {
+    color: "white",
+    fontWeight: "normal",
+  },
+  chart: {
+    flex: 0.3,
   },
 });
