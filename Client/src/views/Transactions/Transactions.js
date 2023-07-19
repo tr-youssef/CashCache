@@ -112,7 +112,7 @@ const Transactions = ({ navigation }) => {
           type="MaterialIcons"
           color={"#33CD48"}
           onPress={() => {
-            accessToken ? alert("test") : navigation.navigate("Plaid");
+            accessToken ? alert("network error") : navigation.navigate("Plaid");
           }}
         />
       ),
