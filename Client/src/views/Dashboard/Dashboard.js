@@ -31,7 +31,7 @@ const Dashboard = ({ navigation }) => {
     return data.toLocaleString(localeToUse, { style: "currency", currency: "CAD" });
   }
 
-  const optionExpenseTrend = {
+  let optionExpenseTrend = {
     backgroundColor: styles.containerDark.backgroundColor,
     tooltip: {
       trigger: "axis",
@@ -112,19 +112,6 @@ const Dashboard = ({ navigation }) => {
     ],
   };
 
-  function getMonthNames() {
-    //this may break if months span a year
-    let result = [];
-    let dt = getExpenseTrendStartDate();
-    result.push(dt.toLocaleString(localeToUse, { month: "short" }));
-    do {
-      dt.setMonth(dt.getMonth() + 1);
-      result.push(dt.toLocaleString(localeToUse, { month: "short" }));
-    } while (dt.getMonth() !== endDate.getMonth());
-    // console.log("result", result);
-    return result;
-  }
-
   function getExpenseTrendStartDate() {
     let dt = new Date(startDate);
     dt.setMonth(dt.getMonth() - numHistoricalExpenseTrendMonths);
@@ -143,12 +130,22 @@ const Dashboard = ({ navigation }) => {
           token
         )
           .then((res) => {
-            //todo - set xaxis.data array with label values and series[0].data array with $ amounts
-            // optionExpenseTrend.series[0].data = res;
             if (ExpenseTrendChartInstanceRef.current) {
-              ExpenseTrendChartInstanceRef.current.xAxis.data = getMonthNames();
-              ExpenseTrendChartInstanceRef.current.xAxis.data
-              // ExpenseTrendChartInstanceRef.current.setOption(optionExpenseTrend);
+              let Amounts = [];
+              let monthNames = [];
+              res.forEach((element) => {
+                let dt = new Date();
+                dt.setFullYear(element.year);
+                dt.setHours(0, 0, 0, 0);
+                dt.setMonth(element.month, 1);
+                monthNames.push(dt.toLocaleString(localeToUse, { month: "short" }));
+
+                Amounts.push(element.amount);
+              });
+
+              optionExpenseTrend.xAxis[0].data = monthNames;
+              optionExpenseTrend.series[0].data = Amounts;
+              ExpenseTrendChartInstanceRef.current.setOption(optionExpenseTrend);
             }
           })
           .catch((error) => console.log("error", error));
@@ -230,7 +227,7 @@ const Dashboard = ({ navigation }) => {
   }, [startDate, endDate, navigation]);
 
   return (
-    <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
+    <ScrollView contentContainerStyle={styles.containerDark} bounces={false}>
       <Text style={styles.chartTitle}> Expenses By Category </Text>
       <Text style={styles.dateRange}>{`${startDate.toLocaleDateString(localeToUse)} - ${endDate.toLocaleDateString(
         localeToUse
@@ -250,6 +247,9 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   containerDark: {
+    width: "100%",
+    height: "500%",
+    paddingBottom: "150%",
     flex: 1,
     backgroundColor: colors.dark.black,
     alignItems: "center",
