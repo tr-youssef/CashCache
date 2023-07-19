@@ -16,9 +16,16 @@ const AddAccount = ({ navigation }) => {
 
   const saveAccount = async (name, initialAmount) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI("/api/accounts/", "POST", { name: name, initialAmount: initialAmount }, token)
+    await callAPI(
+      "/api/accounts/",
+      "POST",
+      { name: name, initialAmount: initialAmount },
+      token
+    )
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
+        await callAPI("/api/accounts", "GET", "", token).then((res) =>
+          setAccounts(res)
+        );
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -29,14 +36,26 @@ const AddAccount = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: "Add Account",
-      headerRight: () => <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, initialAmount)} />,
+      headerRight: () => (
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => saveAccount(name, initialAmount)}
+        />
+      ),
     });
   }, [navigation, name, initialAmount]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
-      <Input label={"Initial amount :"} value={initialAmount.toString()} setValue={setInitialAmount} />
+      <Input
+        label={"Initial amount :"}
+        value={initialAmount.toString()}
+        setValue={setInitialAmount}
+        keyboardType={"decimal-pad"}
+      />
       <Card name={name} initialAmount={initialAmount} />
     </View>
   );

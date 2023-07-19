@@ -88,17 +88,18 @@ const BottomMenu = ({ onLayoutRootView }) => {
             }}
           />
           <Tab.Screen
-            name="BotNavigator"
+            name="Chat Bot"
             component={BotNavigator}
             options={{
               // tabBarLabel: "ChatBot",
               tabBarIcon: ({ focused }) => (
                 <Icon
                   color={focused ? "#33CD48" : "rgba(51, 205, 72, 0.4)"}
-                  name="format-list-bulleted"
-                  type="MaterialIcons"
+                  name="memory"
+                  type="material-icons"
                 />
               ),
+
               headerShown: false,
             }}
           />

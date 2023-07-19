@@ -110,10 +110,10 @@ export const addTransactions = async (req, res) => {
   }
 };
 
-export const ExpensesByDateRange = async (req, res) => {
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
-  const accountId = req.query.accountId;
+export const ExpensesByCategoryForDateRange = async (req, res) => {
+  // const accountId = req.query.accountId;
+  let startDate = new Date(`${req.query.startDate}`);
+  let endDate = new Date(`${req.query.endDate}`);
 
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
@@ -125,8 +125,8 @@ export const ExpensesByDateRange = async (req, res) => {
     {
       $match: {
         tranDate: {
-          $gte: new Date(`${startDate}`),
-          $lt: new Date(`${endDate}`),
+          $gte: startDate,
+          $lt: endDate,
         },
         userId: {
           $eq: new mongoose.Types.ObjectId(`${req.userId}`),
@@ -199,8 +199,95 @@ export const ExpensesByDateRange = async (req, res) => {
       value: elem.amount,
       name: elem.categoryName,
     }));
-    console.log("chartData", chartData);
+    console.log("ExpensesByCategoryForDateRange", chartData);
     res.status(200).json(chartData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const ExpenseTrendForDateRange = async (req, res) => {
+  let startDate = new Date(`${req.query.startDate}`);
+  let endDate = new Date(`${req.query.endDate}`);
+
+  const token = req.headers.authorization.split(" ")[1];
+  if (token) {
+    let decodedData = jwt.verify(token, process.env.HASHCODE);
+    req.userId = decodedData?.id;
+  }
+
+  const tranAgg = Transactions.aggregate([
+    {
+      $match: {
+        tranDate: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+        userId: {
+          $eq: new mongoose.Types.ObjectId(`${req.userId}`),
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "categories",
+      },
+    },
+    {
+      $addFields: {
+        category: {
+          $arrayElemAt: ["$categories", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        tranDate: 1,
+        amount: 1,
+        categoryType: "$category.type",
+      },
+    },
+    {
+      //only aggregate for Expenses
+      $match: {
+        categoryType: {
+          $eq: "Expense",
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$tranDate" },
+          month: { $month: "$tranDate" },
+        },
+        amount: {
+          $sum: "$amount",
+        },
+      },
+    },
+    { $sort: { year: 1, month: 1 } },
+    {
+      $project: {
+        year: "$_id.year",
+        month: "$_id.month",
+        amount: "$amount",
+        _id: 0,
+      },
+    },
+  ]);
+
+  try {
+    const results = await tranAgg.exec();
+    // const chartData = results.map((elem) => ({
+    //   value: elem.amount,
+    //   name: GetMon,
+    // }));
+    console.log("ExpenseTrendForDateRange", results);
+    res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

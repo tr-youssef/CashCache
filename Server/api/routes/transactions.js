@@ -5,7 +5,8 @@ import {
   updateTransaction,
   getTransactions,
   addTransactions,
-  ExpensesByDateRange,
+  ExpensesByCategoryForDateRange,
+  ExpenseTrendForDateRange,
 } from "../controllers/transactions.js";
 import auth from "../middleware/auth.js";
 
@@ -16,6 +17,7 @@ router.post("/", auth, addTransaction);
 router.post("/bulk", auth, addTransactions);
 router.patch("/:id", auth, updateTransaction);
 router.delete("/:id", auth, deleteTransaction);
-router.get("/agg/expenses", auth, ExpensesByDateRange);
+router.get("/agg/expenses_by_category", auth, ExpensesByCategoryForDateRange);
+router.get("/agg/expense_trend", auth, ExpenseTrendForDateRange);
 
 export default router;
