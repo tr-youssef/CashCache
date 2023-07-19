@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import { colors } from "../../utils/theme/theme.js";
@@ -227,7 +227,7 @@ const Dashboard = ({ navigation }) => {
   }, [startDate, endDate, navigation]);
 
   return (
-    <ScrollView contentContainerStyle={styles.containerDark} bounces={false}>
+    <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
       <Text style={styles.chartTitle}> Expenses By Category </Text>
       <Text style={styles.dateRange}>{`${startDate.toLocaleDateString(localeToUse)} - ${endDate.toLocaleDateString(
         localeToUse
@@ -247,10 +247,7 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   containerDark: {
-    width: "100%",
-    height: "500%",
-    paddingBottom: "150%",
-    flex: 1,
+    height: Dimensions.get("window").height + 25,
     backgroundColor: colors.dark.black,
     alignItems: "center",
   },
