@@ -1,12 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { callAPI } from "../../utils/fetch/callAPI";
 import { colors } from "../../utils/theme/theme.js";
@@ -31,8 +24,7 @@ const LoginScreen = () => {
   };
 
   const validateEmail = () => {
-    const emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       setError("Invalid email address");
       emailRef.current?.focus();
@@ -83,24 +75,8 @@ const LoginScreen = () => {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
-        <TextInput
-          autoCapitalize="none"
-          placeholder="Email"
-          value={email}
-          ref={emailRef}
-          keyboardType="email-address"
-          blurOnSubmit={false}
-          onChangeText={(text) => setEmail(text)}
-          style={[styles.input, error && styles.errorInput]}
-        />
-        <TextInput
-          placeholder="Password"
-          ref={passwordRef}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={[styles.input, error && styles.errorInput]}
-          secureTextEntry
-        />
+        <TextInput autoCapitalize="none" placeholder="Email" value={email} ref={emailRef} keyboardType="email-address" blurOnSubmit={false} onChangeText={(text) => setEmail(text)} style={[styles.input, error && styles.errorInput]} />
+        <TextInput placeholder="Password" ref={passwordRef} value={password} onChangeText={(text) => setPassword(text)} style={[styles.input, error && styles.errorInput]} secureTextEntry />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
       </View>
 
@@ -110,10 +86,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
-        >
+        <TouchableOpacity onPress={handleSignUp} style={[styles.button, styles.buttonOutline]}>
           <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
       </View>
