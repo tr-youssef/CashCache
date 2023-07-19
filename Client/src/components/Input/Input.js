@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -189,7 +183,7 @@ const styles = StyleSheet.create({
     color: "#F2FFF5",
     backgroundColor: "#1A251D",
     height: 30,
-    borderRadius: "10",
+    borderRadius: 10,
     borderColor: "#33CD48",
     borderWidth: 1,
     paddingRight: 5,
