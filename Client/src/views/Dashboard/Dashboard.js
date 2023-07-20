@@ -38,9 +38,7 @@ const Dashboard = ({ navigation }) => {
             const dt = new Date();
             dt.setFullYear(element.year);
             dt.setHours(0, 0, 0, 0);
-            console.log("dt", dt);
             dt.setMonth(element.month - 1, 1); //0 - January
-            console.log("element", element);
             monthNames.push(dt.toLocaleString(localeToUse, { month: "short" }));
             amounts.push(element.amount);
           });
