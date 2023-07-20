@@ -49,6 +49,9 @@ const ExpenseTrendChart = ({ data }) => {
           {
             type: "bar",
             data: data.amounts,
+            itemStyle: {
+              color: "#33CD48",
+            },
           },
         ],
       };
@@ -71,7 +74,7 @@ const ExpenseTrendChart = ({ data }) => {
 
   return (
     <View style={styles.box}>
-      <Text style={styles.chartTitle}>Expenses Trend</Text>
+      <Text style={styles.chartTitle}>Expenses by Month</Text>
       <SkiaChart style={styles.chart} ref={chartRef} />
     </View>
   );
