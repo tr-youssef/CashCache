@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, SafeAreaView } from "react-native";
+import { Dimensions, StatusBar, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "../../utils/theme/theme.js";
