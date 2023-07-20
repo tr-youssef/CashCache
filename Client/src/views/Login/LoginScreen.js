@@ -1,10 +1,9 @@
 import React, { useRef, useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { callAPI } from "../../utils/fetch/callAPI";
 import { colors } from "../../utils/theme/theme.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,6 +73,7 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Image style={styles.logo} source={require("../../../assets/logo.png")} />
       <View style={styles.inputContainer}>
         <TextInput autoCapitalize="none" placeholder="Email" value={email} ref={emailRef} keyboardType="email-address" blurOnSubmit={false} onChangeText={(text) => setEmail(text)} style={[styles.input, error && styles.errorInput]} />
         <TextInput placeholder="Password" ref={passwordRef} value={password} onChangeText={(text) => setPassword(text)} style={[styles.input, error && styles.errorInput]} secureTextEntry />
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  logo: { width: 200, height: 200, marginBottom: 40 },
   inputContainer: {
     width: "80%",
   },
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 10,
   },
   errorInput: {
     borderColor: "red",
@@ -119,13 +120,13 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
-    marginTop: 5,
+    marginTop: 10,
   },
   buttonContainer: {
-    width: "60%",
+    width: "80%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 10,
   },
   button: {
     backgroundColor: colors.dark.greenElec,
@@ -136,7 +137,6 @@ const styles = StyleSheet.create({
   },
   buttonOutline: {
     backgroundColor: "white",
-    marginTop: 5,
     borderColor: colors.dark.greenElec,
     borderWidth: 2,
   },
