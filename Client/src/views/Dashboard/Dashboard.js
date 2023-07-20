@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, StatusBar, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
+import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { callAPI } from "../../utils/fetch/callAPI.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "../../utils/theme/theme.js";
-import { Dimensions } from "react-native";
 import ExpensesByCategoryChart from "../../components/Charts/ExpensesByCategoryChart.js";
 import ExpenseTrendChart from "../../components/Charts/ExpenseTrendChart";
 
