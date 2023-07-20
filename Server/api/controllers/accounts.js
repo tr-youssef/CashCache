@@ -29,9 +29,7 @@ export const getAccountById = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    account
-      ? res.status(200).json(account)
-      : res.status(404).send({ message: `No Account with id: ${id}` });
+    account ? res.status(200).json(account) : res.status(404).send({ message: `No Account with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -65,7 +63,7 @@ export const addAccount = async (req, res) => {
   try {
     const accountCreated = await Accounts.create({
       name: newAccount.name,
-      initialAmount: newAccount.initialAmount,
+      balance: newAccount.balance,
       plaidId: newAccount.plaidId,
       userId: req.userId,
     });
@@ -105,7 +103,7 @@ export const updateAccount = async (req, res) => {
       },
       {
         name: newAccount.name,
-        initialAmount: newAccount.initialAmount,
+        balance: newAccount.balance,
       }
     );
     if (oldAccount.modifiedCount > 0) {

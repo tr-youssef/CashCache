@@ -12,20 +12,13 @@ const AddAccount = ({ navigation }) => {
   const AccountContext = useContext(AccountsContext);
   const { setAccounts } = AccountContext;
   const [name, setName] = useState("");
-  const [initialAmount, setInitialAmount] = useState(0);
+  const [balance, setbalance] = useState(0);
 
-  const saveAccount = async (name, initialAmount) => {
+  const saveAccount = async (name, balance) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI(
-      "/api/accounts/",
-      "POST",
-      { name: name, initialAmount: initialAmount },
-      token
-    )
+    await callAPI("/api/accounts/", "POST", { name: name, balance: balance }, token)
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) =>
-          setAccounts(res)
-        );
+        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -37,26 +30,21 @@ const AddAccount = ({ navigation }) => {
     navigation.setOptions({
       title: "Add Account",
       headerRight: () => (
-        <Icon
-          name="save"
-          type="MaterialIcons"
-          color={"#33CD48"}
-          onPress={() => saveAccount(name, initialAmount)}
-        />
+        <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, balance)} />
       ),
     });
-  }, [navigation, name, initialAmount]);
+  }, [navigation, name, balance]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
       <Input
-        label={"Initial amount :"}
-        value={initialAmount.toString()}
-        setValue={setInitialAmount}
+        label={"Initial balance :"}
+        value={balance.toString()}
+        setValue={setbalance}
         keyboardType={"decimal-pad"}
       />
-      <Card name={name} initialAmount={initialAmount} />
+      <Card name={name} balance={balance} />
     </View>
   );
 };

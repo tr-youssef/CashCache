@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import Transactions from "../models/transactions.js";
+import Accounts from "../models/accounts.js";
 import mongoose from "mongoose";
+import mongodb from "mongoose";
 
 export const getTransactions = async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
@@ -75,8 +77,12 @@ export const addTransaction = async (req, res) => {
       categoryId: newTransaction.categoryId,
       accountId: newTransaction.accountId,
     });
+    const filter = { _id: new mongoose.Types.ObjectId(newTransaction.accountId) };
+    const update = { $inc: { balance: newTransaction.amount } };
+    let updateResult = await Accounts.updateOne(filter, update);
     res.status(201).json(transactionCreated);
   } catch (error) {
+    console.log("error", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -291,7 +297,9 @@ export const deleteTransaction = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    transactionDeleted.deletedCount > 0 ? res.status(200).json({ message: "Transaction deleted" }) : res.status(404).json({ message: `No Transaction with id: ${id}` });
+    transactionDeleted.deletedCount > 0
+      ? res.status(200).json({ message: "Transaction deleted" })
+      : res.status(404).json({ message: `No Transaction with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

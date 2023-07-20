@@ -14,20 +14,13 @@ const EditAccount = ({ route, navigation }) => {
   const AccountContext = useContext(AccountsContext);
   const { setAccounts } = AccountContext;
   const [name, setName] = useState(item.name);
-  const [initialAmount, setInitialAmount] = useState(item.initialAmount);
+  const [balance, setbalance] = useState(item.balance);
 
-  const saveAccount = async (name, initialAmount) => {
+  const saveAccount = async (name, balance) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI(
-      `/api/accounts/${item._id}`,
-      "PATCH",
-      { name: name, initialAmount: initialAmount },
-      token
-    )
+    await callAPI(`/api/accounts/${item._id}`, "PATCH", { name: name, balance: balance }, token)
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) =>
-          setAccounts(res)
-        );
+        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -37,16 +30,9 @@ const EditAccount = ({ route, navigation }) => {
 
   const deleteAccount = async (idAccount) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI(
-      `/api/accounts/${item._id}`,
-      "DELETE",
-      { id: idAccount },
-      token
-    )
+    await callAPI(`/api/accounts/${item._id}`, "DELETE", { id: idAccount }, token)
       .then(async () => {
-        await callAPI("/api/accounts", "GET", "", token).then((res) =>
-          setAccounts(res)
-        );
+        await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
       })
       .catch((error) => {
@@ -58,26 +44,16 @@ const EditAccount = ({ route, navigation }) => {
     navigation.setOptions({
       title: "Add Account",
       headerRight: () => (
-        <Icon
-          name="save"
-          type="MaterialIcons"
-          color={"#33CD48"}
-          onPress={() => saveAccount(name, initialAmount)}
-        />
+        <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, balance)} />
       ),
     });
-  }, [navigation, name, initialAmount]);
+  }, [navigation, name, balance]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
-      <Input
-        label={"Initial amount :"}
-        value={initialAmount.toString()}
-        setValue={setInitialAmount}
-        keyboardType="decimal-pad"
-      />
-      <Card name={name} initialAmount={initialAmount} />
+      <Input label={"Balance :"} value={balance.toString()} setValue={setbalance} keyboardType="decimal-pad" />
+      <Card name={name} balance={balance} />
       <DeleteButton
         screen={"AddAccount"}
         action={() => {

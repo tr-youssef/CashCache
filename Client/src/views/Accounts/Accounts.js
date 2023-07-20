@@ -38,7 +38,7 @@ const Accounts = ({ navigation }) => {
               handlerPress(item);
             }}
           >
-            <Card name={item.name} initialAmount={item.initialAmount} />
+            <Card name={item.name} balance={item.balance} />
           </Pressable>
         )}
         keyExtractor={(item) => item._id}

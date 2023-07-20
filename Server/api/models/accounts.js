@@ -5,7 +5,7 @@ const accountSchema = new mongoose.Schema({
     type: String,
     required: [true, "Name is required"],
   },
-  initialAmount: {
+  balance: {
     type: Number,
     required: [true, "Amount is required"],
   },

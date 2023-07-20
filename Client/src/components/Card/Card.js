@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 
-const Card = ({ name, initialAmount }) => {
+const Card = ({ name, balance }) => {
   function randomHalf() {
     return Math.random() < 0.5;
   }
@@ -19,7 +19,7 @@ const Card = ({ name, initialAmount }) => {
         <Image style={styles.logo} source={require("../../../assets/visa.png")} />
       </View>
       <View style={styles.containerAmount}>
-        <Text style={styles.text}>{formatNumber(initialAmount)}</Text>
+        <Text style={styles.text}>{formatNumber(balance)}</Text>
       </View>
       <View style={styles.containerName}>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
