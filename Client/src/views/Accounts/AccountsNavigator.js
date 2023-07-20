@@ -19,7 +19,7 @@ const AccountsNavigator = ({ navigation }) => {
     headerStyle: {
       backgroundColor: "#1A251D",
     },
-    headerTintColor: "#F2FFF5", // Set the desired text color for the header
+    headerTintColor: "#F2FFF5",
   };
   return (
     <AccountsContext.Provider value={accountsContextValue}>

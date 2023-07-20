@@ -10,7 +10,7 @@ const BotNavigator = ({ navigation }) => {
     headerStyle: {
       backgroundColor: "#1A251D",
     },
-    headerTintColor: "#F2FFF5", // Set the desired text color for the header
+    headerTintColor: "#F2FFF5",
   };
   return (
     <Stack.Navigator screenOptions={screenOptions}>
@@ -18,14 +18,7 @@ const BotNavigator = ({ navigation }) => {
         name="Budget Bot"
         component={Bot}
         options={{
-          headerRight: () => (
-            <Icon
-              name="settings"
-              color={"#33CD48"}
-              type="MaterialIcons"
-              onPress={() => navigation.navigate("Settings")}
-            />
-          ),
+          headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,
         }}
       />
       <Stack.Screen name="Settings" component={Settings} />

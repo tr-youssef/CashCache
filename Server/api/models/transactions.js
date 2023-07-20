@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema({
   amount: {
-    type: Number, //or Decimal128?
+    type: Number,
     required: [true, "amount is required"],
   },
   tranDate: {

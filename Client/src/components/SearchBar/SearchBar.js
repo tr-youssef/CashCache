@@ -8,13 +8,7 @@ const SearchBar = ({ search, setSearch }) => {
   return (
     <View style={styles.container}>
       <Icon name="search" size={20} color="#888" type="MaterialIcons" />
-      <TextInput
-        value={search}
-        placeholder="Search"
-        placeholderTextColor="#888"
-        style={styles.input}
-        onChangeText={(text) => handleChange(text)} // You can add your own logic here
-      />
+      <TextInput value={search} placeholder="Search" placeholderTextColor="#888" style={styles.input} onChangeText={(text) => handleChange(text)} />
     </View>
   );
 };

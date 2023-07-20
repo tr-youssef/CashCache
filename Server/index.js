@@ -15,9 +15,6 @@ app.use(express.json({ extended: false }));
 app.use(cors());
 dotenv.config();
 
-// import { Configuration, OpenAIApi } from "openai";
-// import readline from "readline";
-
 app.use("/api/test", test);
 app.use("/api/users", routeUsers);
 app.use("/api/categories", routeCategories);
@@ -33,7 +30,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server running on port : ${PORT}`))
-  )
+  .then(() => app.listen(PORT, () => console.log(`Server running on port : ${PORT}`)))
   .catch((error) => console.log(error));

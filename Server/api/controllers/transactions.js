@@ -48,7 +48,7 @@ export const getTransactions = async (req, res) => {
 
       {
         $sort: {
-          _id: -1, // Sort by tranDate in ascending order
+          _id: -1,
         },
       },
     ]);
@@ -74,7 +74,6 @@ export const addTransaction = async (req, res) => {
       userId: req.userId,
       categoryId: newTransaction.categoryId,
       accountId: newTransaction.accountId,
-      //tags: newTransaction.tags,
     });
     res.status(201).json(transactionCreated);
   } catch (error) {
@@ -111,7 +110,6 @@ export const addTransactions = async (req, res) => {
 };
 
 export const ExpensesByCategoryForDateRange = async (req, res) => {
-  // const accountId = req.query.accountId;
   let startDate = new Date(`${req.query.startDate}`);
   let endDate = new Date(`${req.query.endDate}`);
 
@@ -131,10 +129,6 @@ export const ExpensesByCategoryForDateRange = async (req, res) => {
         userId: {
           $eq: new mongoose.Types.ObjectId(`${req.userId}`),
         },
-        //we decided that we should aggregate all accounts
-        // accountId: {
-        //   $eq: new mongoose.Types.ObjectId(`${accountId}`),
-        // },
       },
     },
     {
@@ -164,7 +158,6 @@ export const ExpensesByCategoryForDateRange = async (req, res) => {
       },
     },
     {
-      //only aggregate for Expenses
       $match: {
         categoryType: {
           $eq: "Expense",
@@ -199,7 +192,6 @@ export const ExpensesByCategoryForDateRange = async (req, res) => {
       value: elem.amount,
       name: elem.categoryName,
     }));
-    console.log("ExpensesByCategoryForDateRange", chartData);
     res.status(200).json(chartData);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -251,7 +243,6 @@ export const ExpenseTrendForDateRange = async (req, res) => {
       },
     },
     {
-      //only aggregate for Expenses
       $match: {
         categoryType: {
           $eq: "Expense",
@@ -282,11 +273,6 @@ export const ExpenseTrendForDateRange = async (req, res) => {
 
   try {
     const results = await tranAgg.exec();
-    // const chartData = results.map((elem) => ({
-    //   value: elem.amount,
-    //   name: GetMon,
-    // }));
-    console.log("ExpenseTrendForDateRange", results);
     res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -305,9 +291,7 @@ export const deleteTransaction = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    transactionDeleted.deletedCount > 0
-      ? res.status(200).json({ message: "Transaction deleted" })
-      : res.status(404).json({ message: `No Transaction with id: ${id}` });
+    transactionDeleted.deletedCount > 0 ? res.status(200).json({ message: "Transaction deleted" }) : res.status(404).json({ message: `No Transaction with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

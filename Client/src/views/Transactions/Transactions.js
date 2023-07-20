@@ -80,9 +80,7 @@ const Transactions = ({ navigation }) => {
     setSelectTransactions(
       transactions.map(({ _id, transaction }) => ({
         _id,
-        transaction: transaction.filter(
-          ({ amount, category, subCategory }) => amount.toString().includes(search) || category[0]?.name?.toLowerCase().includes(search.toLowerCase()) || subCategory[0]?.subcategories[0]?.name?.toLowerCase().includes(search.toLowerCase())
-        ),
+        transaction: transaction.filter(({ amount, category }) => amount.toString().includes(search) || category[0]?.name?.toLowerCase().includes(search.toLowerCase())),
       }))
     );
   }, [transactions, search]);

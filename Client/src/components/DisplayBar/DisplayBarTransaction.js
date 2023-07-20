@@ -7,10 +7,6 @@ import { CategoriesContext } from "../../utils/context/CategoriesContext.js";
 import { RectButton } from "react-native-gesture-handler";
 
 const DisplayBarTransaction = ({ transaction }) => {
-  // const navigation = useNavigation();
-  // const categoryContext = useContext(CategoriesContext);
-  // const { setSelectedCategory } = categoryContext;
-
   return (
     <View style={transaction.category[0]?.type === "Expense" || transaction.subCategory[0]?.type === "Expense" ? styles.containerRed : styles.containerGreen}>
       <View style={styles.rectButton}>
