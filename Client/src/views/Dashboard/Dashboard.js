@@ -25,7 +25,12 @@ const Dashboard = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        const res = await callAPI(`/api/transactions/agg/expense_trend/?startDate=${getExpenseTrendStartDate()}&endDate=${endDate}`, "GET", {}, token);
+        const res = await callAPI(
+          `/api/transactions/agg/expense_trend/?startDate=${getExpenseTrendStartDate()}&endDate=${endDate}`,
+          "GET",
+          {},
+          token
+        );
         if (res && res.length > 0) {
           const amounts = [];
           const monthNames = [];
@@ -33,7 +38,9 @@ const Dashboard = ({ navigation }) => {
             const dt = new Date();
             dt.setFullYear(element.year);
             dt.setHours(0, 0, 0, 0);
-            dt.setMonth(element.month, 1);
+            console.log("dt", dt);
+            dt.setMonth(element.month - 1, 1); //0 - January
+            console.log("element", element);
             monthNames.push(dt.toLocaleString(localeToUse, { month: "short" }));
             amounts.push(element.amount);
           });
@@ -51,7 +58,12 @@ const Dashboard = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        const res = await callAPI(`/api/transactions/agg/expenses_by_category/?startDate=${startDate}&endDate=${endDate}`, "GET", {}, token);
+        const res = await callAPI(
+          `/api/transactions/agg/expenses_by_category/?startDate=${startDate}&endDate=${endDate}`,
+          "GET",
+          {},
+          token
+        );
         if (res && res.length > 0) {
           const expensesByCategoryData = res.map((item) => ({
             category: item.name,
