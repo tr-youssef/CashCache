@@ -71,13 +71,11 @@ const updateAccountBalance = async (accountId, transactionAmount) => {
     return;
   }
 
-  console.log("account", account);
-
   // Update the balance based on the transaction type
   if (account.type === "debit") {
-    account.balance -= transactionAmount;
+    account.balance -= Number(transactionAmount);
   } else if (account.type === "credit") {
-    account.balance += transactionAmount;
+    account.balance += Number(transactionAmount);
   } else {
     console.error("Invalid account type.");
     return;
