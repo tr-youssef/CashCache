@@ -101,9 +101,6 @@ export const addTransaction = async (req, res) => {
       accountId: newTransaction.accountId,
     });
     updateAccountBalance(newTransaction.accountId, newTransaction.amount);
-    // const filter = { _id: new mongoose.Types.ObjectId(newTransaction.accountId) };
-    // const update = { $inc: { balance: newTransaction.amount } };
-    // let updateResult = await Accounts.updateOne(filter, update);
     res.status(201).json(transactionCreated);
   } catch (error) {
     console.log("error", error);
