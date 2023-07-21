@@ -61,6 +61,31 @@ export const getTransactions = async (req, res) => {
   }
 };
 
+const updateAccountBalance = async (accountId, transactionAmount) => {
+  const account = await Accounts.findOne({
+    _id: accountId,
+  });
+
+  if (!account) {
+    console.error("Account not found.");
+    return;
+  }
+
+  console.log("account", account);
+
+  // Update the balance based on the transaction type
+  if (account.type === "debit") {
+    account.balance -= transactionAmount;
+  } else if (account.type === "credit") {
+    account.balance += transactionAmount;
+  } else {
+    console.error("Invalid account type.");
+    return;
+  }
+
+  account.save();
+};
+
 export const addTransaction = async (req, res) => {
   const newTransaction = req.body;
   const token = req.headers.authorization.split(" ")[1];
@@ -77,9 +102,10 @@ export const addTransaction = async (req, res) => {
       categoryId: newTransaction.categoryId,
       accountId: newTransaction.accountId,
     });
-    const filter = { _id: new mongoose.Types.ObjectId(newTransaction.accountId) };
-    const update = { $inc: { balance: newTransaction.amount } };
-    let updateResult = await Accounts.updateOne(filter, update);
+    updateAccountBalance(newTransaction.accountId, newTransaction.amount);
+    // const filter = { _id: new mongoose.Types.ObjectId(newTransaction.accountId) };
+    // const update = { $inc: { balance: newTransaction.amount } };
+    // let updateResult = await Accounts.updateOne(filter, update);
     res.status(201).json(transactionCreated);
   } catch (error) {
     console.log("error", error);
@@ -107,6 +133,7 @@ export const addTransactions = async (req, res) => {
         tags: newTransaction.tags,
       });
       resultArr.push(transactionCreated);
+      updateAccountBalance(newTransaction.accountId, newTransaction.amount);
     }
 
     res.status(201).json(resultArr);
@@ -321,6 +348,10 @@ export const updateTransaction = async (req, res) => {
         accountId: newTransaction.accountId,
       }
     );
+
+    updateAccountBalance(newTransaction.accountId, newTransaction.amount);
+    updateAccountBalance(oldTransaction.accountId, -oldTransaction.amount);
+
     if (oldTransaction.modifiedCount > 0) {
       const transactionUpdated = await Transactions.findOne({
         _id: id,
