@@ -8,7 +8,7 @@ const Card = ({ name, accountNumber, type, balance }) => {
     return Math.random() < 0.5;
   }
 
-  function formatNumber(number) {
+  function formatAccountNumber(number) {
     const formattedNumber = number.toString().padStart(16, "0");
     const result = formattedNumber.replace(/(\d{4})/g, "$1 ").trim();
     return result;
@@ -33,7 +33,7 @@ const Card = ({ name, accountNumber, type, balance }) => {
         {isMastercard() && <Image style={styles.logo} source={require("../../../assets/MasterCard.png")} />}
       </View>
       <View style={styles.containerAccountNumber}>
-        <Text style={styles.text}>{formatNumber(accountNumber)}</Text>
+        <Text style={styles.text}>{formatAccountNumber(accountNumber)}</Text>
       </View>
       <View style={styles.containerBalance}>
         <Text style={styles.text}>Balance: {currencyFormatter(balance)}</Text>
