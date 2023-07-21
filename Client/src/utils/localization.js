@@ -7,5 +7,5 @@ export function currencyFormatter(data) {
 }
 
 export function getShortMonthName(date) {
-  date.toLocaleString(localeToUse, { month: "short" });
+  return date.toLocaleString(localeToUse, { month: "short" });
 }
