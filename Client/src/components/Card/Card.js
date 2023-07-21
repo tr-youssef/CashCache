@@ -13,12 +13,24 @@ const Card = ({ name, accountNumber, type, balance }) => {
     const result = formattedNumber.replace(/(\d{4})/g, "$1 ").trim();
     return result;
   }
+
+  function isVisa() {
+    var cardName = new String(name);
+    return type == "credit" && cardName.toUpperCase().includes("VISA");
+  }
+
+  function isMastercard() {
+    var cardName = new String(name);
+    return type == "credit" && cardName.toUpperCase().includes("MASTERCARD");
+  }
+
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#72AEEB", "#C99DF3"]} style={styles.background} />
       <View style={styles.top}>
         <Image style={styles.hologram} source={require("../../../assets/hologram.png")} />
-        <Image style={styles.logo} source={require("../../../assets/visa.png")} />
+        {isVisa() && <Image style={styles.logo} source={require("../../../assets/visa.png")} />}
+        {isMastercard() && <Image style={styles.logo} source={require("../../../assets/MasterCard.png")} />}
       </View>
       <View style={styles.containerAccountNumber}>
         <Text style={styles.text}>{formatNumber(accountNumber)}</Text>
