@@ -10,7 +10,6 @@ const Dashboard = ({ navigation }) => {
   const [endDate, setEndDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date(endDate.getFullYear(), endDate.getMonth(), 1));
   const numHistoricalExpenseTrendMonths = 4;
-  const localeToUse = "en-CA";
   const [expenseTrendData, setExpenseTrendData] = useState({ amounts: [], monthNames: [] });
   const [expensesByCategoryData, setExpensesByCategoryData] = useState([]);
 
@@ -39,7 +38,8 @@ const Dashboard = ({ navigation }) => {
             dt.setFullYear(element.year);
             dt.setHours(0, 0, 0, 0);
             dt.setMonth(element.month - 1, 1); //0 - January
-            monthNames.push(dt.toLocaleString(localeToUse, { month: "short" }));
+            console.log("element", element);
+            monthNames.push(getShortMontName(dt));
             amounts.push(element.amount);
           });
 

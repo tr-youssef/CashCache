@@ -4,16 +4,13 @@ import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
 import * as echarts from "echarts/core";
 import { PieChart } from "echarts/charts";
 import { LegendComponent, TooltipComponent } from "echarts/components";
+import currencyFormatter from "../../utils/localization.js";
 
 echarts.use([SVGRenderer, PieChart, LegendComponent, TooltipComponent]);
 
 const ExpensesByCategoryChart = ({ data }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  function currencyFormatter(data) {
-    data = parseFloat(data);
-    return data.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
-  }
 
   useEffect(() => {
     if (chartRef.current) {
