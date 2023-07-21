@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
+import currencyFormatter from "../../utils/localization.js";
 
-const Card = ({ name, balance }) => {
+const Card = ({ name, accountNumber, type, balance }) => {
   function randomHalf() {
     return Math.random() < 0.5;
   }
+
   function formatNumber(number) {
     const formattedNumber = number.toString().padStart(16, "0");
     const result = formattedNumber.replace(/(\d{4})/g, "$1 ").trim();
@@ -18,8 +20,11 @@ const Card = ({ name, balance }) => {
         <Image style={styles.hologram} source={require("../../../assets/hologram.png")} />
         <Image style={styles.logo} source={require("../../../assets/visa.png")} />
       </View>
-      <View style={styles.containerAmount}>
-        <Text style={styles.text}>{formatNumber(balance)}</Text>
+      <View style={styles.containerAccountNumber}>
+        <Text style={styles.text}>{formatNumber(accountNumber)}</Text>
+      </View>
+      <View style={styles.containerBalance}>
+        <Text style={styles.text}>Balance: {currencyFormatter(balance)}</Text>
       </View>
       <View style={styles.containerName}>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
@@ -63,9 +68,13 @@ const styles = StyleSheet.create({
     fontFamily: "Inconsolata_400Regular",
     letterSpacing: 2,
   },
-  containerAmount: {
+  containerAccountNumber: {
     width: "100%",
     alignItems: "center",
+  },
+  containerBalance: {
+    marginTop: 10,
+    paddingLeft: 22,
   },
   logo: {},
   hologram: {},

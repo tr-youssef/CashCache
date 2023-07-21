@@ -8,17 +8,31 @@ import Card from "../../components/Card/Card.js";
 import { AccountsContext } from "../../utils/context/AccountsContext.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteButton from "../../components/DeleteButton/DeleteButton.js";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const EditAccount = ({ route, navigation }) => {
   const { item } = route.params;
   const AccountContext = useContext(AccountsContext);
   const { setAccounts } = AccountContext;
   const [name, setName] = useState(item.name);
-  const [balance, setbalance] = useState(item.balance);
+  const [accountNumber, setAccountNumber] = useState(item.accountNumber);
+  const [balance, setBalance] = useState(item.balance);
 
-  const saveAccount = async (name, balance) => {
+  //dropdown state
+  const data = [
+    { label: "Credit", value: "credit" },
+    { label: "Debit", value: "debit" },
+  ];
+  const [type, setType] = useState(item.type);
+
+  const saveAccount = async (name, accountNumber, type, balance) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI(`/api/accounts/${item._id}`, "PATCH", { name: name, balance: balance }, token)
+    await callAPI(
+      `/api/accounts/${item._id}`,
+      "PATCH",
+      { name: name, accountNumber: accountNumber, type: type, balance: balance },
+      token
+    )
       .then(async () => {
         await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
@@ -42,18 +56,30 @@ const EditAccount = ({ route, navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Add Account",
+      title: "Edit Account",
       headerRight: () => (
-        <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, balance)} />
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => saveAccount(name, accountNumber, type, balance)}
+        />
       ),
     });
-  }, [navigation, name, balance]);
+  }, [navigation, name, accountNumber, type, balance]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
-      <Input label={"Balance :"} value={balance.toString()} setValue={setbalance} keyboardType="decimal-pad" />
-      <Card name={name} balance={balance} />
+      <Input
+        label={"Account Number :"}
+        value={accountNumber.toString()}
+        setValue={setAccountNumber}
+        keyboardType="decimal-pad"
+      />
+      <Input label={"Type :"} datalist={data} value={type} setValue={setType} />
+      <Input label={"Balance :"} value={balance.toString()} setValue={setBalance} keyboardType="decimal-pad" />
+      <Card name={name} accountNumber={accountNumber} type={type} balance={balance} />
       <DeleteButton
         screen={"AddAccount"}
         action={() => {

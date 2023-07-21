@@ -12,11 +12,24 @@ const AddAccount = ({ navigation }) => {
   const AccountContext = useContext(AccountsContext);
   const { setAccounts } = AccountContext;
   const [name, setName] = useState("");
-  const [balance, setbalance] = useState(0);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [balance, setBalance] = useState(0);
 
-  const saveAccount = async (name, balance) => {
+  //dropdown state
+  const data = [
+    { label: "Credit", value: "credit" },
+    { label: "Debit", value: "debit" },
+  ];
+  const [type, setType] = useState(data.length > 0 ? data[0].value : "");
+
+  const saveAccount = async (name, accountNumber, type, balance) => {
     const token = await AsyncStorage.getItem("token");
-    await callAPI("/api/accounts/", "POST", { name: name, balance: balance }, token)
+    await callAPI(
+      "/api/accounts/",
+      "POST",
+      { name: name, accountNumber: accountNumber, type: type, balance: balance },
+      token
+    )
       .then(async () => {
         await callAPI("/api/accounts", "GET", "", token).then((res) => setAccounts(res));
         navigation.navigate("Accounts");
@@ -30,21 +43,28 @@ const AddAccount = ({ navigation }) => {
     navigation.setOptions({
       title: "Add Account",
       headerRight: () => (
-        <Icon name="save" type="MaterialIcons" color={"#33CD48"} onPress={() => saveAccount(name, balance)} />
+        <Icon
+          name="save"
+          type="MaterialIcons"
+          color={"#33CD48"}
+          onPress={() => saveAccount(name, accountNumber, type, balance)}
+        />
       ),
     });
-  }, [navigation, name, balance]);
+  }, [navigation, name, accountNumber, type, balance]);
 
   return (
     <View style={styles.container}>
       <Input label={"Name :"} value={name} setValue={setName} />
+      <Input label={"Account Number:"} value={accountNumber.toString()} setValue={setAccountNumber} />
+      <Input label={"Type :"} datalist={data} value={type} setValue={setType} />
       <Input
         label={"Initial balance :"}
         value={balance.toString()}
-        setValue={setbalance}
+        setValue={setBalance}
         keyboardType={"decimal-pad"}
       />
-      <Card name={name} balance={balance} />
+      <Card name={name} accountNumber={accountNumber} type={type} balance={balance} />
     </View>
   );
 };

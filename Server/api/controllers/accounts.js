@@ -65,6 +65,8 @@ export const addAccount = async (req, res) => {
       name: newAccount.name,
       balance: newAccount.balance,
       plaidId: newAccount.plaidId,
+      type: newAccount.type,
+      accountNumber: newAccount.accountNumber,
       userId: req.userId,
     });
     res.status(201).json(accountCreated);
@@ -103,6 +105,8 @@ export const updateAccount = async (req, res) => {
       },
       {
         name: newAccount.name,
+        accountNumber: newAccount.accountNumber,
+        type: newAccount.type,
         balance: newAccount.balance,
       }
     );

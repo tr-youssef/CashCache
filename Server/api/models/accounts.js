@@ -17,6 +17,14 @@ const accountSchema = new mongoose.Schema({
   plaidId: {
     type: String,
   },
+  type: {
+    type: String,
+    required: [true, "Account type is required"],
+  },
+  accountNumber: {
+    type: Number,
+    required: [true, "Account number is required"],
+  },
 });
 
 const Accounts = mongoose.model("Accounts", accountSchema);
