@@ -72,16 +72,16 @@ const updateAccountBalance = async (accountId, transactionAmount) => {
   }
 
   // Update the balance based on the transaction type
+  const value = Number(transactionAmount);
   if (account.type === "debit") {
-    account.balance -= Number(transactionAmount);
+    account.balance -= value;
   } else if (account.type === "credit") {
-    account.balance += Number(transactionAmount);
+    account.balance += value;
   } else {
     console.error("Invalid account type.");
     return;
   }
-
-  account.save();
+  await account.save();
 };
 
 export const addTransaction = async (req, res) => {
@@ -318,6 +318,14 @@ export const deleteTransaction = async (req, res) => {
     req.userId = decodedData?.id;
   }
   try {
+    //find the Tx so we can reverse the amount on the account
+    const Tx = await Transactions.findOne({
+      _id: id,
+      userId: req.userId,
+    });
+    await updateAccountBalance(Tx.accountId, -Tx.amount);
+
+    //then delete it
     const transactionDeleted = await Transactions.deleteOne({
       _id: id,
       userId: req.userId,
@@ -334,7 +342,15 @@ export const updateTransaction = async (req, res) => {
   const { id } = req.params;
   const newTransaction = req.body;
   try {
-    const oldTransaction = await Transactions.updateOne(
+    const oldTransaction = await Transactions.findOne({
+      _id: id,
+    });
+    if (!oldTransaction) {
+      res.status(404).json({ message: `No Transaction with id: ${id}` });
+      exit;
+    }
+
+    const updateResult = await Transactions.updateOne(
       {
         _id: id,
       },
@@ -347,14 +363,11 @@ export const updateTransaction = async (req, res) => {
       }
     );
 
-    updateAccountBalance(newTransaction.accountId, newTransaction.amount);
-    updateAccountBalance(oldTransaction.accountId, -oldTransaction.amount);
+    await updateAccountBalance(newTransaction.accountId, newTransaction.amount);
+    await updateAccountBalance(oldTransaction.accountId, -oldTransaction.amount);
 
-    if (oldTransaction.modifiedCount > 0) {
-      const transactionUpdated = await Transactions.findOne({
-        _id: id,
-      });
-      res.status(201).json(transactionUpdated);
+    if (updateResult.modifiedCount > 0) {
+      res.status(201).json(newTransaction);
     } else {
       res.status(404).json({ message: `No Transaction with id: ${id}` });
     }
