@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "../../utils/theme/theme.js";
 import ExpensesByCategoryChart from "../../components/Charts/ExpensesByCategoryChart.js";
 import ExpenseTrendChart from "../../components/Charts/ExpenseTrendChart";
+import { getShortMonthName } from "../../utils/localization.js";
 
 const Dashboard = ({ navigation }) => {
   const [endDate, setEndDate] = useState(new Date());
@@ -39,7 +40,7 @@ const Dashboard = ({ navigation }) => {
             dt.setHours(0, 0, 0, 0);
             dt.setMonth(element.month - 1, 1); //0 - January
             console.log("element", element);
-            monthNames.push(getShortMontName(dt));
+            monthNames.push(getShortMonthName(dt));
             amounts.push(element.amount);
           });
 

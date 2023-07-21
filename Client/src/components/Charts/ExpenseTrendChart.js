@@ -4,7 +4,7 @@ import { SkiaChart, SVGRenderer } from "@wuba/react-native-echarts";
 import * as echarts from "echarts/core";
 import { BarChart } from "echarts/charts";
 import { GridComponent, LegendComponent, TooltipComponent } from "echarts/components";
-import currencyFormatter from "../../utils/localization.js";
+import { currencyFormatter } from "../../utils/localization.js";
 
 echarts.use([SVGRenderer, BarChart, GridComponent, LegendComponent, TooltipComponent]);
 

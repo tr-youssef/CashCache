@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import currencyFormatter from "../../utils/localization.js";
+import { currencyFormatter } from "../../utils/localization.js";
 
 const Card = ({ name, accountNumber, type, balance }) => {
   function randomHalf() {
