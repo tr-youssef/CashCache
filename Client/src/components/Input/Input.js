@@ -4,18 +4,7 @@ import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 
-const Input = ({
-  label,
-  placeholder,
-  datalist = "",
-  date = "",
-  setDate,
-  value,
-  setValue,
-  disabled,
-  line = 1,
-  keyboardType = "default",
-}) => {
+const Input = ({ label, placeholder, datalist = "", date = "", setDate, value, setValue, disabled, line = 1, keyboardType = "default" }) => {
   const [isFocus, setIsFocus] = useState(false);
   const [show, setShow] = useState(false);
   const onChange = (event, selectedDate) => {
@@ -66,53 +55,16 @@ const Input = ({
           </View>
         </TouchableOpacity>
       ) : disabled ? (
-        <TextInput
-          value={value}
-          placeholder={placeholder}
-          placeholderTextColor="#888"
-          style={styles.disabledInput}
-          editable={false}
-          selectTextOnFocus={false}
-        />
+        <TextInput value={value} placeholder={placeholder} placeholderTextColor="#888" style={styles.disabledInput} editable={false} selectTextOnFocus={false} />
       ) : line > 1 ? (
-        <TextInput
-          value={value}
-          placeholder={placeholder}
-          placeholderTextColor="#888"
-          style={styles.inputMultiLine}
-          onChangeText={(text) => setValue(text)}
-          multiline
-          numberOfLines={line}
-        />
+        <TextInput value={value} placeholder={placeholder} placeholderTextColor="#888" style={styles.inputMultiLine} onChangeText={(text) => setValue(text)} multiline numberOfLines={line} />
       ) : (
-        <TextInput
-          value={value}
-          placeholder={placeholder}
-          placeholderTextColor="#888"
-          keyboardType={keyboardType}
-          style={styles.input}
-          onChangeText={(text) => setValue(text)}
-        />
+        <TextInput value={value} placeholder={placeholder} placeholderTextColor="#888" keyboardType={keyboardType} style={styles.input} onChangeText={(text) => setValue(text)} />
       )}
 
-      <Modal
-        style={styles.modal}
-        isVisible={show}
-        animationIn="slideInLeft"
-        onSwipeComplete={() => setShow(false)}
-        swipeDirection="left"
-        animationOut="slideOutLeft"
-        onBackdropPress={() => setShow(false)}
-      >
+      <Modal style={styles.modal} isVisible={show} animationIn="slideInLeft" onSwipeComplete={() => setShow(false)} swipeDirection="left" animationOut="slideOutLeft" onBackdropPress={() => setShow(false)}>
         <View style={styles.modalContainerDark}>
-          <DateTimePicker
-            testID="dateTimePicker"
-            mode="date"
-            value={date}
-            display="spinner"
-            onChange={onChange}
-            themeVariant="dark"
-          />
+          <DateTimePicker testID="dateTimePicker" mode="date" value={date} display="spinner" onChange={onChange} themeVariant="dark" />
         </View>
       </Modal>
     </View>
