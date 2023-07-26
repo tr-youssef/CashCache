@@ -7,6 +7,8 @@ const accountSchema = new mongoose.Schema({
   },
   balance: {
     type: Number,
+
+    default: 0,
     required: [true, "Amount is required"],
   },
   userId: {
@@ -19,11 +21,14 @@ const accountSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    required: [true, "Account type is required"],
+    default: "debit",
+    // required: [true, "Account type is required"],
   },
   accountNumber: {
     type: Number,
-    required: [true, "Account number is required"],
+
+    default: 1111111111111111,
+    // required: [true, "Account number is required"],
   },
 });
 

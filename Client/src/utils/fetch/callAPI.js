@@ -2,7 +2,7 @@
 //and on a Mac:
 // ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk "{print $2}"
 
-const ServerIP = "192.168.0.145";
+const ServerIP = "10.44.22.68";
 const Port = "4001";
 
 export async function callAPI(path = "", httpMethod = "GET", data = {}, token = "") {

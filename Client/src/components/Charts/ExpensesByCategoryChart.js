@@ -24,7 +24,7 @@ const ExpensesByCategoryChart = ({ data }) => {
           },
         },
         legend: {
-          top: "2%",
+          top: "90%",
           left: "center",
         },
         series: [
@@ -38,14 +38,11 @@ const ExpensesByCategoryChart = ({ data }) => {
               borderWidth: 2,
             },
             label: {
-              show: false,
-              position: "left",
+              show: true,
             },
             emphasis: {
               label: {
                 show: true,
-                fontSize: 16,
-                fontWeight: "bold",
               },
             },
             labelLine: {

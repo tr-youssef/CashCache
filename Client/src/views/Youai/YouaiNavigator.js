@@ -15,7 +15,7 @@ const BotNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Budget Bot"
+        name="AI Assistant"
         component={Bot}
         options={{
           headerRight: () => <Icon name="settings" color={"#33CD48"} type="MaterialIcons" onPress={() => navigation.navigate("Settings")} />,

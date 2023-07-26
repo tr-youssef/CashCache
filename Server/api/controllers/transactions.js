@@ -71,7 +71,6 @@ const updateAccountBalance = async (accountId, transactionAmount) => {
     return;
   }
 
-  // Update the balance based on the transaction type
   const value = Number(transactionAmount);
   if (account.type === "debit") {
     account.balance -= value;
@@ -140,7 +139,6 @@ export const addTransactions = async (req, res) => {
 export const ExpensesByCategoryForDateRange = async (req, res) => {
   let startDate = new Date(`${req.query.startDate}`);
   let endDate = new Date(`${req.query.endDate}`);
-
   const token = req.headers.authorization.split(" ")[1];
   if (token) {
     let decodedData = jwt.verify(token, process.env.HASHCODE);
@@ -327,9 +325,7 @@ export const deleteTransaction = async (req, res) => {
       _id: id,
       userId: req.userId,
     });
-    transactionDeleted.deletedCount > 0
-      ? res.status(200).json({ message: "Transaction deleted" })
-      : res.status(404).json({ message: `No Transaction with id: ${id}` });
+    transactionDeleted.deletedCount > 0 ? res.status(200).json({ message: "Transaction deleted" }) : res.status(404).json({ message: `No Transaction with id: ${id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

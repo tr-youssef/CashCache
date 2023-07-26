@@ -25,12 +25,7 @@ const Dashboard = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        const res = await callAPI(
-          `/api/transactions/agg/expense_trend/?startDate=${getExpenseTrendStartDate()}&endDate=${endDate}`,
-          "GET",
-          {},
-          token
-        );
+        const res = await callAPI(`/api/transactions/agg/expense_trend/?startDate=${getExpenseTrendStartDate()}&endDate=${new Date()}`, "GET", {}, token);
         if (res && res.length > 0) {
           const amounts = [];
           const monthNames = [];
@@ -38,8 +33,7 @@ const Dashboard = ({ navigation }) => {
             const dt = new Date();
             dt.setFullYear(element.year);
             dt.setHours(0, 0, 0, 0);
-            dt.setMonth(element.month - 1, 1); //0 - January
-            console.log("element", element);
+            dt.setMonth(element.month - 1, 1);
             monthNames.push(getShortMonthName(dt));
             amounts.push(element.amount);
           });
@@ -57,12 +51,7 @@ const Dashboard = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (token) {
-        const res = await callAPI(
-          `/api/transactions/agg/expenses_by_category/?startDate=${startDate}&endDate=${endDate}`,
-          "GET",
-          {},
-          token
-        );
+        const res = await callAPI(`/api/transactions/agg/expenses_by_category/?startDate=${startDate}&endDate=${new Date()}`, "GET", {}, token);
         if (res && res.length > 0) {
           const expensesByCategoryData = res.map((item) => ({
             category: item.name,
@@ -87,7 +76,6 @@ const Dashboard = ({ navigation }) => {
 
     LoadAllCharts();
     const unsubscribe = navigation.addListener("focus", LoadAllCharts);
-
     return () => {
       unsubscribe();
     };
@@ -97,7 +85,6 @@ const Dashboard = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.containerDark} bounces={true}>
         <ExpensesByCategoryChart data={expensesByCategoryData} />
-
         <ExpenseTrendChart data={expenseTrendData} />
       </ScrollView>
     </SafeAreaView>

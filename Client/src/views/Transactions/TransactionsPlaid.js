@@ -52,6 +52,7 @@ const TransactionsPlaid = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       const nameAccounts = await callAPI("/api/plaid/getAccounts", "POST", { access_token: accessToken }, token);
+      console.log("nameAccounts", nameAccounts);
       return nameAccounts;
     } catch (error) {
       throw new Error(error);
@@ -77,15 +78,10 @@ const TransactionsPlaid = ({ navigation }) => {
 
   const createTransaction = async (transaction, existingAccount) => {
     try {
-      const { account_id, amount, date } = transaction;
+      const { amount, date } = transaction;
       const categoryId = transaction.amount > 0 ? "64a6e7ede4a6c55040e9c7fc" : "64a6e81fe4a6c55040e9c7fe";
       const token = await AsyncStorage.getItem("token");
-      await callAPI(
-        "/api/transactions",
-        "POST",
-        { amount, tranDate: date, categoryId, accountId: existingAccount._id },
-        token
-      );
+      await callAPI("/api/transactions", "POST", { amount, tranDate: date, categoryId, accountId: existingAccount._id }, token);
     } catch (error) {
       throw new Error(error);
     }
@@ -121,9 +117,7 @@ const TransactionsPlaid = ({ navigation }) => {
     return transaction ? transaction.name : null;
   };
 
-  return (
-    <Plaid linkToken={linkToken} onExit={(exit) => navigation.navigate("Transactions")} onSuccess={handleSuccess} />
-  );
+  return <Plaid linkToken={linkToken} onExit={(exit) => navigation.navigate("Transactions")} onSuccess={handleSuccess} />;
 };
 
 export default TransactionsPlaid;

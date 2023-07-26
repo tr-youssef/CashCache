@@ -175,12 +175,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
-import {
-  GiftedChat,
-  Bubble,
-  InputToolbar,
-  Composer,
-} from "react-native-gifted-chat";
+import { GiftedChat, Bubble, InputToolbar, Composer } from "react-native-gifted-chat";
 import { callAPI } from "../../utils/fetch/callAPI";
 
 const Bot = () => {
@@ -193,20 +188,9 @@ const Bot = () => {
     try {
       setLoading(true);
       const userMessage = newMessages[0];
-      setMessages((previousMessage) =>
-        GiftedChat.append(previousMessage, userMessage)
-      );
+      setMessages((previousMessage) => GiftedChat.append(previousMessage, userMessage));
       const messageText = userMessage.text.toLowerCase();
-      const keywords = [
-        "budget",
-        "budgeting",
-        "money",
-        "save",
-        "$",
-        "savings",
-        "saving",
-        "investment",
-      ];
+      const keywords = ["budget", "budgeting", "money", "save", "$", "savings", "saving", "investment", "hello"];
 
       if (!keywords.some((keyword) => messageText.includes(keyword))) {
         const botMessage = {
@@ -218,9 +202,7 @@ const Bot = () => {
             name: "Budget Bot",
           },
         };
-        setMessages((previousMessage) =>
-          GiftedChat.append(previousMessage, botMessage)
-        );
+        setMessages((previousMessage) => GiftedChat.append(previousMessage, botMessage));
         setLoading(false);
         return;
       }
@@ -242,9 +224,7 @@ const Bot = () => {
           name: "Budget Bot",
         },
       };
-      setMessages((previousMessage) =>
-        GiftedChat.append(previousMessage, botMessage)
-      );
+      setMessages((previousMessage) => GiftedChat.append(previousMessage, botMessage));
       setLoading(false);
     } catch (error) {
       console.log("error", error);
