@@ -11,7 +11,6 @@ echarts.use([SVGRenderer, BarChart, GridComponent, LegendComponent, TooltipCompo
 const ExpenseTrendChart = ({ data }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-
   useEffect(() => {
     if (chartRef.current) {
       let option = {
@@ -32,7 +31,7 @@ const ExpenseTrendChart = ({ data }) => {
         xAxis: [
           {
             type: "category",
-            data: data.monthNames,
+            data: data.monthNames.sort().reverse(),
             axisTick: {
               alignWithLabel: true,
             },
@@ -46,7 +45,7 @@ const ExpenseTrendChart = ({ data }) => {
         series: [
           {
             type: "bar",
-            data: data.amounts,
+            data: data.amounts.sort(),
             itemStyle: {
               color: "#33CD48",
             },
@@ -72,7 +71,7 @@ const ExpenseTrendChart = ({ data }) => {
 
   return (
     <View style={styles.box}>
-      <Text style={styles.chartTitle}>Expenses by Month</Text>
+      <Text style={styles.chartTitle}>Total Expenses by Month</Text>
       <SkiaChart style={styles.chart} ref={chartRef} />
     </View>
   );

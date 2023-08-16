@@ -15,13 +15,11 @@ const Card = ({ name, accountNumber, type, balance }) => {
   }
 
   function isVisa() {
-    var cardName = new String(name);
-    return type == "credit" && cardName.toUpperCase().includes("VISA");
+    return type == "debit";
   }
 
   function isMastercard() {
-    var cardName = new String(name);
-    return type == "credit" && cardName.toUpperCase().includes("MASTERCARD");
+    return type == "credit";
   }
 
   return (

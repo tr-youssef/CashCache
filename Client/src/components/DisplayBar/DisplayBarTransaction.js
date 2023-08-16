@@ -23,7 +23,7 @@ const DisplayBarTransaction = ({ transaction }) => {
             </View>
           )}
         </View>
-        <Text style={styles.text}>{transaction.amount} CAD</Text>
+        <Text style={styles.text}>{Math.abs(transaction.amount)} CAD</Text>
       </View>
     </View>
   );
