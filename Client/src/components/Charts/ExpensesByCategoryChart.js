@@ -75,7 +75,7 @@ const ExpensesByCategoryChart = ({ data }) => {
 
   return (
     <View style={styles.box}>
-      <Text style={styles.chartTitle}>Expenses By Category</Text>
+      <Text style={styles.chartTitle}>Monthly Expenses By Category</Text>
       <Text style={styles.chartTitle}>{Intl.DateTimeFormat("en-US", { month: "long" }).format(new Date())}</Text>
       <SkiaChart style={styles.chart} ref={chartRef} />
     </View>

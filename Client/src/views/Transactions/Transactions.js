@@ -34,7 +34,7 @@ const Transactions = ({ navigation }) => {
   const renderSectionHeader = ({ section }) => (
     <View style={styles.sectionContainer}>
       <Text style={styles.text}>{moment(section.date).format("MMM D, YYYY")}</Text>
-      <Text style={styles.text}>{section.sum.toFixed(2)} CAD</Text>
+      <Text style={styles.text}>{-section.sum.toFixed(2)} CAD</Text>
     </View>
   );
   const transactionsByDate = selectTransactions.reduce((acc, transaction) => {
@@ -56,7 +56,9 @@ const Transactions = ({ navigation }) => {
   const createLinkToken = useCallback(async () => {
     const token = await AsyncStorage.getItem("token");
     await callAPI("/api/plaid/generate_link_token", "POST", {}, token)
-      .then((res) => setLinkToken(res.link_token))
+      .then((res) => {
+        setLinkToken(res.link_token);
+      })
       .catch((error) => console.log("error", error));
   }, [setLinkToken]);
 

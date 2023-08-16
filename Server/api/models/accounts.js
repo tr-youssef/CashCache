@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+function generateRandomCreditCardNumber() {
+  let randomNumber = "";
+  for (let i = 0; i < 16; i++) {
+    randomNumber += Math.floor(Math.random() * 10);
+  }
+  return randomNumber;
+}
+
+function generateRandomAccountType() {
+  return Math.random() < 0.5 ? "debit" : "credit";
+}
+
 const accountSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,13 +33,13 @@ const accountSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    default: "debit",
+    default: generateRandomAccountType,
     // required: [true, "Account type is required"],
   },
   accountNumber: {
     type: Number,
+    default: generateRandomCreditCardNumber, // Use the function to generate the default value
 
-    default: 1111111111111111,
     // required: [true, "Account number is required"],
   },
 });

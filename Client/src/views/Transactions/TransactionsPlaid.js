@@ -52,7 +52,6 @@ const TransactionsPlaid = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       const nameAccounts = await callAPI("/api/plaid/getAccounts", "POST", { access_token: accessToken }, token);
-      console.log("nameAccounts", nameAccounts);
       return nameAccounts;
     } catch (error) {
       throw new Error(error);
@@ -116,7 +115,6 @@ const TransactionsPlaid = ({ navigation }) => {
     const transaction = data.accounts.find((item) => item.account_id === accountId);
     return transaction ? transaction.name : null;
   };
-
   return <Plaid linkToken={linkToken} onExit={(exit) => navigation.navigate("Transactions")} onSuccess={handleSuccess} />;
 };
 
