@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@rneui/themed";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { navigationRef } from "../../../src/utils/navigation/RootNavigation.js";
-import { NavigationContainer, useIsFocused } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import DashboardNavigator from "../../../src/views/Dashboard/DashboardNavigator.js";
 import CategoriesNavigator from "../../../src/views/Categories/CategoriesNavigator.js";

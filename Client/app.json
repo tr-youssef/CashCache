@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Client",
-    "slug": "Client",
+    "slug": "cashcache",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,9 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#050A05"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.djinpark1.Client"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,6 +26,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bf663653-fd85-4c3e-b49a-e3f9539a0aec"
+      }
+    },
+    "owner": "djinpark1",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bf663653-fd85-4c3e-b49a-e3f9539a0aec"
     }
   }
 }
