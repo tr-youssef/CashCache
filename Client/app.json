@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#050A05"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.djinpark1.Client"
@@ -34,7 +32,7 @@
     },
     "owner": "djinpark1",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/bf663653-fd85-4c3e-b49a-e3f9539a0aec"
